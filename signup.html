@@ -8,20 +8,40 @@
 	<link rel="stylesheet" href="css/bootstrap.css">
 	
 </head>
-<body>
-	<div class="jumbotron text-center">
-		<h1>Welcome to Navigator</h1>
-		<p>Maintain the customer details!</p> 
-	</div>
-	<div class="container">
+<body>	
+	<div class="container mt-5">
 		<div class="row">
 			<div class="col-md-4 d-none d-md-block">
 			</div>
 			<div class="col-md-4 col-sm-12">
 				<div class="bg-color">
-				<a class="d-block m-3 pt-3 text-white" href="signup.html"><h4><i class="fa fa-plane"></i> Sign Up</h4><a>
-				<a class="d-block m-3 pt-3 text-white" href=""><h4><i class="fa fa-lock"></i> Sign In</h4><a>
-				<a class="d-block m-3 pt-3 text-white" href=""><h4><i class="fa fa-video-camera"></i> Watch Video</h4><a>
+					<h3 class="text-center text-white">SIGN UP</h3><br/>
+					<form action="#" class="text-white">
+						<div class="form-group">
+							<label for="cname">Company Name:</label>
+							<input type="text" class="form-control" id="cname">
+						</div>
+						<div class="form-group">
+							<label for="name">Name:</label>
+							<input type="text" class="form-control" id="name">
+						</div>
+						<div class="form-group">
+							<label for="mobile">Mobile Number:</label>
+							<input type="tel" class="form-control" id="mobile">
+						</div>
+						<div class="form-group">
+							<label for="altmobile">Alternative Number:</label>
+							<input type="tel" class="form-control" id="altmobile">
+						</div>
+						<div class="form-group">
+							<label for="email">Email address:</label>
+							<input type="email" class="form-control" id="email">
+						</div>						
+						
+						 <button id="btnClick" class="btn form-btn">Home</button>
+						<button type="submit" class="btn form-btn">Submit</button>
+					</form>
+				
 				</div>
 			</div>
 			<div class="col-md-4">
