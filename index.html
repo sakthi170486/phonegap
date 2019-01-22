@@ -38,30 +38,30 @@
 					<div class="col-md-4 col-sm-12  mx-auto">
 						<div class="bg-color">
 							<h3 class="text-center text-white">SIGN UP</h3><br/>
-							<form action="#" class="text-white">
+							<form action="#" class="text-white" name="reg" id="reg">
 								<div class="form-group">
 									<label for="cname">Company Name: *</label>
-									<input type="text" class="form-control" required id="cname">
+									<input type="text" class="form-control" required name="cname" id="cname">
 								</div>
 								<div class="form-group">
 									<label for="name">Name: *</label>
-									<input type="text" class="form-control" required id="name">
+									<input type="text" class="form-control" required name="name" id="name">
 								</div>
 								<div class="form-group">
 									<label for="mobile">Mobile Number: *</label>
-									<input type="tel" class="form-control" required id="mobile">
+									<input type="tel" class="form-control" required name="mobile" id="mobile">
 								</div>
 								<div class="form-group">
 									<label for="altmobile">Alternative Number:</label>
-									<input type="tel" class="form-control" id="altmobile">
+									<input type="tel" class="form-control" name="altmobile" id="altmobile">
 								</div>
 								<div class="form-group">
 									<label for="email">Email address: *</label>
-									<input type="email" class="form-control" required id="email">
+									<input type="email" class="form-control" required name="email" id="email">
 								</div>	
 								<div class="form-group text-center">
 								<a id="" href="index.html" class="btn form-btn pt-3 lnk">Home</a>
-								<button type="submit" class="btn form-btn reg">Submit</button>
+								<button type="submit" class="btn form-btn reg" name="insert" id="insert" >Submit</button>
 								</div>
 							</form>				
 						</div>
@@ -149,5 +149,40 @@
 	<!-- <script src="js/home.js"></script>
 	<script src="js/signup.js"></script>-->
 	<script src="js/main.js"></script> 
-	
+	<script type="text/javascript">
+	$(function()
+	{
+		$("#insert").click(function(e){
+			e.preventDefault();
+			var cname=$("#cname").val();
+			var name=$("#name").val();
+			var mobile=$("#mobile").val();
+			var email=$("#email").val();
+			if($.trim(cname).length > 0 && $.trim(name).length > 0 && $.trim(mobile).length > 0 && $.trim(email).length > 0)
+			{
+				$.ajax({
+					type: "POST",
+					url:"database/insert.php",
+					dataType : 'json', // data type
+					data : $("#reg").serialize(), // post data || get data
+					crossDomain: true,
+					cache: false,
+					beforeSend: function(){ $("#insert").text('Connecting...');},
+					success: function(data){
+						if(data=="success")
+						{
+							alert("inserted");
+							$("#insert").text('Submit');
+						}
+						else if(data=="error")
+						{
+							alert("error");
+						}
+					}
+				});
+			}
+			return false;
+		});
+	});
+ </script>
 </html>
