@@ -54,19 +54,11 @@
 	<script src="js/jquery.min.js"></script>
 	<script src="js/popper.min.js"></script>
 	<script src="js/bootstrap.min.js"></script>	
-	<script>
-		window.onload = function()
-		{
-			document.addEventListener("deviceready", init, false);
-		}
-		function init()
-		{
-			var myButton = document.getElementById("btnClick");
-			myButton.addEventListener("click", goToHome, false);
-		}
-		function goToHome()
-		{
-			window.location = "index.html";
-		}
+	<script>		
+		$(function(){
+			$('#btnClick').on('click',function(){
+				window.location.href = "index.html";
+			});
+		});
 	</script>
 </html>

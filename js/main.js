@@ -37,7 +37,13 @@ var app = {
     },
     // Update DOM on a Received Event
     receivedEvent: function(id) {
-        var parentElement = document.getElementById(id);        
-    }
+        var parentElement = document.getElementById(id);
+		var myButton = document.getElementById("btnClick");
+		myButton.addEventListener("click", goToHome, true);       
+    }, 
+	goToHome:function(){
+		window.location = "index.html";
+	}
+
 };
 app.initialize();
