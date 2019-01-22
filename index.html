@@ -169,6 +169,7 @@
 					cache: false,
 					beforeSend: function(){ $("#insert").text('Connecting...');},
 					success: function(data){
+						alert(data);
 						if(data=="success")
 						{
 							alert("inserted");
