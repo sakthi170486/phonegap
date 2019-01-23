@@ -21,7 +21,7 @@
 					<div class="col-md-4 col-sm-12">
 						<div class="bg-color">
 						<a class="d-block m-3 pt-3 text-white lnk" href="SignUp"><h4><i class="fa fa-plane"></i> Sign Up</h4></a>
-						<a class="d-block m-3 pt-3 text-white lnk" href="SignIn"><h4><i class="fa fa-lock"></i> Sign In</h4></a>
+						<a class="d-block m-3 pt-3 text-white lnk" id="sgnin" href="SignIn"><h4><i class="fa fa-lock"></i> Sign In</h4></a>
 						<a class="d-block m-3 pt-3 text-white lnk" href=""><h4><i class="fa fa-video-camera"></i> Watch Video</h4></a>
 						</div>
 					</div>
@@ -163,17 +163,17 @@
 				$.ajax({
 					type: "POST",
 					url:"http://www.azillesoft.com/phonegap/database/insert.php",
-					dataType : 'json', // data type
+					//dataType : 'json', // data type
 					data : $("#reg").serialize(), // post data || get data
 					crossDomain: true,
 					cache: false,
 					beforeSend: function(){ $("#insert").text('Connecting...');},
 					success: function(data){
-						alert(data);
 						if(data=="success")
 						{
 							alert("inserted");
 							$("#insert").text('Submit');
+							$('#sgnin').click();
 						}
 						else if(data=="error")
 						{
