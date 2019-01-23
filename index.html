@@ -21,7 +21,7 @@
 					<div class="col-md-4 col-sm-12">
 						<div class="bg-color">
 						<a class="d-block m-3 pt-3 text-white lnk" href="SignUp"><h4><i class="fa fa-plane"></i> Sign Up</h4></a>
-						<a class="d-block m-3 pt-3 text-white lnk" id="sgnin" href="SignIn"><h4><i class="fa fa-lock"></i> Sign In</h4></a>
+						<a class="d-block m-3 pt-3 text-white lnk" href="SignIn"><h4><i class="fa fa-lock"></i> Sign In</h4></a>
 						<a class="d-block m-3 pt-3 text-white lnk" href=""><h4><i class="fa fa-video-camera"></i> Watch Video</h4></a>
 						</div>
 					</div>
@@ -61,6 +61,7 @@
 								</div>	
 								<div class="form-group text-center">
 								<a id="" href="index.html" class="btn form-btn pt-3 lnk">Home</a>
+								<a class="d-none lnk" id="sgnin" href="SignIn"><h4>Sign In</h4></a>
 								<button type="submit" class="btn form-btn reg" name="insert" id="insert" >Submit</button>
 								</div>
 							</form>				
@@ -173,7 +174,7 @@
 						{
 							alert("inserted");
 							$("#insert").text('Submit');
-							$('body #sgnin').click();
+							$('#sgnin').click();
 							$("#reg")[0].reset();
 						}
 						else if(data=="error")
