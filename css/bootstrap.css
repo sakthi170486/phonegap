@@ -5679,7 +5679,7 @@ a.close.disabled {
   background-color: #fff;
   background-clip: padding-box;
   border: 1px solid rgba(0, 0, 0, 0.2);
-  border-radius: 0.3rem;
+  border-radius: 0.5rem;
   outline: 0;
 }
 
@@ -5762,7 +5762,7 @@ a.close.disabled {
 
 @media (min-width: 576px) {
   .modal-dialog {
-    max-width: 500px;
+    max-width: 360px;
     margin: 1.75rem auto;
   }
   .modal-dialog-centered {
@@ -9920,3 +9920,4 @@ a.text-dark:hover, a.text-dark:focus {
     -moz-transition: all 0.4s;
     transition: all 0.4s;
 }
+#profimg{width:70px;border-radius:50%;cursor:pointer;}

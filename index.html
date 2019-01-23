@@ -40,26 +40,42 @@
 					<div class="col-md-4 col-sm-12  mx-auto">
 						<div class="bg-color">
 							<h3 class="text-center text-white">SIGN UP</h3><br/>
+							<div class="form-group cam text-center text-white">
+								<a href="" data-toggle="modal" data-target="#photo"><img src="img/camera.png" id='profimg' class="img-responsive"></a><br/>
+								<span>upload photo</span><br/>
+								<hr/>
+							</div>
+							<div id="photo" class="modal fade" role="dialog">
+								<div class="modal-dialog">
+									<div class="modal-content">
+										<div class="modal-header">
+											<p class="modal-title text-center w-100 font-weight-bold">Upload Photo</p>
+											<span class="close" data-dismiss="modal">&times;</span>
+											
+										</div>
+										<div class="modal-body text-center">
+											<button id='but_take' class="btn btn-outline-primary">Take photo</button><br/>
+											<button id='but_select' class="btn btn-outline-info mt-1">Select photo from Gallery</button>
+											
+										</div>
+									</div>
+								</div>	
+							</div>
 							<form action="#" class="text-white" name="reg" id="reg">
 								<div class="form-group">
-									<label for="cname">Company Name: *</label>
-									<input type="text" class="form-control" required name="cname" id="cname">
+									<input type="text" class="form-control" required placeholder="Company Name *" name="cname" id="cname">
 								</div>
 								<div class="form-group">
-									<label for="name">Name: *</label>
-									<input type="text" class="form-control" required name="name" id="name">
+									<input type="text" class="form-control" required placeholder="Your Name *" name="name" id="name">
 								</div>
 								<div class="form-group">
-									<label for="mobile">Mobile Number: *</label>
-									<input type="tel" class="form-control" required name="mobile" id="mobile">
+									<input type="tel" class="form-control" required placeholder="Mobile Number *" name="mobile" id="mobile">
 								</div>
 								<div class="form-group">
-									<label for="altmobile">Alternative Number:</label>
-									<input type="tel" class="form-control" name="altmobile" id="altmobile">
+									<input type="tel" class="form-control" placeholder="Alternative Number" name="altmobile" id="altmobile">
 								</div>
 								<div class="form-group">
-									<label for="email">Email address: *</label>
-									<input type="email" class="form-control" required name="email" id="email">
+									<input type="email" class="form-control" placeholder="Email address *" required name="email" id="email">
 								</div>	
 								<div class="form-group text-center">
 								<a id="" href="Home" class="btn form-btn pt-3 lnk">Home</a>
@@ -152,6 +168,34 @@
 	<script src="js/signup.js"></script>-->
 	<script src="js/main.js"></script> 
 	<script type="text/javascript">
+		// Change image source and upload photo to server
+		function onSuccess(imageURI) {
+			// Set image source
+			var image = document.getElementById('img');
+			image.src = imageURI  + '?' + Math.random();
+
+			var options = new FileUploadOptions();
+			options.fileKey = "file";
+			options.fileName = imageURI.substr(imageURI.lastIndexOf('/') + 1);
+			options.mimeType = "image/jpeg";
+
+			var params = {};
+			params.value1 = "test";
+			params.value2 = "param";
+
+			options.params = params;
+			options.chunkedMode = false;
+
+			var ft = new FileTransfer();
+			ft.upload(imageURI, "http://www.azillesoft.com/phonegap/upload.php", function(result){
+				alert('successfully uploaded ' + result.response);
+			}, function(error){
+				alert('error : ' + JSON.stringify(error));
+			}, options);
+		}
+		function onFail(message) {
+			alert('Failed because: ' + message);
+		}
 	$(function()
 	{
 		$('body').on('click','.lnk',function(e){
@@ -166,7 +210,7 @@
 			{
 				$.ajax({
 					type: "POST",
-					url:"http://www.azillesoft.com/phonegap/database/chkumobile.php",
+					url:"http://www.azillesoft.com/phonegap/database/checkumobile.php",
 					data : 'm='+v, // post data || get data
 					crossDomain: true,
 					cache: false,
@@ -183,6 +227,24 @@
 				});
 			}
 		});
+	
+		// take picture from camera
+		$('body').on('click','#but_take',function(){
+			navigator.camera.getPicture(onSuccess, onFail, { quality: 20,
+				destinationType: Camera.DestinationType.FILE_URL 
+			});
+		});
+
+		// upload select 
+		$('body').on('click','#but_select',function(){
+			navigator.camera.getPicture(onSuccess, onFail, { quality: 50,
+				sourceType: Camera.PictureSourceType.PHOTOLIBRARY, 
+				allowEdit: true,
+				destinationType: Camera.DestinationType.FILE_URI
+			});
+		});
+
+           
 		$("body").on('click','#insert',function(e){
 			e.preventDefault();	
 			var cname=$("#cname").val();
