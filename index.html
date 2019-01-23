@@ -160,7 +160,29 @@
 			var template = Handlebars.compile($("#"+l+"-tpl").html());	
 			$('.maincontent').html(template);
 		});
-			
+		$("body").on('blur','#mobile',function(e){
+			var v=$(this).val();
+			if(v.length > 0)
+			{
+				$.ajax({
+					type: "POST",
+					url:"http://www.azillesoft.com/phonegap/database/chkumobile.php",
+					data : 'm='+v, // post data || get data
+					crossDomain: true,
+					cache: false,
+					success: function(data){
+						if(data == "exists")
+						{
+							alert("Mobile number already registered.");
+							$("#mobile").val('');
+							$("#reg")[0].reset();
+							var signinTpl = Handlebars.compile($("#signin-tpl").html());	
+							$('.maincontent').html(signinTpl);							
+						}						
+					}
+				});
+			}
+		});
 		$("body").on('click','#insert',function(e){
 			e.preventDefault();	
 			var cname=$("#cname").val();
