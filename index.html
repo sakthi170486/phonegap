@@ -173,11 +173,13 @@
 						{
 							alert("inserted");
 							$("#insert").text('Submit');
-							$('#sgnin').click();
+							$('body #sgnin').click();
+							$("#reg")[0].reset();
 						}
 						else if(data=="error")
 						{
 							alert("error");
+							//$("#reg")[0].reset();
 						}
 					}
 				});
