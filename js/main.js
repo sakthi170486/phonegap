@@ -1,15 +1,15 @@
 var app = {
     renderHome: function() {
-        $('body').html(this.homeTpl());
+        $('.maincontent').html(this.homeTpl());
     },
 	renderSignUp: function() {
-        $('body').html(this.signupTpl());
+        $('.maincontent').html(this.signupTpl());
     },	
 	renderSignIn: function() {
-        $('body').html(this.signinTpl());
+        $('.maincontent').html(this.signinTpl());
     },
 	renderOTP: function() {
-        $('body').html(this.otpTpl());
+        $('.maincontent').html(this.otpTpl());
     },
     initialize: function() {
 		var self = this;
@@ -19,12 +19,12 @@ var app = {
 		 this.signinTpl = Handlebars.compile($("#signin-tpl").html());		
         this.otpTpl = Handlebars.compile($("#otp-tpl").html());
 		self.renderHome();
-		$('.lnk').on('click',function(e){
+		/* $('.lnk').on('click',function(e){
 			e.preventDefault();
 			var l=$(this).attr('href');
 			var n= 'self.render'+l+'()';
 			eval(n);			
-		});
+		}); */
     }
 };
 app.initialize();

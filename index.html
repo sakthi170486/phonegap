@@ -9,6 +9,8 @@
 		<script src="css/source-sans-pro.js"></script>
 	</head>
 	<body>
+		<div class="maincontent">
+		</div>
 		<script id="home-tpl" type="text/x-handlebars-template">
 			<div class="jumbotron text-center">
 				<h1>Welcome to Navigator</h1>
@@ -60,8 +62,7 @@
 									<input type="email" class="form-control" required name="email" id="email">
 								</div>	
 								<div class="form-group text-center">
-								<a id="" href="index.html" class="btn form-btn pt-3 lnk">Home</a>
-								<a class="d-none lnk" id="sgnin" href="SignIn"><h4>Sign In</h4></a>
+								<a id="" href="Home" class="btn form-btn pt-3 lnk">Home</a>
 								<button type="submit" class="btn form-btn reg" name="insert" id="insert" >Submit</button>
 								</div>
 							</form>				
@@ -86,7 +87,7 @@
 									<input type="tel" class="form-control" required id="umobile">
 								</div>									
 								<div class="form-group text-center">
-								<a id="" href="index.html" class="btn form-btn pt-3 lnk">Home</a>
+								<a id="" href="Home" class="btn form-btn pt-3 lnk">Home</a>
 								<button type="submit" class="btn form-btn lgn">Login</button>
 								</div>
 							</form>				
@@ -153,14 +154,40 @@
 	<script type="text/javascript">
 	$(function()
 	{
-		$("body").on('click','#insert',function(e){
+		$('body').on('click','.lnk',function(e){
 			e.preventDefault();
+			var l=$(this).attr('href').toLowerCase();
+			var template = Handlebars.compile($("#"+l+"-tpl").html());	
+			$('.maincontent').html(template);
+		});
+			
+		$("body").on('click','#insert',function(e){
+			e.preventDefault();	
 			var cname=$("#cname").val();
 			var name=$("#name").val();
 			var mobile=$("#mobile").val();
-			var email=$("#email").val();
+			var amobile=$("#altmobile").val();
+			var email=$("#email").val();			
 			if($.trim(cname).length > 0 && $.trim(name).length > 0 && $.trim(mobile).length > 0 && $.trim(email).length > 0)
-			{
+			{				
+				 atpos = email.indexOf("@");
+				 dotpos = email.lastIndexOf(".");				 
+				 if (atpos < 1 || ( dotpos - atpos < 2 )) {
+					alert("Please enter correct email ID")
+					$("#email").focus() ;
+					return false;
+				 }
+				 if(isNaN( mobile ) ||$.trim(mobile).length != 10 ) {					
+					alert( "Please provide a valid mobile number." );
+					$("#mobile").focus() ;
+					return false;
+				 }
+				  if( amobile != '' && $.trim(amobile).length != 10 ) {					
+					alert( "Please provide a valid alternate number." );
+					$("#altmobile").focus() ;
+					return false;
+				 }		
+			
 				$.ajax({
 					type: "POST",
 					url:"http://www.azillesoft.com/phonegap/database/insert.php",
@@ -174,8 +201,10 @@
 						{
 							alert("inserted");
 							$("#insert").text('Submit');
-							$('#sgnin').click();
 							$("#reg")[0].reset();
+							var signinTpl = Handlebars.compile($("#signin-tpl").html());	
+							$('.maincontent').html(signinTpl);
+							
 						}
 						else if(data=="error")
 						{
@@ -184,6 +213,11 @@
 						}
 					}
 				});
+			}
+			else 
+			{
+				alert("Enter all the required fields");
+				//$("#reg")[0].reset();
 			}
 			return false;
 		});
