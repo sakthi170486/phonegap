@@ -187,7 +187,7 @@
 			options.chunkedMode = false;
 
 			var ft = new FileTransfer();
-			ft.upload(imageURI, "http://www.azillesoft.com/phonegap/upload.php", function(result){
+			ft.upload(imageURI, "http://www.azillesoft.com/phonegap/database/upload.php", function(result){
 				alert('successfully uploaded ' + result.response);
 			}, function(error){
 				alert('error : ' + JSON.stringify(error));

@@ -9920,4 +9920,4 @@ a.text-dark:hover, a.text-dark:focus {
     -moz-transition: all 0.4s;
     transition: all 0.4s;
 }
-#profimg{width:70px;border-radius:50%;cursor:pointer;}
+#profimg{max-width:100px;border-radius:50%;cursor:pointer;}
