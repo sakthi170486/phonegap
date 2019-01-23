@@ -203,24 +203,27 @@
 	{
 		$('body').on('click','.lnk',function(e){
 			e.preventDefault();
-			var l=$(this).attr('href').toLowerCase();			
-			var v = $('#imgname').val();
-			if(v.length > 0)
-			{
-				$.ajax({
-					type: "POST",
-					url:"http://www.azillesoft.com/phonegap/database/checkuimg.php",
-					data : 'm='+v, // post data || get data
-					crossDomain: true,
-					cache: false,
-					success: function(data){
-						if(data == 0)
-						{
-							$('#profimg').attr('src','img/camera.png');
+			var l=$(this).attr('href').toLowerCase();
+			if($('#imgname').val())
+			{		
+				var v = $('#imgname').val();
+				if(v.length > 0)
+				{
+					$.ajax({
+						type: "POST",
+						url:"http://www.azillesoft.com/phonegap/database/checkuimg.php",
+						data : 'm='+v, // post data || get data
+						crossDomain: true,
+						cache: false,
+						success: function(data){
+							if(data == 0)
+							{
+								$('#profimg').attr('src','img/camera.png');
+							}
+							//console.log(data);						
 						}
-						//console.log(data);						
-					}
-				});
+					});
+				}
 			}
 			
 			var template = Handlebars.compile($("#"+l+"-tpl").html());	
