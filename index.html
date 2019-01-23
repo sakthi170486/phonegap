@@ -312,8 +312,9 @@
 							$('.maincontent').html(signinTpl);
 							
 						}
-						else if(data=="error")
-						{				
+						else 
+						{	
+							alert(data);						
 							delImg();
 							$('#profimg').attr('src','img/camera.png');
 							alert("error");							
