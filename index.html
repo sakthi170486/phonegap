@@ -39,7 +39,7 @@
 					</div>
 					<div class="col-md-4 col-sm-12  mx-auto">
 						<div class="bg-color">
-							<h3 class="text-center text-white">SIGN UP</h3><br/>
+							<h3 class="text-center text-white">SIGN UP</h3>
 							<div class="form-group cam text-center text-white">
 								<a href="" data-toggle="modal" data-target="#photo"><img src="img/camera.png" id='profimg' class="img-responsive"></a><br/>
 								<span>upload photo</span><br/>
@@ -171,7 +171,7 @@
 		// Change image source and upload photo to server
 		function onSuccess(imageURI) {
 			// Set image source
-			var image = document.getElementById('img');
+			var image = document.getElementById('profimg');
 			image.src = imageURI  + '?' + Math.random();
 
 			var options = new FileUploadOptions();
