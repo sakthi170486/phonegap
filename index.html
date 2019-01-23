@@ -374,7 +374,7 @@
 					data : 'm='+v, // post data || get data
 					crossDomain: true,
 					cache: false,
-					success: function(data){
+					success: function(data){					
 						if(data == 0)
 						{
 							alert("Mobile number not registered. Enter Registered mobile Number");
@@ -386,7 +386,8 @@
 		});
 		
 		// Send OTP to registered mobile
-		$("body").on('click','#lgn',function(e){
+		$("body").on('click','.lgn',function(e){
+			e.preventDefault();
 			var v=$('#umobile').val();
 			if(v.length > 0)
 			{
@@ -414,7 +415,8 @@
 			}
 		});
 		// Check OTP 
-		$("body").on('click','#lgn',function(e){
+		$("body").on('click','.lgnotp',function(e){
+			e.preventDefault();
 			var m=$('#cumobile').val();
 			var o=$('#otp').val();
 			if(o.length > 0)
