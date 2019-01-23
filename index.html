@@ -51,7 +51,7 @@
 										<div class="modal-header">
 											<p class="modal-title text-center w-100 font-weight-bold">Upload Photo</p>
 											<span class="close" data-dismiss="modal">&times;</span>
-											<input type="hidden" class="form-control" name="imgname" id="imgname">
+											
 										</div>
 										<div class="modal-body text-center">
 											<button id='but_take' class="btn btn-outline-primary">Take photo</button><br/>
@@ -76,7 +76,7 @@
 								</div>
 								<div class="form-group">
 									<input type="email" class="form-control" placeholder="Email address *" required name="email" id="email">
-									
+									<input type="hidden" class="form-control" name="imgname" id="imgname">
 								</div>	
 								<div class="form-group text-center">
 								<a id="" href="Home" class="btn form-btn pt-3 lnk">Home</a>
@@ -298,7 +298,7 @@
 					type: "POST",
 					url:"http://www.azillesoft.com/phonegap/database/insert.php",
 					//dataType : 'json', // data type
-					data : $("#reg").serialize() +'&imgname='+imgname, // post data || get data
+					data : $("#reg").serialize(), // post data || get data
 					crossDomain: true,
 					cache: false,
 					beforeSend: function(){ $("#insert").text('Connecting...');},
