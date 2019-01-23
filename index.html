@@ -203,9 +203,7 @@
 	{
 		$('body').on('click','.lnk',function(e){
 			e.preventDefault();
-			var l=$(this).attr('href').toLowerCase();
-			var template = Handlebars.compile($("#"+l+"-tpl").html());	
-			$('.maincontent').html(template);
+			var l=$(this).attr('href').toLowerCase();			
 			var v = $('#imgname').val();
 			if(v.length > 0)
 			{
@@ -224,6 +222,9 @@
 					}
 				});
 			}
+			
+			var template = Handlebars.compile($("#"+l+"-tpl").html());	
+			$('.maincontent').html(template);
 		});
 		$("body").on('blur','#mobile',function(e){
 			var v=$(this).val();
@@ -312,9 +313,8 @@
 							$('.maincontent').html(signinTpl);
 							
 						}
-						else 
-						{	
-							alert(data);						
+						else if(data=="error")
+						{				
 							delImg();
 							$('#profimg').attr('src','img/camera.png');
 							alert("error");							
