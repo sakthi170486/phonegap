@@ -216,6 +216,10 @@
 					crossDomain: true,
 					cache: false,
 					success: function(data){
+						if(data == 0)
+						{
+							$('#profimg').attr('src','img/camera.png');
+						}
 						//console.log(data);						
 					}
 				});
@@ -223,17 +227,19 @@
 		});
 		$("body").on('blur','#mobile',function(e){
 			var v=$(this).val();
+			var im = $('#imgname').val();
 			if(v.length > 0)
 			{
 				$.ajax({
 					type: "POST",
 					url:"http://www.azillesoft.com/phonegap/database/checkumobile.php",
-					data : 'm='+v, // post data || get data
+					data : 'm='+v+'&im='+im, // post data || get data
 					crossDomain: true,
 					cache: false,
 					success: function(data){
 						if(data == "exists")
-						{
+						{			
+							$('#profimg').attr('src','img/camera.png');
 							alert("Mobile number already registered.");
 							$("#mobile").val('');
 							$("#reg")[0].reset();
@@ -259,9 +265,7 @@
 				allowEdit: true,
 				destinationType: Camera.DestinationType.FILE_URI
 			});
-		});
-
-           
+		});           
 		$("body").on('click','#insert',function(e){
 			e.preventDefault();	
 			var cname=$("#cname").val();
