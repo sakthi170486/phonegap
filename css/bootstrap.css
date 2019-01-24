@@ -5617,8 +5617,8 @@ a.close.disabled {
 }
 
 .modal {
-  position: fixed;
-  top: 0;
+  position: absolute;
+  top: 15%;
   left: 0;
   z-index: 1050;
   display: none;
@@ -9887,11 +9887,17 @@ a.text-dark:hover, a.text-dark:focus {
 /*# sourceMappingURL=bootstrap.css.map */
 
 /*********** Custom CSS *****************************/
+.inner-content{
+	background-color:#944df6;border-radius:0.6em;
+    max-width: 500px;
+	margin: 0 auto;
+}
 .bg-color {
+	min-height: 100vh;
     width: 100%;
     border-radius: 10px;
     overflow: hidden;
-    padding: 55px 55px 37px 55px;
+    padding: 0px 5px 0px 5px;
     background: #9152f8;
     background: -webkit-linear-gradient(top, #7579ff, #b224ef);
     background: -o-linear-gradient(top, #7579ff, #b224ef);
@@ -9920,4 +9926,91 @@ a.text-dark:hover, a.text-dark:focus {
     -moz-transition: all 0.4s;
     transition: all 0.4s;
 }
+#lgmid{padding-top:180px;}
 #profimg{max-width:100px;border-radius:50%;cursor:pointer;}
+
+/************ Nav sidebar csas *************/
+#sidebar {
+    min-width: 210px;
+    max-width: 210px;
+    min-height: 100vh;  
+	background: #7386D5;
+    color: #fff;
+    transition: all 0.3s;
+	z-index: 9999;	
+}
+#content{z-index: 9999;}
+#sidebar.active {
+    margin-left: -215px;
+}
+a[data-toggle="collapse"] {
+    position: relative;
+}
+
+.dropdown-toggle::after {
+    display: block;
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+}
+#sidebar .sidebar-header {
+    padding: 10px;
+    background: #6d7fcc;
+	text-align:center;
+}
+#sidebar .sidebar-header img{
+width: 60px;
+    height: 60px;
+    border-radius: 50%;
+}
+
+#sidebar ul.components {
+    padding: 20px 0;
+    border-bottom: 1px solid #47748b;
+}
+
+#sidebar ul p {
+    color: #fff;
+    /* padding: 10px; */
+	text-align:center;
+}
+
+#sidebar ul li a {
+    padding: 10px;
+    font-size: 1em;
+    display: block;
+	color: #fff;
+}
+#sidebar ul li a .fa {
+    margin-right: 10px;
+    width: 15px;
+}
+#sidebar ul li a:hover {
+    color: #7386D5;
+    background: #fff;
+}
+
+#sidebar ul li.active > a, a[aria-expanded="true"] {
+    color: #fff;
+    background: #6d7fcc;
+}
+ul ul a {
+    font-size: 0.9em !important;
+    padding-left: 30px !important;
+    background: #6d7fcc;
+}
+.wrapper {
+    display: flex;
+    width: 100%;
+}
+.inner-container{position: absolute;
+z-index: 999;}
+@media (max-width: 768px) {
+    #sidebar {
+        margin-left: -215px;
+    }
+    #sidebar.active {
+		margin-left: -5px;
+    }
+}

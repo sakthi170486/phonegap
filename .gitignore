@@ -45,3 +45,8 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+database/checkumobile.php
+database/dp.php
+database/insert.php
+database/upload.php
+database/checkuimg.php
