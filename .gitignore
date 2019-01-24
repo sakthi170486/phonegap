@@ -50,3 +50,5 @@ database/dp.php
 database/insert.php
 database/upload.php
 database/checkuimg.php
+database/checkotp.php
+database/sendotp.php
