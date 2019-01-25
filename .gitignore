@@ -52,3 +52,7 @@ database/upload.php
 database/checkuimg.php
 database/checkotp.php
 database/sendotp.php
+database/checkcusmobile.php
+database/insertcustomer.php
+database/json.php
+database/cusjson.php
