@@ -9624,6 +9624,15 @@ button.bg-dark:focus {
   .text-sm-center {
     text-align: center !important;
   }
+.getcontent {
+     width: auto !important;
+}
+.w-70 {
+     width: auto !important;
+}
+.has-search .form-control-feedback {
+        left: 22px !important;
+}
 }
 
 @media (min-width: 768px) {
@@ -9636,6 +9645,15 @@ button.bg-dark:focus {
   .text-md-center {
     text-align: center !important;
   }
+   .getcontent {
+     width: auto !important;
+}
+.w-70 {
+     width: auto !important;
+}
+.has-search .form-control-feedback {
+        left: 22px !important;
+}
 }
 
 @media (min-width: 992px) {
@@ -9648,6 +9666,15 @@ button.bg-dark:focus {
   .text-lg-center {
     text-align: center !important;
   }
+  .getcontent {
+     width: auto !important;
+}
+.w-70 {
+     width: auto !important;
+}
+.has-search .form-control-feedback {
+        left: 22px !important;
+}
 }
 
 @media (min-width: 1200px) {
@@ -9660,6 +9687,15 @@ button.bg-dark:focus {
   .text-xl-center {
     text-align: center !important;
   }
+   .getcontent {
+     width: auto !important;
+}
+.w-70 {
+     width: auto !important;
+}
+.has-search .form-control-feedback {
+        left: 22px !important;
+}
 }
 
 .text-lowercase {
@@ -9889,7 +9925,7 @@ a.text-dark:hover, a.text-dark:focus {
 /*********** Custom CSS *****************************/
 .inner-content{
 	background-color:#944df6;
-    max-width: 500px;
+   /*  max-width: 500px; */
 	margin: 0 auto;
 }
 .bg-color {
@@ -9930,8 +9966,8 @@ a.text-dark:hover, a.text-dark:focus {
 
 /************ Nav sidebar csas *************/
 #sidebar {
-    min-width: 210px;
-    max-width: 210px;
+    min-width: 190px;
+    max-width: 190px;
     min-height: 100vh;  
 	background: #7386D5;
     color: #fff;
@@ -9940,7 +9976,7 @@ a.text-dark:hover, a.text-dark:focus {
 }
 #content{z-index: 9999;}
 #sidebar.active {
-    margin-left: -215px;
+    margin-left: -205px;
 }
 a[data-toggle="collapse"] {
     position: relative;
@@ -10003,11 +10039,78 @@ ul ul a {
     display: flex;
     width: 100%;
 }
-.inner-container{position: absolute;
-z-index: 999;}
+.getcontent {    position: absolute;
+    z-index: 999;
+    width: 100%;}
+.w-70{width:70%;margin:0 auto;}
+.has-search .form-control {
+    padding-left: 2.375rem;
+}
+
+.has-search .form-control-feedback {
+    position: absolute;
+    z-index: 2;
+    display: block;
+    width: 2.375rem;
+    height: 2.375rem;
+    line-height: 2.375rem;
+    text-align: center;
+    pointer-events: none;
+    color: #aaa;
+	left:66px;
+}
+
+
+.customer-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+   
+}
+
+.customer-list li {
+    display: block;
+    border-bottom: 1px solid #e0e0e0;
+    padding: 0px;
+    display: -webkit-box;
+    display: -moz-box;
+    display: box;
+    margin-top: 5px;
+    width: 100%;
+    padding-left: 0px;
+    cursor: pointer;
+}
+
+.customer-list li>a {
+    color: #fff;
+    display: block;
+    padding: 5px;
+    text-decoration: none;
+    width: 100%;
+    -webkit-box-flex: 1;
+    -moz-box-flex: 1;
+    box-flex: 1;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    background-position: -10px 0;
+    background-repeat: no-repeat;
+    -webkit-background-size: 10px 100%;
+    -moz-background-size: 10px 100%;
+    -ms-background-size: 10px 100%;
+    -o-background-size: 10px 100%;
+    background-size: 10px 100%;
+}
+
+.customer-list li>a * {
+    pointer-events: none;
+}
+
+
+
 @media (max-width: 768px) {
     #sidebar {
-        margin-left: -215px;
+        margin-left: -205px;
     }
     #sidebar.active {
 		margin-left: -5px;

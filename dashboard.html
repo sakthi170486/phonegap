@@ -11,88 +11,133 @@
 	<body>
 		<div class="inner-content">
 			<div class="maincontent bg-color">
+				<div class="wrapper">
+					<!-- Sidebar -->
+					<nav id="sidebar">
+						<div class="sidebar-header">
+							<img src="img/camera.png" id="uimg" class="img-responsive" alt="Profile Image"/>
+						</div>
+						<ul class="list-unstyled components">
+							<p id="uname">Welcome Guest</p><hr/>
+							<!--<li class="active">
+								<a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Home</a>
+								<ul class="collapse list-unstyled" id="homeSubmenu">
+									<li>
+										<a href="#">Home 1</a>
+									</li>
+									<li>
+										<a href="#">Home 2</a>
+									</li>
+									<li>
+										<a href="#">Home 3</a>
+									</li>
+								</ul>
+							</li>-->
+							<li><a href="#"><i class="fa fa-user"></i> My Account</a></li>
+							<li><a href="AddCustomer" class="lnk"><i class="fa fa-user-plus"></i> Add Customer</a></li>
+							<li class="active"><a href="Dashboard" class="lnk"><i class="fa fa-search"></i> Search Customer</a></li>
+							<li><a href="#" id="logout"><i class="fa fa-sign-out"></i> Logout</a></li>					
+						</ul>
+					</nav>
+					<div id="content">
+						 <nav class="navbar navbar-expand-lg">
+							<div class="container-fluid">
+								<span id="sidebarCollapse" class="text-white">
+									<i class="fa fa-bars"></i> 
+								</span>
+							</div>
+						</nav>																
+					</div>
+					
+					<div class="getcontent">
+						
+					</div>
+				</div>
 			</div>
 		</div>
 	</body>
-	<script id="dashboard-tpl" type="text/x-handlebars-template">
-		<div class="wrapper">
-			<!-- Sidebar -->
-			<nav id="sidebar">
-				<div class="sidebar-header">
-					<img src="img/camera.png" class="img-responsive" alt="Profile Image"/>
+	<script id="dashboard-tpl" type="text/x-handlebars-template">			
+		<div class="container inner-container mt-5">
+			<div class="row">
+				<div class="col-md-1 d-none d-md-block">
 				</div>
-				<ul class="list-unstyled components">
-					<p>Welcome Guest</p><hr/>
-					<!--<li class="active">
-						<a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Home</a>
-						<ul class="collapse list-unstyled" id="homeSubmenu">
-							<li>
-								<a href="#">Home 1</a>
-							</li>
-							<li>
-								<a href="#">Home 2</a>
-							</li>
-							<li>
-								<a href="#">Home 3</a>
-							</li>
-						</ul>
-					</li>-->
-					<li><a href="#"><i class="fa fa-user"></i> My Account</a></li>
-					<li><a href="#"><i class="fa fa-user-plus"></i> Add Customer</a></li>
-					<li class="active"><a href="#"><i class="fa fa-search"></i> Search Customer</a></li>
-					<li><a href="#" id="logout"><i class="fa fa-sign-out"></i> Logout</a></li>					
-				</ul>
-			</nav>
-			<div id="content">
-				 <nav class="navbar navbar-expand-lg ">
-					<div class="container-fluid">
-						<span id="sidebarCollapse" class="text-white">
-							<i class="fa fa-bars"></i>
-						</span>
-					</div>
-				</nav>																
-			</div>	
-			<div class="container h-100 inner-container">
-				<div class="h-100 row align-items-center">
-					<div class="col-md-1 d-none d-md-block">
-					</div>
-					<div class="col-md-10 col-sm-12 mx-auto">							
-						<div class="details">
-							<h3 class="text-center text-white">SIGN IN</h3><br/>
-							<form action="#" class="text-white">								
-								<div class="form-group">
-									<label for="mobile">Enter OTP: *</label>
-									<input type="text" class="form-control" required id="otp">
-									<input type="hidden" name="cumobile" id="cumobile">
-								</div>									
-								<div class="form-group text-center">
-									<a id="" href="Home" class="btn form-btn pt-3 lnk">Home</a>
-									<button type="submit" class="btn form-btn lgnotp">Submit</button>
-								</div>
-							</form>	
+				<div class="col-md-10 col-sm-12 mx-auto">
+					<form action="#" class="text-white">								
+						<div class="form-group has-search">
+							 <span class="fa fa-search form-control-feedback"></span>
+							<input class='form-control search-key w-70' placeholder="Search Customer" type="search"/>
+						</div>
+					</form>	
+					<hr/>
+					<div class="details">
+						<div class="scroll">
+							<div class="text-center mt-5" id="loader">
+								<img src="img/ajax-loader.gif" alt="" class="img-responsive"/>
+							</div>
+							<ul class='customer-list'>
+								
+							</ul>
 						</div>
 					</div>
-					<div class="col-md-1">
-					</div>
 				</div>
+				<div class="col-md-1">
+				</div>
+			</div>
+		</div>		
+	</script>
+	<script id="addcustomer-tpl" type="text/x-handlebars-template">
+		<div class="container inner-container mt-5">
+			<div class="h-100 row align-items-center">
+				<div class="col-md-1 d-none d-md-block">
+				</div>
+				<div class="col-md-10 col-sm-12 mx-auto">						
+					<h3 class="text-center text-white">Add Customer</h3><br/>					
+					<form action="#" class="text-white" name="cusreg" id="cusreg">
+						<div class="form-group">
+							<input type="text" class="form-control" required placeholder="Customer Name *" name="cname" id="cname">
+						</div>						
+						<div class="form-group">
+							<input type="tel" class="form-control" required placeholder="Mobile Number *" name="mobile" id="mobile">
+						</div>						
+						<div class="form-group">
+							<input type="email" class="form-control" placeholder="Email address *" required name="email" id="email">
+						</div>	
+						<div class="form-group">
+							<input type="text" class="form-control" required placeholder="Address *" name="addr" id="addr">
+						</div>
+						<div class="form-group">
+							<input type="text" class="form-control" placeholder="City" name="city" id="city">
+						</div>
+						<div class="form-group">
+							<input type="text" class="form-control" placeholder="State" name="state" id="state">
+						</div>
+						<div class="form-group">
+							<input type="text" class="form-control" placeholder="Country" name="country" id="country">
+						</div>
+						<div class="form-group">
+							<input type="tel" class="form-control" placeholder="Pincode" name="pincode" id="pincode">
+							<input type="hidden" class="form-control" name="compid" id="compid">
+						</div>
+						<div class="form-group text-center">
+						<a id="" href="Dashboard" class="btn form-btn pt-3 lnk">Cancel</a>
+						<button type="submit" class="btn form-btn" name="insert" id="insert" >Submit</button>
+						</div>
+					</form>	
+				</div>
+				<div class="col-md-1"></div>
 			</div>
 		</div>
 	</script>
-	
-	<script id="employee-tpl" type="text/x-handlebars-template">
+	<script id="customer-tpl" type="text/x-handlebars-template">
 		<div class='header'><a href='#' class="button header-button header-button-left">Back</a><h1>Details</h1></div>
 		<div class='details'>
-		<img id='image' src='img/{{firstName}}_{{lastName}}.jpg' style="float:left;margin:10px;"/>
+		<!--<img id='image' src='img/{{firstName}}_{{lastName}}.jpg' style="float:left;margin:10px;"/>-->
 		<h1>{{firstName}} {{lastName}}</h1>
 		<h2>{{title}}</h2>
-		<span class="location"></span>
 		<ul>
 		<li><a href="tel:{{officePhone}}">Call Office<br/>{{officePhone}}</a></li>
 		<li><a href="tel:{{cellPhone}}">Call Cell<br/>{{cellPhone}}</a></li>
-		<li><a href="sms:{{cellPhone}}">SMS<br/>{{cellPhone}}</a></li>
-		<li><a href="#" class="add-location-btn">Add Location</a></li>
-		<li><a href="#" class="add-contact-btn">Add to Contacts</a></li>
-		<li><a href="#" class="change-pic-btn">Change Picture</a></li>
+		<li><a href="sms:{{cellPhone}}">SMS<br/>{{cellPhone}}</a></li>		
 		</ul>
 		</div>
 	</script>
@@ -103,9 +148,9 @@
 	<script src="js/popper.min.js"></script>
 	<script src="js/bootstrap.min.js"></script>	
 	<script src="lib/handlebars.js"></script>
-	<script src="js/dashboard.js"></script> 
-	 <script src="js/jquery-ui.js"></script>
-	 <script src="js/jquery.mCustomScrollbar.concat.min.js"></script>	
+	<script src="js/jquery-ui.js"></script>
+	<script src="js/jquery.mCustomScrollbar.concat.min.js"></script>	
+	<script src="js/dashboard.js"></script>
 	<script type="text/javascript">
 		window.onload = function()
 		{
@@ -115,14 +160,65 @@
 				window.location.href="index.html";
 			}
 		}
+		function getlist()
+		{
+			var id=window.localStorage.getItem('lgnid');
+			$('.getcontent .customer-list').html('');
+			$.ajax({
+				type: "POST",
+				url:"http://www.azillesoft.com/phonegap/database/cusjson.php",
+				data : 'u='+id, // post data || get data
+				dataType : 'json', // data type
+				crossDomain: true,
+				cache: false,
+				beforeSend: function(){ $('.getcontent #loader').show();},
+				success: function(result){
+					if(result.length > 0) 
+					{		
+						$('.getcontent #loader').hide();
+						$.each(result, function(i, field){
+							 var id=field.id;
+							 var name=field.name;
+							$('.getcontent .customer-list').append('<li><a href="fulldet.html?id='+id+'">'+name+'</a></li>');
+						});	
+					}					
+				}
+			});
+		}
+		function getmydet()
+		{
+			var uid=window.localStorage.getItem('uid');
+			$.ajax({
+				type: "POST",
+				url:"http://www.azillesoft.com/phonegap/database/json.php",
+				data : 'u='+uid, // post data || get data
+				dataType : 'json', // data type
+				crossDomain: true,
+				cache: false,
+				success: function(result){
+					if( result.length > 0) 
+					{
+						$.each(result, function(i, field){
+							 var id=field.id;
+							 var title=field.company_name;
+							 var name=field.name;
+							 var mobile=field.phonenumber;
+							 var img=field.profilepic;
+							 if(img != '')
+							 {
+								$('#uimg').attr('src','http://www.azillesoft.com/phonegap/database/upload/'+img);
+							}
+							
+							$('#uname').text('Welcome '+name);
+						});	
+					}					
+				}
+			});
+		}
 		$(function()
 		{
-			var dashboardTpl = Handlebars.compile($("#dashboard-tpl").html());
-			var options = {direction:'right'};
-			$('.maincontent').html('');
-			$( ".maincontent" ).effect( 'slide', options, 300, function(){
-				$('.maincontent').html(dashboardTpl);
-			});
+			getmydet();
+			getlist();
 			
 			$('.maincontent').on('click', '#sidebarCollapse',function () {
 				$('#sidebar').toggleClass('active');
@@ -130,22 +226,108 @@
 			$('.maincontent').on('click', '#logout',function () {
 				localStorage.clear();
 				window.location.href="index.html";
-			});	
+			});
+			
 			// open the corresponding page
 			$('body').on('click','.lnk',function(e){
 				e.preventDefault();
+				$('li').removeClass('active');
+				$(this).parent().addClass('active');
 				// Most effect types need no options passed by default
 				
-				var l=$(this).attr('href').toLowerCase();				
+				var l=$(this).attr('href').toLowerCase();	
+				
+				if(l == 'dashboard')
+					window.localStorage.setItem('firstpage',1);
+				else
+					window.localStorage.setItem('firstpage',0);
+					
 				var template = Handlebars.compile($("#"+l+"-tpl").html());
 				var options = {direction:'right'};
-				$('.maincontent').html('');
-				$( ".maincontent" ).effect( 'slide', options, 300, function(){
-					$('.maincontent').html(template);
-				});
-				
+				$('.getcontent').html('');
+				$( ".getcontent" ).effect( 'slide', options, 300, function(){
+					
+					$('.getcontent').html(template);
+					$('#sidebar').removeClass('active');
+					if(l=='dashboard')
+					{
+						getlist();
+					}
+				});				
 			});
 			
+			// Check mobile number already registered or not
+			$("body").on('blur','#mobile',function(e){
+				var v=$(this).val();
+				var id=window.localStorage.getItem('lgnid');
+				if(v.length > 0)
+				{
+					$.ajax({
+						type: "POST",
+						url:"http://www.azillesoft.com/phonegap/database/checkcusmobile.php",
+						data : 'm='+v+'&id='+id, // post data || get data
+						crossDomain: true,
+						cache: false,
+						success: function(data){
+							if(data == "exists")
+							{
+								alert("Mobile number already registered.");
+								$("#mobile").val('').focus();															
+							}						
+						}
+					});
+				}
+			});	
+			// insert data to server
+			$("body").on('click','#insert',function(e){
+				e.preventDefault();	
+				$('#compid').val(window.localStorage.getItem('lgnid'));
+				var cname=$("#cname").val();
+				var addr=$("#addr").val();
+				var mobile=$("#mobile").val();
+				var email=$("#email").val();
+				if($.trim(cname).length > 0 && $.trim(addr).length > 0 && $.trim(mobile).length > 0 && $.trim(email).length > 0)
+				{				
+					 atpos = email.indexOf("@");
+					 dotpos = email.lastIndexOf(".");				 
+					 if (atpos < 1 || ( dotpos - atpos < 2 )) {
+						alert("Please enter correct email ID")
+						$("#email").focus() ;
+						return false;
+					 }
+					 if(isNaN( mobile ) ||$.trim(mobile).length != 10 ) {					
+						alert( "Please provide a valid mobile number." );
+						$("#mobile").focus() ;
+						return false;
+					 }				
+				
+					$.ajax({
+						type: "POST",
+						url:"http://www.azillesoft.com/phonegap/database/insertcustomer.php",
+						data : $("#cusreg").serialize(), // post data || get data
+						crossDomain: true,
+						cache: false,
+						beforeSend: function(){ $("#insert").text('Connecting...');},
+						success: function(data){
+							if(data=="success")
+							{
+								alert("inserted");
+								$("#insert").text('Submit');
+								$("#cusreg")[0].reset();
+							}
+							else if(data=="error")
+							{
+								alert("error");	
+							}
+						}
+					});
+				}
+				else 
+				{				
+					alert("Enter all the required fields");
+				}
+				return false;
+			});				
 		});
 	</script>
 </html>

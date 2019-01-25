@@ -154,6 +154,15 @@
 	<script src="js/main.js"></script> 
 	<script src="js/jquery-ui.js"></script>
 	<script type="text/javascript">
+		// If logged in then move to dashboard
+		window.onload = function()
+		{
+			var lgn=window.localStorage.getItem('loginstatus');
+			if(lgn == 'true')
+			{
+				window.location.href="dashboard.html";
+			}
+		}
 		// Change image source and upload photo to server
 		function onSuccess(imageURI) {
 			// Set image source
@@ -192,33 +201,42 @@
 			// Most effect types need no options passed by default
 			
 			var l=$(this).attr('href').toLowerCase();
-			if($('#imgname').val())
-			{		
-				var v = $('#imgname').val();
-				if(v.length > 0)
-				{
-					$.ajax({
-						type: "POST",
-						url:"http://www.azillesoft.com/phonegap/database/checkuimg.php",
-						data : 'm='+v, // post data || get data
-						crossDomain: true,
-						cache: false,
-						success: function(data){
-							if(data == 0)
-							{
-								$('#profimg').attr('src','img/camera.png');
+			if(l != '#' && l != '')
+			{
+				if($('#imgname').val())
+				{		
+					var v = $('#imgname').val();
+					if(v.length > 0)
+					{
+						$.ajax({
+							type: "POST",
+							url:"http://www.azillesoft.com/phonegap/database/checkuimg.php",
+							data : 'm='+v, // post data || get data
+							crossDomain: true,
+							cache: false,
+							success: function(data){
+								if(data == 0)
+								{
+									$('#profimg').attr('src','img/camera.png');
+								}
+								//console.log(data);						
 							}
-							//console.log(data);						
-						}
-					});
+						});
+					}
 				}
+				var template = Handlebars.compile($("#"+l+"-tpl").html());
+				
+				if(l == 'welcome')
+					window.localStorage.setItem('firstpage',1);
+				else
+					window.localStorage.setItem('firstpage',0);
+			
+				var options = {direction:'right'};
+				$('.maincontent').html('');
+				$( ".maincontent" ).effect( 'slide', options, 300, function(){
+					$('.maincontent').html(template);
+				});
 			}
-			var template = Handlebars.compile($("#"+l+"-tpl").html());
-			var options = {direction:'right'};
-			$('.maincontent').html('');
-			$( ".maincontent" ).effect( 'slide', options, 300, function(){
-				$('.maincontent').html(template);
-			});
 			
 		});
 		
@@ -408,6 +426,8 @@
 						else
 						{
 							window.localStorage.setItem('loginstatus','true');
+							window.localStorage.setItem('lgnid',data);
+							window.localStorage.setItem('uid',m);
 							window.location.href="dashboard.html";
 						}						
 					}
