@@ -27,7 +27,7 @@ var app = {
 	
     initialize: function() {
 		var self = this;
-		this.bindEvents();
+		//this.bindEvents();
 		self.renderHome();		
     }
 };

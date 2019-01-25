@@ -35,7 +35,7 @@ var app = {
     },
     initialize: function() {
 		var self = this;
-		this.bindEvents();
+		//this.bindEvents();
 		this.welcomeTpl = Handlebars.compile($("#welcome-tpl").html());
         this.homeTpl = Handlebars.compile($("#home-tpl").html());
 		self.renderHome();
