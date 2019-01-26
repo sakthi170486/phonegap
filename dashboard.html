@@ -528,7 +528,7 @@
 					 }
 					if( amobile != '' && $.trim(amobile).length != 10 ) {					
 						alert( "Please provide a valid alternate number." );
-						$("#ealtmobile").focus() ;
+						$("#altmobile").focus() ;
 						return false;
 					 }		
 				
@@ -545,8 +545,13 @@
 							{
 								alert("updated");
 								$("#update").text('Update');
-								var myaccTpl = Handlebars.compile($("#myaccount-tpl").html());	
-								$('.getcontent').html(myaccTpl);
+								getlist();
+								$('#eprofile').addClass('d-none');
+								$('#vprofile').removeClass('d-none');
+								$('#ptitle').text('My Profile');
+								$('#pedit').show();
+								/*var myaccTpl = Handlebars.compile($("#myaccount-tpl").html());	
+								$('.getcontent').html(myaccTpl);*/
 								
 							}
 							else if(data=="error")
