@@ -9981,7 +9981,7 @@ a.text-dark:hover, a.text-dark:focus {
 }
 #content{z-index: 1030;}
 #sidebar.active {
-    margin-left: -205px;
+    margin-left: -195px;
 }
 a[data-toggle="collapse"] {
     position: relative;
@@ -10121,7 +10121,7 @@ font-size: 30px;}
 
 @media (max-width: 768px) {
     #sidebar {
-        margin-left: -205px;
+        margin-left: -195px;
     }
     #sidebar.active {
 		margin-left: -5px;
