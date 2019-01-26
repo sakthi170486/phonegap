@@ -1,7 +1,7 @@
 var app = {
 	renderHome: function() {
-		var dashboardTpl = Handlebars.compile($("#dashboard-tpl").html());
-		$('.getcontent').html(dashboardTpl);
+		var myaccountTpl = Handlebars.compile($("#myaccount-tpl").html());
+		$('.getcontent').html(myaccountTpl);
     },	
     // Bind Event Listeners
     //

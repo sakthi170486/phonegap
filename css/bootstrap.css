@@ -9977,9 +9977,9 @@ a.text-dark:hover, a.text-dark:focus {
 	background: #7386D5;
     color: #fff;
     transition: all 0.3s;
-	z-index: 9999;	
+	z-index: 1030;	
 }
-#content{z-index: 9999;}
+#content{z-index: 1030;}
 #sidebar.active {
     margin-left: -205px;
 }
@@ -10111,7 +10111,12 @@ ul ul a {
 .customer-list li>a * {
     pointer-events: none;
 }
-
+#pedit,#cpswd{margin-bottom:20px;color:#151415;}
+#epic{    position: absolute;
+    right: 10px;
+    top: 72px;
+	color:#fff;
+font-size: 30px;}
 
 
 @media (max-width: 768px) {

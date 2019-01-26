@@ -33,9 +33,9 @@
 									</li>
 								</ul>
 							</li>-->
-							<li><a href="#"><i class="fa fa-user"></i> My Account</a></li>
+							<li class="active"><a href="MyAccount" class="lnk"><i class="fa fa-user"></i> My Account</a></li>
 							<li><a href="AddCustomer" class="lnk"><i class="fa fa-user-plus"></i> Add Customer</a></li>
-							<li class="active"><a href="Dashboard" class="lnk"><i class="fa fa-search"></i> Search Customer</a></li>
+							<li><a href="Dashboard" class="lnk"><i class="fa fa-search"></i> Search Customer</a></li>
 							<li><a href="#" id="logout"><i class="fa fa-sign-out"></i> Logout</a></li>					
 						</ul>
 					</nav>
@@ -51,6 +51,21 @@
 					
 					<div class="getcontent">
 						
+					</div>
+					<div id="photo" class="modal fade" role="dialog">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header">
+									<p class="modal-title text-center w-100 font-weight-bold">Upload Photo</p>
+									<span class="close" data-dismiss="modal">&times;</span>									
+								</div>
+								<div class="modal-body text-center">
+									<button id='but_take' class="btn btn-outline-primary">Take photo</button><br/>
+									<button id='but_select' class="btn btn-outline-info mt-1">Select photo from Gallery</button>
+									
+								</div>
+							</div>
+						</div>	
 					</div>
 				</div>
 			</div>
@@ -128,6 +143,57 @@
 			</div>
 		</div>
 	</script>
+	<script id="myaccount-tpl" type="text/x-handlebars-template">
+		<div class="container inner-container mt-5">
+			<div class="h-100 row align-items-center">
+				<div class="col-md-1 d-none d-md-block">
+				</div>
+				<div class="col-md-10 col-sm-12 mx-auto text-white">	
+					<h3 class="text-center text-white" id="ptitle" >My Profile</h3><hr/>
+					<a href="" class="float-right font-weight-bold" id="pedit">Profile Edit <i class="fa fa-edit"></i></a>
+					<div class="clearfix"></div>
+					<div class="d-none" id="eprofile">					
+						<form action="#" class="text-white" name="reg" id="reg">
+							<div class="form-group">
+								<input type="text" class="form-control" required placeholder="Company Name *" name="ecname" id="ecname">
+							</div>
+							<div class="form-group">
+								<input type="text" class="form-control" required placeholder="Your Name *" name="ename" id="ename">
+							</div>
+							<div class="form-group">
+								<input type="tel" class="form-control" required placeholder="Mobile Number *" name="emobile" id="emobile">
+							</div>
+							<div class="form-group">
+								<input type="tel" class="form-control" placeholder="Alternative Number" name="altmobile" id="altmobile">
+							</div>
+							<div class="form-group">
+								<input type="email" class="form-control" placeholder="Email address *" required name="eemail" id="eemail">
+								<input type="hidden" class="form-control" name="imgname" id="imgname">
+								<input type="hidden" class="form-control" name="eid" id="eid">
+							</div>	
+							<div class="form-group text-center">
+								<a id="" href="" class="btn form-btn pt-3 cncl">Cancel</a>
+								<button type="submit" class="btn form-btn reg" name="update" id="update" >Update</button>
+							</div>
+						</form>	
+					</div>
+					<div class="row" id="vprofile">					
+						<div class='col-4 col-md-4 col-sm-4'>
+							<img src="img/camera.png" id="profimg" class="img-responsive" alt="Profile Image"/><a href="" title="change photo" id="epic" data-toggle="modal" data-target="#photo"><i class="fa fa-camera"></i></a>
+						</div>
+						<div class='col-8 col-md-8 col-sm-8'>
+							<p id="mcompname"></p>
+							<p id="mname"></p>
+							<p id="memail"></p>
+							<p id="mphone"></p>
+							<p id="maltnum"></p>
+						</div>
+					</div>					
+				</div>
+				<div class="col-md-1"></div>
+			</div>
+		</div>
+	</script>
 	<script id="customer-tpl" type="text/x-handlebars-template">
 		<div class='header'><a href='#' class="button header-button header-button-left">Back</a><h1>Details</h1></div>
 		<div class='details'>
@@ -160,6 +226,38 @@
 				window.location.href="index.html";
 			}
 		}
+		
+		// Change image source and upload photo to server
+		function onSuccess(imageURI) {
+			// Set image source
+			var image = document.getElementById('profimg');
+			image.src = imageURI  + '?' + Math.random();
+
+			var options = new FileUploadOptions();
+			options.fileKey = "file";
+			options.fileName = imageURI.substr(imageURI.lastIndexOf('/') + 1);
+			options.mimeType = "image/jpeg";
+
+			var params = {};
+			params.value1 = "test";
+			params.value2 = "param";
+
+			options.params = params;
+			options.chunkedMode = false;
+			var uid=window.localStorage.getItem('lgnid');
+			var ft = new FileTransfer();
+			ft.upload(imageURI, "http://www.azillesoft.com/phonegap/database/upload.php?a=u&id="+uid, function(result){
+				//alert('successfully uploaded ' + result.response);
+				$('#photo').modal('hide');				
+			}, function(error){
+				alert('error : ' + JSON.stringify(error));
+			}, options);
+		}
+		function onFail(message) {
+			alert('Failed because: ' + message);
+		}
+		
+		
 		function getlist()
 		{
 			var id=window.localStorage.getItem('lgnid');
@@ -199,15 +297,31 @@
 					if( result.length > 0) 
 					{
 						$.each(result, function(i, field){
-							 var id=field.id;
-							 var title=field.company_name;
-							 var name=field.name;
-							 var mobile=field.phonenumber;
-							 var img=field.profilepic;
-							 if(img != '')
-							 {
+							var id=field.id;
+							var cname=field.company_name;
+							var name=field.name;
+							var mobile=field.phonenumber;
+							var emailid=field.emailid;
+							var altnum=field.alternumber;
+							var img=field.profilepic;
+							if(img != '')
+							{
 								$('#uimg').attr('src','http://www.azillesoft.com/phonegap/database/upload/'+img);
+								$('#profimg').attr('src','http://www.azillesoft.com/phonegap/database/upload/'+img);
 							}
+							$('.getcontent #mcompname').text('Company Name : '+cname);
+							$('.getcontent #mname').text('Name : '+name);
+							$('.getcontent #memail').text('Email Id : '+emailid);
+							$('.getcontent #mphone').text('Contact Number : '+mobile);
+							$('.getcontent #maltnum').text('Alternate Number : '+altnum);
+							
+							$('.getcontent #ecname').val(cname);
+							$('.getcontent #ename').val(name);
+							$('.getcontent #eemail').val(emailid);
+							$('.getcontent #emobile').val(mobile);
+							$('.getcontent #altmobile').val(altnum);
+							$('.getcontent #imgname').val(img);
+							$('.getcontent #eid').val(id);
 							
 							$('#uname').text('Welcome '+name);
 						});	
@@ -220,6 +334,23 @@
 			getmydet();
 			getlist();
 			
+			// take picture from camera
+			$('body').on('click','#but_take',function(){
+				navigator.camera.getPicture(onSuccess, onFail, { quality: 20,
+					destinationType: Camera.DestinationType.FILE_URL 
+				});
+			});
+
+			// upload select 
+			$('body').on('click','#but_select',function(){
+				navigator.camera.getPicture(onSuccess, onFail, { quality: 50,
+					sourceType: Camera.PictureSourceType.PHOTOLIBRARY, 
+					allowEdit: true,
+					destinationType: Camera.DestinationType.FILE_URI
+				});
+			}); 
+			
+			
 			$('.maincontent').on('click', '#sidebarCollapse',function () {
 				$('#sidebar').toggleClass('active');
 			});	
@@ -227,6 +358,22 @@
 				localStorage.clear();
 				window.location.href="index.html";
 			});
+			
+			$('body').on('click','#pedit',function(e){
+				e.preventDefault();
+				$('#vprofile').addClass('d-none');
+				$('#eprofile').removeClass('d-none');
+				$('#ptitle').text('Edit Profile');
+				$(this).hide();
+			});
+			$('body').on('click','.cncl',function(e){
+				e.preventDefault();
+				$('#eprofile').addClass('d-none');
+				$('#vprofile').removeClass('d-none');
+				$('#ptitle').text('My Profile');
+				$('#pedit').show();
+			});
+			
 			
 			// open the corresponding page
 			$('body').on('click','.lnk',function(e){
@@ -253,9 +400,36 @@
 					{
 						getlist();
 					}
+					if(l=='myaccount')
+					{
+					getmydet();
+					}
 				});				
 			});
 			
+			
+			// Check mobile number already registered or not
+				$("body").on('blur','#emobile',function(e){
+					var v=$(this).val();
+					var id = window.localStorage.getItem('lgnid');
+					if(v.length > 0)
+					{
+						$.ajax({
+							type: "POST",
+							url:"http://www.azillesoft.com/phonegap/database/checkumobile.php",
+							data : 'm='+v+'&id='+id, // post data || get data
+							crossDomain: true,
+							cache: false,
+							success: function(data){
+								if(data == "exists")
+								{	
+									alert("Mobile number already registered.");
+									$("#emobile").val('').focus();															
+								}						
+							}
+						});
+					}
+				});
 			// Check mobile number already registered or not
 			$("body").on('blur','#mobile',function(e){
 				var v=$(this).val();
@@ -328,6 +502,72 @@
 				}
 				return false;
 			});				
+		
+			// update data to server
+			$("body").on('click','#update',function(e){
+				e.preventDefault();	
+				var cname=$("#ecname").val();
+				var name=$("#ename").val();
+				var mobile=$("#emobile").val();
+				var amobile=$("#ealtmobile").val();
+				var email=$("#eemail").val();			
+				var imgname=$("#imgname").val();
+				if($.trim(ecname).length > 0 && $.trim(ename).length > 0 && $.trim(emobile).length > 0 && $.trim(eemail).length > 0)
+				{				
+					 atpos = email.indexOf("@");
+					 dotpos = email.lastIndexOf(".");				 
+					 if (atpos < 1 || ( dotpos - atpos < 2 )) {
+						alert("Please enter correct email ID")
+						$("#eemail").focus() ;
+						return false;
+					 }
+					 if(isNaN( mobile ) ||$.trim(mobile).length != 10 ) {					
+						alert( "Please provide a valid mobile number." );
+						$("#emobile").focus() ;
+						return false;
+					 }
+					if( amobile != '' && $.trim(amobile).length != 10 ) {					
+						alert( "Please provide a valid alternate number." );
+						$("#ealtmobile").focus() ;
+						return false;
+					 }		
+				
+					$.ajax({
+						type: "POST",
+						url:"http://www.azillesoft.com/phonegap/database/update.php",
+						//dataType : 'json', // data type
+						data : $("#reg").serialize(), // post data || get data
+						crossDomain: true,
+						cache: false,
+						beforeSend: function(){ $("#update").text('Connecting...');},
+						success: function(data){
+							if(data=="success")
+							{
+								alert("updated");
+								$("#update").text('Update');
+								var myaccTpl = Handlebars.compile($("#myaccount-tpl").html());	
+								$('.getcontent').html(myaccTpl);
+								
+							}
+							else if(data=="error")
+							{	
+								alert("error");	
+								$('#eprofile').addClass('d-none');
+								$('#vprofile').removeClass('d-none');
+								$('#ptitle').text('My Profile');
+								$('#pedit').show();
+								//$("#reg")[0].reset();
+							}
+						}
+					});
+				}
+				else 
+				{					
+					alert("Enter all the required fields");
+					//$("#reg")[0].reset();
+				}
+				return false;
+			});
 		});
 	</script>
 </html>
