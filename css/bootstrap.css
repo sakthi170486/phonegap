@@ -10111,7 +10111,16 @@ ul ul a {
 .customer-list li>a * {
     pointer-events: none;
 }
-#pedit,#cpswd,#cusedit{margin-bottom:20px;color:#151415;}
+#pedit,#cpswd{margin-bottom:20px;color:#151415;}
+#cusedit{    margin-right: 10px;
+    text-align: right;
+    margin-bottom: 10px;
+    color: #151415;
+    right: 0;
+    position: absolute;}
+#cusbck{
+    margin-left: 10px;
+text-align: left;margin-bottom:10px;color:#151415;}
 #epic{    position: absolute;
     right: 10px;
     top: 72px;

@@ -149,7 +149,7 @@
 				</div>
 				<div class="col-md-10 col-sm-12 mx-auto text-white">	
 					<h3 class="text-center text-white" id="ptitle" >My Profile</h3><hr/>
-					<a href="" class="float-right font-weight-bold" id="pedit">Profile Edit <i class="fa fa-edit"></i></a>
+					<a href="" class="float-right" id="pedit">Profile Edit <i class="fa fa-edit"></i></a>
 					
 					<div class="clearfix"></div>
 					<div class="d-none" id="eprofile">					
@@ -201,7 +201,6 @@
 				</div>
 				<div class="col-md-10 col-sm-12 mx-auto text-white">	
 					<h3 class="text-center text-white" id="cptitle" >Customer Profile</h3><hr/>
-					<a href="" class="float-right font-weight-bold" id="cusedit">Profile Edit <i class="fa fa-edit"></i></a>
 					<div class="clearfix"></div>
 					<div class="d-none" id="ecusprofile">					
 						<form action="#" class="text-white" name="ecusreg" id="ecusreg">
@@ -237,6 +236,8 @@
 					</form>	
 					</div>
 					<div class="row" id="vcusprofile">
+						<a href="" class="float-right" id="cusedit">Profile Edit <i class="fa fa-edit"></i></a>
+						<a href="Dashboard" class="lnk" id="cusbck"><i class="fa fa-arrow-left"></i> Back </a>
 						<div class='col-12 col-md-12 col-sm-12'>
 							<p id="vcusname"></p>
 							<p id="vcusemail"></p>
@@ -425,6 +426,45 @@
 			});
 		}
 		
+		$.fn.serializeObject = function()
+		{
+			var o = {};
+			var a = this.serializeArray();
+			$.each(a, function() {
+				if (o[this.name] !== undefined) {
+					if (!o[this.name].push) {
+						o[this.name] = [o[this.name]];
+					}
+					o[this.name].push(this.value || '');
+				} else {
+					o[this.name] = this.value || '';
+				}
+			});
+			return o;
+		};	
+		
+		function SaveDataToLocalStorage(data)
+		{		
+			var a = [];
+			// Parse the serialized data back into an aray of objects
+			if(localStorage.getItem('cusdet') !== null)
+			{
+				a = [JSON.parse(localStorage.getItem('cusdet'))];
+			}
+			// Push the new data (whether it be an object or anything else) onto the array
+			if(a == null || a.length === 0)
+			{
+				a = JSON.parse(data);
+			}
+			else
+			{				
+				a.push(data);
+			}			
+			// Re-serialize the array back into a string and store it in localStorage
+			localStorage.setItem('cusdet', JSON.stringify(a));
+			
+		}
+		
 		$(function()
 		{
 			getmydet();
@@ -445,7 +485,6 @@
 					destinationType: Camera.DestinationType.FILE_URI
 				});
 			}); 
-			
 			
 			$('.maincontent').on('click', '#sidebarCollapse',function () {
 				$('#sidebar').toggleClass('active');
@@ -490,7 +529,6 @@
 				$('#vcusprofile').addClass('d-none');
 				$('#ecusprofile').removeClass('d-none');
 				$('#cptitle').text('Edit Customer Profile');
-				$(this).hide();
 			});
 			
 			$('body').on('click','.ecncl',function(e){
@@ -498,9 +536,7 @@
 				$('#ecusprofile').addClass('d-none');
 				$('#vcusprofile').removeClass('d-none');
 				$('#cptitle').text('Customer Profile');
-				$('#cusedit').show();
 			});
-			
 			
 			// open the corresponding page
 			$('body').on('click','.lnk',function(e){
@@ -533,7 +569,6 @@
 					}
 				});				
 			});
-			
 			
 			// Check my mobile number already registered or not
 			$("body").on('blur','#emobile',function(e){
@@ -582,6 +617,9 @@
 				}
 			});	
 			
+			
+			
+			
 			// insert customer data to server
 			$("body").on('click','#insert',function(e){
 				e.preventDefault();	
@@ -591,7 +629,7 @@
 				var mobile=$("#mobile").val();
 				var email=$("#email").val();
 				if($.trim(cname).length > 0 && $.trim(addr).length > 0 && $.trim(mobile).length > 0 && $.trim(email).length > 0)
-				{				
+				{
 					 atpos = email.indexOf("@");
 					 dotpos = email.lastIndexOf(".");				 
 					 if (atpos < 1 || ( dotpos - atpos < 2 )) {
@@ -605,6 +643,32 @@
 						return false;
 					 }				
 				
+					
+						
+					/*var data = (JSON.stringify($('#cusreg').serializeObject()));					
+					
+					SaveDataToLocalStorage(data);
+					var employees = localStorage.getItem('cusdet');
+					
+					$.ajax({
+						type: "POST",
+						url:"database/getcustomer.php",
+						data : 'd='+employees, // post data || get data						
+						success: function(data){
+							if(data=="success")
+							{
+								alert("inserted");
+								$("#insert").text('Submit');
+								$("#cusreg")[0].reset();
+							}
+							else if(data=="error")
+							{
+								alert("error");	
+							}
+						}
+					});*/
+					
+					
 					$.ajax({
 						type: "POST",
 						url:"http://www.azillesoft.com/phonegap/database/insertcustomer.php",

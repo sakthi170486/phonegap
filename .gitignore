@@ -59,3 +59,4 @@ database/cusjson.php
 database/update.php
 database/cusdetails.php
 database/updatecustomer.php
+database/getcustomer.php
