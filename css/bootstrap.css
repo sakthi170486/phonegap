@@ -10111,7 +10111,7 @@ ul ul a {
 .customer-list li>a * {
     pointer-events: none;
 }
-#pedit,#cpswd{margin-bottom:20px;color:#151415;}
+#pedit,#cpswd,#cusedit{margin-bottom:20px;color:#151415;}
 #epic{    position: absolute;
     right: 10px;
     top: 72px;

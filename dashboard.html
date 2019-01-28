@@ -61,8 +61,7 @@
 								</div>
 								<div class="modal-body text-center">
 									<button id='but_take' class="btn btn-outline-primary">Take photo</button><br/>
-									<button id='but_select' class="btn btn-outline-info mt-1">Select photo from Gallery</button>
-									
+									<button id='but_select' class="btn btn-outline-info mt-1">Select photo from Gallery</button>									
 								</div>
 							</div>
 						</div>	
@@ -80,7 +79,7 @@
 					<form action="#" class="text-white">								
 						<div class="form-group has-search">
 							 <span class="fa fa-search form-control-feedback"></span>
-							<input class='form-control search-key w-70' placeholder="Search Customer" type="search"/>
+							<input class='form-control search-key w-70' placeholder="Search Customer" id="srchcus" type="search"/>
 						</div>
 					</form>	
 					<hr/>
@@ -151,6 +150,7 @@
 				<div class="col-md-10 col-sm-12 mx-auto text-white">	
 					<h3 class="text-center text-white" id="ptitle" >My Profile</h3><hr/>
 					<a href="" class="float-right font-weight-bold" id="pedit">Profile Edit <i class="fa fa-edit"></i></a>
+					
 					<div class="clearfix"></div>
 					<div class="d-none" id="eprofile">					
 						<form action="#" class="text-white" name="reg" id="reg">
@@ -195,18 +195,65 @@
 		</div>
 	</script>
 	<script id="customer-tpl" type="text/x-handlebars-template">
-		<div class='header'><a href='#' class="button header-button header-button-left">Back</a><h1>Details</h1></div>
-		<div class='details'>
-		<!--<img id='image' src='img/{{firstName}}_{{lastName}}.jpg' style="float:left;margin:10px;"/>-->
-		<h1>{{firstName}} {{lastName}}</h1>
-		<h2>{{title}}</h2>
-		<ul>
-		<li><a href="tel:{{officePhone}}">Call Office<br/>{{officePhone}}</a></li>
-		<li><a href="tel:{{cellPhone}}">Call Cell<br/>{{cellPhone}}</a></li>
-		<li><a href="sms:{{cellPhone}}">SMS<br/>{{cellPhone}}</a></li>		
-		</ul>
+		<div class="container inner-container mt-5">
+			<div class="h-100 row align-items-center">
+				<div class="col-md-1 d-none d-md-block">
+				</div>
+				<div class="col-md-10 col-sm-12 mx-auto text-white">	
+					<h3 class="text-center text-white" id="cptitle" >Customer Profile</h3><hr/>
+					<a href="" class="float-right font-weight-bold" id="cusedit">Profile Edit <i class="fa fa-edit"></i></a>
+					<div class="clearfix"></div>
+					<div class="d-none" id="ecusprofile">					
+						<form action="#" class="text-white" name="ecusreg" id="ecusreg">
+						<div class="form-group">
+							<input type="text" class="form-control" required placeholder="Customer Name *" name="ecusname" id="ecusname">
+						</div>						
+						<div class="form-group">
+							<input type="tel" class="form-control" required placeholder="Mobile Number *" name="mobile" id="mobile">
+						</div>						
+						<div class="form-group">
+							<input type="email" class="form-control" placeholder="Email address *" required name="email" id="email">
+						</div>	
+						<div class="form-group">
+							<input type="text" class="form-control" required placeholder="Address *" name="ecusaddr" id="ecusaddr">
+						</div>
+						<div class="form-group">
+							<input type="text" class="form-control" placeholder="City" name="ecuscity" id="ecuscity">
+						</div>
+						<div class="form-group">
+							<input type="text" class="form-control" placeholder="State" name="ecusstate" id="ecusstate">
+						</div>
+						<div class="form-group">
+							<input type="text" class="form-control" placeholder="Country" name="ecuscountry" id="ecuscountry">
+						</div>
+						<div class="form-group">
+							<input type="tel" class="form-control" placeholder="Pincode" name="ecuspincode" id="ecuspincode">
+							<input type="hidden" class="form-control" name="ecusid" id="ecusid">
+						</div>
+						<div class="form-group text-center">
+						<a id="" href="" class="btn form-btn pt-3 ecncl">Cancel</a>
+						<button type="submit" class="btn form-btn" name="cusupdate" id="cusupdate" >Update</button>
+						</div>
+					</form>	
+					</div>
+					<div class="row" id="vcusprofile">
+						<div class='col-12 col-md-12 col-sm-12'>
+							<p id="vcusname"></p>
+							<p id="vcusemail"></p>
+							<p id="vcusphone"></p>
+							<p id="vcusaddr"></p>
+							<p id="vcuscity"></p>
+							<p id="vcusstate"></p>
+							<p id="vcuscountry"></p>
+							<p id="vcuspincode"></p>
+						</div>
+					</div>					
+				</div>
+				<div class="col-md-1"></div>
+			</div>
 		</div>
 	</script>
+	
 	
 	<script src="phonegap.js"></script>
 	<script type="text/javascript" charset="utf-8" src="cordova.js"></script>
@@ -253,19 +300,19 @@
 				alert('error : ' + JSON.stringify(error));
 			}, options);
 		}
+		
 		function onFail(message) {
 			alert('Failed because: ' + message);
 		}
-		
-		
-		function getlist()
+				
+		function getlist(s = '')
 		{
 			var id=window.localStorage.getItem('lgnid');
 			$('.getcontent .customer-list').html('');
 			$.ajax({
 				type: "POST",
 				url:"http://www.azillesoft.com/phonegap/database/cusjson.php",
-				data : 'u='+id, // post data || get data
+				data : 'u='+id+'&c='+s, // post data || get data
 				dataType : 'json', // data type
 				crossDomain: true,
 				cache: false,
@@ -277,12 +324,13 @@
 						$.each(result, function(i, field){
 							 var id=field.id;
 							 var name=field.name;
-							$('.getcontent .customer-list').append('<li><a href="fulldet.html?id='+id+'">'+name+'</a></li>');
+							$('.getcontent .customer-list').append('<li><a class="vcus" href="'+id+'">'+name+'</a></li>');
 						});	
 					}					
 				}
 			});
 		}
+		
 		function getmydet()
 		{
 			var uid=window.localStorage.getItem('uid');
@@ -329,6 +377,54 @@
 				}
 			});
 		}
+		
+		function getcusdet(id)
+		{
+			$.ajax({
+				type: "POST",
+				url:"http://www.azillesoft.com/phonegap/database/cusdetails.php",
+				data : 'u='+id, // post data || get data
+				dataType : 'json', // data type
+				crossDomain: true,
+				cache: false,
+				success: function(result){
+					if( result.length > 0) 
+					{
+						$.each(result, function(i, field){
+							var id=field.id;
+							var cname=field.name;
+							var addr=field.address;
+							var mobile=field.phonenumber;
+							var emailid=field.emailid;
+							var city=field.city;
+							var state=field.state;
+							var country=field.country;
+							var pincode=field.pincode;
+							
+							$('.getcontent #vcusname').text('Name : '+cname);
+							$('.getcontent #vcusemail').text('Email Id : '+emailid);
+							$('.getcontent #vcusphone').text('Contact Number : '+mobile);
+							$('.getcontent #vcusaddr').text('Address : '+addr);
+							$('.getcontent #vcuscity').text('City : '+city);
+							$('.getcontent #vcusstate').text('State : '+state);
+							$('.getcontent #vcuscountry').text('Country : '+country);
+							$('.getcontent #vcuspincode').text('Pincode : '+pincode);
+							
+							$('.getcontent #ecusname').val(cname);
+							$('.getcontent #email').val(emailid);
+							$('.getcontent #mobile').val(mobile);
+							$('.getcontent #ecusaddr').val(addr);
+							$('.getcontent #ecuscity').val(city);
+							$('.getcontent #ecusstate').val(state);
+							$('.getcontent #ecuscountry').val(country);
+							$('.getcontent #ecuspincode').val(pincode);
+							$('.getcontent #ecusid').val(id);
+						});	
+					}					
+				}
+			});
+		}
+		
 		$(function()
 		{
 			getmydet();
@@ -354,6 +450,7 @@
 			$('.maincontent').on('click', '#sidebarCollapse',function () {
 				$('#sidebar').toggleClass('active');
 			});	
+			
 			$('.maincontent').on('click', '#logout',function () {
 				localStorage.clear();
 				window.location.href="index.html";
@@ -366,12 +463,42 @@
 				$('#ptitle').text('Edit Profile');
 				$(this).hide();
 			});
+			
 			$('body').on('click','.cncl',function(e){
 				e.preventDefault();
 				$('#eprofile').addClass('d-none');
 				$('#vprofile').removeClass('d-none');
 				$('#ptitle').text('My Profile');
 				$('#pedit').show();
+			});
+			
+			$('body').on('click','.vcus',function(e){
+				e.preventDefault();
+				var id=$(this).attr('href');				
+				var template = Handlebars.compile($("#customer-tpl").html());
+				var options = {direction:'right'};
+				$('.getcontent').html('');
+				$( ".getcontent" ).effect( 'slide', options, 300, function(){					
+					$('.getcontent').html(template);
+					getcusdet(id);
+					$('#sidebar').removeClass('active');					
+				});
+			});
+			
+			$('body').on('click','#cusedit',function(e){
+				e.preventDefault();
+				$('#vcusprofile').addClass('d-none');
+				$('#ecusprofile').removeClass('d-none');
+				$('#cptitle').text('Edit Customer Profile');
+				$(this).hide();
+			});
+			
+			$('body').on('click','.ecncl',function(e){
+				e.preventDefault();
+				$('#ecusprofile').addClass('d-none');
+				$('#vcusprofile').removeClass('d-none');
+				$('#cptitle').text('Customer Profile');
+				$('#cusedit').show();
 			});
 			
 			
@@ -402,44 +529,46 @@
 					}
 					if(l=='myaccount')
 					{
-					getmydet();
+						getmydet();
 					}
 				});				
 			});
 			
 			
-			// Check mobile number already registered or not
-				$("body").on('blur','#emobile',function(e){
-					var v=$(this).val();
-					var id = window.localStorage.getItem('lgnid');
-					if(v.length > 0)
-					{
-						$.ajax({
-							type: "POST",
-							url:"http://www.azillesoft.com/phonegap/database/checkumobile.php",
-							data : 'm='+v+'&id='+id, // post data || get data
-							crossDomain: true,
-							cache: false,
-							success: function(data){
-								if(data == "exists")
-								{	
-									alert("Mobile number already registered.");
-									$("#emobile").val('').focus();															
-								}						
-							}
-						});
-					}
-				});
-			// Check mobile number already registered or not
+			// Check my mobile number already registered or not
+			$("body").on('blur','#emobile',function(e){
+				var v=$(this).val();
+				var id = window.localStorage.getItem('lgnid');
+				if(v.length > 0)
+				{
+					$.ajax({
+						type: "POST",
+						url:"http://www.azillesoft.com/phonegap/database/checkumobile.php",
+						data : 'm='+v+'&id='+id, // post data || get data
+						crossDomain: true,
+						cache: false,
+						success: function(data){
+							if(data == "exists")
+							{	
+								alert("Mobile number already registered.");
+								$("#emobile").val('').focus();															
+							}						
+						}
+					});
+				}
+			});
+			
+			// Check customer mobile number already registered or not
 			$("body").on('blur','#mobile',function(e){
 				var v=$(this).val();
 				var id=window.localStorage.getItem('lgnid');
+				var cid = $('#ecusid').val();
 				if(v.length > 0)
 				{
 					$.ajax({
 						type: "POST",
 						url:"http://www.azillesoft.com/phonegap/database/checkcusmobile.php",
-						data : 'm='+v+'&id='+id, // post data || get data
+						data : 'm='+v+'&id='+id+'&cid='+cid, // post data || get data
 						crossDomain: true,
 						cache: false,
 						success: function(data){
@@ -452,7 +581,8 @@
 					});
 				}
 			});	
-			// insert data to server
+			
+			// insert customer data to server
 			$("body").on('click','#insert',function(e){
 				e.preventDefault();	
 				$('#compid').val(window.localStorage.getItem('lgnid'));
@@ -503,7 +633,7 @@
 				return false;
 			});				
 		
-			// update data to server
+			// update my details to server
 			$("body").on('click','#update',function(e){
 				e.preventDefault();	
 				var cname=$("#ecname").val();
@@ -573,6 +703,77 @@
 				}
 				return false;
 			});
+			
+			
+			// update customer data to server
+			$("body").on('click','#cusupdate',function(e){
+				e.preventDefault();	
+				var cname=$("#ecusname").val();
+				var id=$("#ecusid").val();
+				var addr=$("#ecusaddr").val();
+				var mobile=$("#mobile").val();
+				var email=$("#email").val();
+				if($.trim(cname).length > 0 && $.trim(addr).length > 0 && $.trim(mobile).length > 0 && $.trim(email).length > 0)
+				{				
+					 atpos = email.indexOf("@");
+					 dotpos = email.lastIndexOf(".");				 
+					 if (atpos < 1 || ( dotpos - atpos < 2 )) {
+						alert("Please enter correct email ID")
+						$("#email").focus() ;
+						return false;
+					 }
+					 if(isNaN( mobile ) ||$.trim(mobile).length != 10 ) {					
+						alert( "Please provide a valid mobile number." );
+						$("#mobile").focus() ;
+						return false;
+					 }				
+				
+					$.ajax({
+						type: "POST",
+						url:"http://www.azillesoft.com/phonegap/database/updatecustomer.php",
+						data : $("#ecusreg").serialize(), // post data || get data
+						crossDomain: true,
+						cache: false,
+						beforeSend: function(){ $("#cusupdate").text('Connecting...');},
+						success: function(data){
+							if(data=="success")
+							{
+								alert("updated");
+								$("#cusupdate").text('Update');								
+								getcusdet(id);
+								$('#ecusprofile').addClass('d-none');
+								$('#vcusprofile').removeClass('d-none');
+								$('#cptitle').text('Customer Profile');
+								$('#cusedit').show();
+								
+								
+							}
+							else if(data=="error")
+							{	
+								alert("error");	
+								$("#cusupdate").text('Update');	
+								$('#ecusprofile').addClass('d-none');
+								$('#vcusprofile').removeClass('d-none');
+								$('#cptitle').text('Customer Profile');
+								$('#cusedit').show();
+								//$("#reg")[0].reset();
+							}
+						}
+					});
+				}
+				else 
+				{				
+					alert("Enter all the required fields");
+				}
+				return false;
+			});	
+		
+			// filter customer list
+			$('body').on('keyup','#srchcus',function(){
+				var c= $(this).val();				
+				getlist(c);
+			});
+		
 		});
 	</script>
 </html>

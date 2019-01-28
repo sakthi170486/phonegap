@@ -57,3 +57,5 @@ database/insertcustomer.php
 database/json.php
 database/cusjson.php
 database/update.php
+database/cusdetails.php
+database/updatecustomer.php
