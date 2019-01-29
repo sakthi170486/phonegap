@@ -8,7 +8,7 @@
 		<link rel="stylesheet" href="css/bootstrap.css">
 		<link rel="stylesheet" href="css/jquery.mCustomScrollbar.css">
 	</head>
-	<body>
+	<body onload="onLoad()">
 		<div class="inner-content">
 			<div class="maincontent bg-color">
 				<div class="wrapper">
@@ -283,6 +283,31 @@
 			}
 		}
 		
+		function onLoad() {
+			document.addEventListener("deviceready", onDeviceReady, false);
+		}
+
+		// PhoneGap is loaded and it is now safe to call PhoneGap methods
+		//
+		function onDeviceReady() {
+			// Register the event listener
+			document.addEventListener("backbutton", onBackKeyDown, false);
+		}
+
+		// Handle the back button
+		//
+		function onBackKeyDown() {
+			if(window.localStorage.getItem('firstpage') == 1)
+			{
+				navigator.app.exitApp();
+			}
+			else
+			{
+				history.go(-1);
+				navigator.app.backHistory();
+			}
+		}
+		
 		// Change image source and upload photo to server
 		function onSuccess(imageURI) {
 			// Set image source
@@ -447,6 +472,7 @@
 			});
 		}
 		
+		/*
 		$.fn.serializeObject = function()
 		{
 			var o = {};
@@ -462,8 +488,7 @@
 				}
 			});
 			return o;
-		};	
-		
+		};			
 		function SaveDataToLocalStorage(data)
 		{		
 			var a = [];
@@ -482,10 +507,9 @@
 				a.push(data);
 			}			
 			// Re-serialize the array back into a string and store it in localStorage
-			localStorage.setItem('cusdet', JSON.stringify(a));
-			
-		}
-		
+			localStorage.setItem('cusdet', JSON.stringify(a));			
+		}		
+		*/
 		
 		$(function()
 		{
@@ -518,6 +542,7 @@
 				window.location.href="index.html";
 			});
 			
+			//my profile edit page
 			$('body').on('click','#pedit',function(e){
 				e.preventDefault();
 				$('#vprofile').addClass('d-none');
@@ -526,6 +551,7 @@
 				$(this).hide();
 			});
 			
+			// back from my profile edit page
 			$('body').on('click','.cncl',function(e){
 				e.preventDefault();
 				$('#eprofile').addClass('d-none');
@@ -534,6 +560,7 @@
 				$('#pedit').show();
 			});
 			
+			// view customer details
 			$('body').on('click','.vcus',function(e){
 				e.preventDefault();
 				var id=$(this).attr('href');				
@@ -548,6 +575,7 @@
 				});
 			});
 			
+			// cutomer edit
 			$('body').on('click','#cusedit',function(e){
 				e.preventDefault();
 				$('#vcusprofile').addClass('d-none');
@@ -555,6 +583,7 @@
 				$('#cptitle').text('Edit Customer Profile');
 			});
 			
+			// back from customer profile edit page
 			$('body').on('click','.ecncl',function(e){
 				e.preventDefault();
 				$('#ecusprofile').addClass('d-none');
@@ -643,9 +672,6 @@
 					});
 				}
 			});	
-			
-			
-			
 			
 			// insert customer data to server
 			$("body").on('click','#insert',function(e){
@@ -867,7 +893,7 @@
 				getlist(c);
 				
 			});
-			
+			// bulk sync data to main table in server
 			$("body").on('click','#sync',function(e){
 				e.preventDefault();	
 				 var arr = $('.mrgcus:checked').map(function(){
@@ -910,6 +936,7 @@
 				
 			});
 		
+			// single data sync to main table in server
 			$("body").on('click','.mcus',function(e){
 				e.preventDefault();	
 				var arr =$(this).attr('href');	
@@ -931,6 +958,8 @@
 				});			
 				
 			});
+			
+			// Delete data from table
 			$("body").on('click','.dcus',function(e){
 				e.preventDefault();	
 				var arr =$(this).attr('href');	
