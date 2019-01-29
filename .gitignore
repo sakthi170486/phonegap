@@ -62,3 +62,4 @@ database/updatecustomer.php
 database/getcustomer.php
 database/delcus.php
 database/synctoserver.php
+dashboard.html.bak
