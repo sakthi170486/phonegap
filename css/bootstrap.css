@@ -10122,8 +10122,8 @@ ul ul a {
 .customer-list li>a * {
     pointer-events: none;
 }
-#pedit,#cpswd{margin-bottom:20px;color:#151415;}
-#cusedit{    margin-right: 10px;
+#cpswd{margin-bottom:20px;color:#151415;}
+#pedit,#cusedit{    margin-right: 10px;
     text-align: right;
     margin-bottom: 10px;
     color: #151415;
