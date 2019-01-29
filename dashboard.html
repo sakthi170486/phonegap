@@ -911,7 +911,7 @@
 					data : 'v='+arr, // post data || get data
 					crossDomain: true,
 					cache: false,
-					beforeSend: function(){ $('#sync').html('<img src="img/reload.gif" class="img-responsive"> Sync');},
+					beforeSend: function(){ $('#sync').html('<img src="img/reload.gif" class="img-responsive"> Syncing');},
 					success: function(data){
 						if(data=="success")
 						{
