@@ -384,11 +384,10 @@
 					crossDomain: true,
 					cache: false,
 					beforeSend: function(){
-						var options = { dimBackground: true };
-						SpinnerPlugin.activityStart("Loading...", options);
+						SpinnerDialog.show(null, "Processing");
 					},
 					success: function(data){
-						SpinnerPlugin.activityStop();
+						SpinnerDialog.hide();
 						if(data == 0)
 						{
 							alert("Mobile number not registered. Enter Registered mobile Number");							
@@ -423,11 +422,10 @@
 					crossDomain: true,
 					cache: false,
 					beforeSend: function(){
-						var options = { dimBackground: true };
-						SpinnerPlugin.activityStart("Loading...", options);
+						SpinnerDialog.show(null, "Processing");
 					},
 					success: function(data){
-						SpinnerPlugin.activityStop();
+						SpinnerDialog.hide();
 						if(data == 0)
 						{
 							alert("Incorrect OTP");							
