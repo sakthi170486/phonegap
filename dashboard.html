@@ -88,6 +88,7 @@
 							<div class="text-center mt-5" id="loader">
 								<img src="img/ajax-loader.gif" alt="" class="img-responsive"/>
 							</div>
+							<a href="" class="float-right text-right w-100" id="sync"><i class="fa fa-refresh"></i> Sync</a>							
 							<ul class='customer-list'>
 								
 							</ul>
@@ -131,6 +132,7 @@
 						<div class="form-group">
 							<input type="tel" class="form-control" placeholder="Pincode" name="pincode" id="pincode">
 							<input type="hidden" class="form-control" name="compid" id="compid">
+							<input type="hidden" class="form-control" name="ecusid" id="ecusid" value=''>
 						</div>
 						<div class="form-group text-center">
 						<a id="" href="Dashboard" class="btn form-btn pt-3 lnk">Cancel</a>
@@ -228,6 +230,7 @@
 						<div class="form-group">
 							<input type="tel" class="form-control" placeholder="Pincode" name="ecuspincode" id="ecuspincode">
 							<input type="hidden" class="form-control" name="ecusid" id="ecusid">
+							<input type="hidden" class="form-control" name="source" id="source">
 						</div>
 						<div class="form-group text-center">
 						<a id="" href="" class="btn form-btn pt-3 ecncl">Cancel</a>
@@ -307,7 +310,7 @@
 		}
 				
 		function getlist(s = '')
-		{
+		{			
 			var id=window.localStorage.getItem('lgnid');
 			$('.getcontent .customer-list').html('');
 			$.ajax({
@@ -323,13 +326,22 @@
 					{		
 						$('.getcontent #loader').hide();
 						$.each(result, function(i, field){
-							 var id=field.id;
-							 var name=field.name;
-							$('.getcontent .customer-list').append('<li><a class="vcus" href="'+id+'">'+name+'</a></li>');
+							var id=field.id;
+							var name=field.name;
+							var src=field.source;
+							if(src == 1)
+							{
+								$('.getcontent .customer-list').append('<li><a class="vcus" href="'+id+'" data-src="'+src+'">'+name+'</a><a class="text-right dcus" data-src="'+src+'" href="'+id+'"><i class="fa fa-trash"></i></a></li>');
+							}
+							else
+							{
+								$('.getcontent .customer-list').append('<li><input type="checkbox" name="mrgcus[]" class="mrgcus" value="'+id+'"> <a class="vcus" href="'+id+'" data-src="'+src+'">'+name+'</a> <a class="text-right mcus" href="'+id+'"><i class="fa fa-check"></i></a><a class="text-right dcus" href="'+id+'" data-src="'+src+'" title="delete"><i class="fa fa-trash"></i></a></li>');
+							}
 						});	
 					}					
 				}
 			});
+			
 		}
 		
 		function getmydet()
@@ -379,12 +391,12 @@
 			});
 		}
 		
-		function getcusdet(id)
+		function getcusdet(id , src)
 		{
 			$.ajax({
 				type: "POST",
 				url:"http://www.azillesoft.com/phonegap/database/cusdetails.php",
-				data : 'u='+id, // post data || get data
+				data : 'u='+id+'&s='+src, // post data || get data
 				dataType : 'json', // data type
 				crossDomain: true,
 				cache: false,
@@ -420,6 +432,7 @@
 							$('.getcontent #ecuscountry').val(country);
 							$('.getcontent #ecuspincode').val(pincode);
 							$('.getcontent #ecusid').val(id);
+							$('.getcontent #source').val(src);
 						});	
 					}					
 				}
@@ -465,11 +478,13 @@
 			
 		}
 		
+		
 		$(function()
 		{
 			getmydet();
 			getlist();
 			
+			$('#sidebar').removeClass('active');
 			// take picture from camera
 			$('body').on('click','#but_take',function(){
 				navigator.camera.getPicture(onSuccess, onFail, { quality: 20,
@@ -514,12 +529,13 @@
 			$('body').on('click','.vcus',function(e){
 				e.preventDefault();
 				var id=$(this).attr('href');				
+				var src=$(this).attr('data-src');
 				var template = Handlebars.compile($("#customer-tpl").html());
 				var options = {direction:'right'};
 				$('.getcontent').html('');
 				$( ".getcontent" ).effect( 'slide', options, 300, function(){					
 					$('.getcontent').html(template);
-					getcusdet(id);
+					getcusdet(id,src);
 					$('#sidebar').removeClass('active');					
 				});
 			});
@@ -548,15 +564,18 @@
 				var l=$(this).attr('href').toLowerCase();	
 				
 				if(l == 'dashboard')
+				{
 					window.localStorage.setItem('firstpage',1);
+				}
 				else
+				{
 					window.localStorage.setItem('firstpage',0);
+				}
 					
 				var template = Handlebars.compile($("#"+l+"-tpl").html());
 				var options = {direction:'right'};
 				$('.getcontent').html('');
 				$( ".getcontent" ).effect( 'slide', options, 300, function(){
-					
 					$('.getcontent').html(template);
 					$('#sidebar').removeClass('active');
 					if(l=='dashboard')
@@ -566,7 +585,7 @@
 					if(l=='myaccount')
 					{
 						getmydet();
-					}
+					}					
 				});				
 			});
 			
@@ -740,6 +759,7 @@
 								alert("updated");
 								$("#update").text('Update');
 								getlist();
+								
 								$('#eprofile').addClass('d-none');
 								$('#vprofile').removeClass('d-none');
 								$('#ptitle').text('My Profile');
@@ -777,6 +797,7 @@
 				var addr=$("#ecusaddr").val();
 				var mobile=$("#mobile").val();
 				var email=$("#email").val();
+				var src=$("#source").val();
 				if($.trim(cname).length > 0 && $.trim(addr).length > 0 && $.trim(mobile).length > 0 && $.trim(email).length > 0)
 				{				
 					 atpos = email.indexOf("@");
@@ -804,7 +825,7 @@
 							{
 								alert("updated");
 								$("#cusupdate").text('Update');								
-								getcusdet(id);
+								getcusdet(id,src);
 								$('#ecusprofile').addClass('d-none');
 								$('#vcusprofile').removeClass('d-none');
 								$('#cptitle').text('Customer Profile');
@@ -836,8 +857,99 @@
 			$('body').on('keyup','#srchcus',function(){
 				var c= $(this).val();				
 				getlist(c);
+				
+			});
+			
+			$("body").on('click','#sync',function(e){
+				e.preventDefault();	
+				 var arr = $('.mrgcus:checked').map(function(){
+					return this.value;
+				}).get();
+				
+				if(arr == '')
+				{
+					
+					var v=$('.mrgcus').length;
+					if(v > 0)
+					{
+						alert('select atleast one customer');
+					}
+					else
+					{
+						alert('There is no record to sync');
+					}
+				}
+				else
+				{
+					$.ajax({
+						type: "POST",
+						url:"http://www.azillesoft.com/phonegap/database/synctoserver.php",
+						data : 'v='+arr, // post data || get data
+						crossDomain: true,
+						cache: false,
+						beforeSend: function(){ $('#sync').html('<img src="img/reload.gif" class="img-responsive"> Sync');},
+						success: function(data){
+							if(data=="success")
+							{
+								$('#sync').html('<i class="fa fa-refresh"></i> Sync');
+								getlist();
+								
+								
+							}
+						}
+					});
+				}
+				
 			});
 		
+			$("body").on('click','.mcus',function(e){
+				e.preventDefault();	
+				var arr =$(this).attr('href');	
+				$.ajax({
+					type: "POST",
+					url:"http://www.azillesoft.com/phonegap/database/synctoserver.php",
+					data : 'v='+arr, // post data || get data
+					crossDomain: true,
+					cache: false,
+					beforeSend: function(){ $('#sync').html('<img src="img/reload.gif" class="img-responsive"> Sync');},
+					success: function(data){
+						if(data=="success")
+						{
+							$('#sync').html('<i class="fa fa-refresh"></i> Sync');
+							getlist();
+							
+						}
+					}
+				});			
+				
+			});
+			$("body").on('click','.dcus',function(e){
+				e.preventDefault();	
+				var arr =$(this).attr('href');	
+				var s =$(this).attr('data-src');
+				var message = "Are you sure want to delete?";
+				var title = "CONFIRM";
+				var buttonLabels = "YES,NO";
+				navigator.notification.confirm(message, confirmCallback, title, buttonLabels);
+				function confirmCallback(buttonIndex) {
+					if(buttonIndex == 1)
+					{				  
+						$.ajax({
+							type: "POST",
+							url:"http://www.azillesoft.com/phonegap/database/delcus.php",
+							data : 'v='+arr+'&s='+s, // post data || get data
+							crossDomain: true,
+							cache: false,
+							success: function(data){
+								if(data=="success")
+								{
+									getlist();
+								}
+							}
+						});
+					}					
+				}				
+			});
 		});
 	</script>
 </html>

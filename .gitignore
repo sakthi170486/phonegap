@@ -60,3 +60,5 @@ database/update.php
 database/cusdetails.php
 database/updatecustomer.php
 database/getcustomer.php
+database/delcus.php
+database/synctoserver.php
