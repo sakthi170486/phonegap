@@ -211,6 +211,7 @@
 		function onBackKeyDown() {
 			if(window.localStorage.getItem('firstpage') == 1)
 			{
+				localStorage.clear();
 				navigator.app.exitApp();
 			}
 			else
