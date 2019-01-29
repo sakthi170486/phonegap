@@ -179,16 +179,21 @@
 							</div>
 						</form>	
 					</div>
-					<div class="row" id="vprofile">					
-						<div class='col-4 col-md-4 col-sm-4'>
-							<img src="img/camera.png" id="profimg" class="img-responsive" alt="Profile Image"/><a href="" title="change photo" id="epic" data-toggle="modal" data-target="#photo"><i class="fa fa-camera"></i></a>
+						
+						<div class="text-center mt-5" id="myaccloader">
+							<img src="img/ajax-loader.gif" alt="" class="img-responsive"/>
 						</div>
-						<div class='col-8 col-md-8 col-sm-8'>
-							<p id="mcompname"></p>
-							<p id="mname"></p>
-							<p id="memail"></p>
-							<p id="mphone"></p>
-							<p id="maltnum"></p>
+						<div class="row" id="vprofile">
+							<div class='col-4 col-md-4 col-sm-4'>
+								<img src="img/camera.png" id="profimg" class="img-responsive" alt="Profile Image"/><a href="" title="change photo" id="epic" data-toggle="modal" data-target="#photo"><i class="fa fa-camera"></i></a>
+							</div>
+							<div class='col-8 col-md-8 col-sm-8'>
+								<p id="mcompname"></p>
+								<p id="mname"></p>
+								<p id="memail"></p>
+								<p id="mphone"></p>
+								<p id="maltnum"></p>
+							</div>
 						</div>
 					</div>					
 				</div>
@@ -354,6 +359,7 @@
 				dataType : 'json', // data type
 				crossDomain: true,
 				cache: false,
+				beforeSend: function(){ $('.getcontent #myaccloader').show();$('.getcontent #vprofile').hide();},
 				success: function(result){
 					if( result.length > 0) 
 					{
@@ -385,7 +391,9 @@
 							$('.getcontent #eid').val(id);
 							
 							$('#uname').text('Welcome '+name);
-						});	
+						});						
+						$('.getcontent #myaccloader').hide();
+						$('.getcontent #vprofile').show();
 					}					
 				}
 			});
