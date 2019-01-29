@@ -151,8 +151,6 @@
 				</div>
 				<div class="col-md-10 col-sm-12 mx-auto text-white">	
 					<h3 class="text-center text-white" id="ptitle" >My Profile</h3><hr/>
-					<a href="" class="float-right" id="pedit">Profile Edit <i class="fa fa-edit"></i></a>
-					
 					<div class="clearfix"></div>
 					<div class="d-none" id="eprofile">					
 						<form action="#" class="text-white" name="reg" id="reg">
@@ -184,6 +182,7 @@
 							<img src="img/ajax-loader.gif" alt="" class="img-responsive"/>
 						</div>
 						<div class="row" id="vprofile">
+							<a href="" class="float-right" id="pedit">Profile Edit <i class="fa fa-edit"></i></a>
 							<div class='col-4 col-md-4 col-sm-4'>
 								<img src="img/camera.png" id="profimg" class="img-responsive" alt="Profile Image"/><a href="" title="change photo" id="epic" data-toggle="modal" data-target="#photo"><i class="fa fa-camera"></i></a>
 							</div>
@@ -242,6 +241,9 @@
 						<button type="submit" class="btn form-btn" name="cusupdate" id="cusupdate" >Update</button>
 						</div>
 					</form>	
+					</div>
+					<div class="text-center mt-5" id="cusloader">
+						<img src="img/ajax-loader.gif" alt="" class="img-responsive"/>
 					</div>
 					<div class="row" id="vcusprofile">
 						<a href="" class="float-right" id="cusedit">Profile Edit <i class="fa fa-edit"></i></a>
@@ -434,6 +436,7 @@
 				dataType : 'json', // data type
 				crossDomain: true,
 				cache: false,
+				beforeSend: function(){ $('.getcontent #cusloader').show();$('.getcontent #vcusprofile').hide();},
 				success: function(result){
 					if( result.length > 0) 
 					{
@@ -468,6 +471,8 @@
 							$('.getcontent #ecusid').val(id);
 							$('.getcontent #source').val(src);
 						});	
+						$('.getcontent #cusloader').hide();
+						$('.getcontent #vcusprofile').show();
 					}					
 				}
 			});
