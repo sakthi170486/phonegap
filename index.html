@@ -255,10 +255,12 @@
 				}
 				var template = Handlebars.compile($("#"+l+"-tpl").html());
 				
-				if(l == 'welcome')
-					window.localStorage.setItem('firstpage',1);
+				if(l == 'home' || l == 'wecome'){
+					window.localStorage.setItem('firstpage',1);}
 				else
+				{
 					window.localStorage.setItem('firstpage',0);
+				}
 			
 				var options = {direction:'right'};
 				$('.maincontent').html('');
