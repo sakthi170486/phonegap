@@ -9992,7 +9992,7 @@ a.text-dark:hover, a.text-dark:focus {
 }
 #content{z-index: 1030;}
 #sidebar.active {
-    margin-left: -195px;
+    margin-left: -190px;
 }
 a[data-toggle="collapse"] {
     position: relative;
@@ -10037,6 +10037,7 @@ width: 60px;
     margin-right: 10px;
     width: 15px;
 }
+#sidebarCollapse .fa{font-size:1.6rem;}
 #sidebar ul li a:hover {
     color: #7386D5;
     background: #fff;
@@ -10146,7 +10147,7 @@ right: 15px;}
 .dcus .fa{margin-right:18px;}
 @media (max-width: 768px) {
     #sidebar {
-        margin-left: -195px;
+        margin-left: -190px;
     }
     #sidebar.active {
 		margin-left: -5px;

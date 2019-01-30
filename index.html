@@ -406,7 +406,7 @@
 			var v=$('#umobile').val();
 			if(v.length > 0)
 			{
-				$.ajax({
+				/*$.ajax({
 					type: "POST",
 					url:"http://www.azillesoft.com/phonegap/database/sendotp.php",
 					data : 'm='+v, // post data || get data
@@ -430,7 +430,10 @@
 							$('#cumobile').val(v);
 						}						
 					}					
-				});
+				});*/
+				var otpTpl = Handlebars.compile($("#otp-tpl").html());	
+				$('.maincontent').html(otpTpl);
+				$('#cumobile').val(v);
 			}
 			else
 			{
