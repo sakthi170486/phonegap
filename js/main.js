@@ -27,15 +27,17 @@ var app = {
         document.addEventListener("backbutton", function(e){			
 			if(window.localStorage.getItem('firstpage') == 1){
 				e.preventDefault();
+				localStorage.clear();
 				navigator.app.exitApp();
 			} else {
-				navigator.app.backHistory()
+				navigator.app.backHistory();
+				history.go(-1);
 			} 
 		}, false);
     },
     initialize: function() {
 		var self = this;
-		//this.bindEvents();
+		this.bindEvents();
 		this.welcomeTpl = Handlebars.compile($("#welcome-tpl").html());
         this.homeTpl = Handlebars.compile($("#home-tpl").html());
 		self.renderHome();

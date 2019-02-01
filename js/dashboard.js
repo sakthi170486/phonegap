@@ -2,6 +2,7 @@ var app = {
 	renderHome: function() {
 		var myaccountTpl = Handlebars.compile($("#myaccount-tpl").html());
 		$('.getcontent').html(myaccountTpl);
+		window.localStorage.setItem('firstpage',1);
     },	
     // Bind Event Listeners
     //
@@ -18,16 +19,19 @@ var app = {
         document.addEventListener("backbutton", function(e){			
 			if(window.localStorage.getItem('firstpage') == 1){
 				e.preventDefault();
+				localStorage.clear();
 				navigator.app.exitApp();
 			} else {
-				navigator.app.backHistory()
+				
+				navigator.app.backHistory();
+				history.go(-1);
 			} 
 		}, false);
     },
 	
     initialize: function() {
 		var self = this;
-		//this.bindEvents();
+		this.bindEvents();
 		self.renderHome();		
     }
 };
