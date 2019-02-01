@@ -9,7 +9,7 @@ var app = {
 				$('.maincontent').html(app.homeTpl());
 				window.localStorage.setItem('firstpage',1);
             });			
-		 }, 3500); 
+		 }, 1500); 
 		
     },	
 	// Bind Event Listeners
