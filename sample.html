@@ -34,9 +34,36 @@
 					</div>
 					
 					<div class="getcontent">
-							<input type='text' id='note' >
-							<button onclick='insertData()' id='submit'>Submit</button><br>
-							<ul id='list'></ul>
+						<div class="container inner-container mt-5">
+							<div class="row">
+								<div class="col-md-1 d-none d-md-block">
+								</div>
+								<div class="col-md-10 col-sm-12 mx-auto">
+									<form action="#" class="text-white">								
+										<div class="form-group has-search">
+											 <span class="fa fa-search form-control-feedback"></span>
+											<input class='form-control search-key w-70' placeholder="Search Customer" id="srchcus" type="search"/>
+										</div>
+									</form>	
+									<hr/>
+									<div class="details">
+										<div class="scroll">
+											<input type='text' class='form-control' id='note' >
+											<button onclick='insertData()' class="btn btn-primary" id='submit'>Submit</button><br>
+											<div class="text-center mt-5" id="loader">
+												<img src="img/ajax-loader.gif" alt="" class="img-responsive"/>
+											</div>
+											<a href="" class="float-right text-right w-100" id="sync"><i class="fa fa-refresh"></i> Sync</a>							
+											<ul class='customer-list'>
+												
+											</ul>
+										</div>
+									</div>
+								</div>
+								<div class="col-md-1">
+								</div>
+							</div>
+						</div>
 					</div>
 					
 				</div>
@@ -88,15 +115,24 @@
 
 				tx.executeSql("select * from notes",[],function(tx1,result){
 					var len = result.rows.length;
-
+					$('.getcontent .customer-list').html('');
 					for (var i=0; i<len; i++){
 						var note = result.rows.item(i).note;
-
+						var id = result.rows.item(i).id;
+						var src=0;
 						// Add list item
-						var ul = document.getElementById("list");
+						/*var ul = document.getElementById("list");
 						var li = document.createElement("li");
 						li.appendChild(document.createTextNode(note));
-						ul.appendChild(li);
+						ul.appendChild(li);*/
+						if(src == 1)
+						{
+							$('.getcontent .customer-list').append('<li><a class="vcus" href="'+id+'" data-src="'+src+'">'+name+'</a><a class="text-right dcus" data-src="'+src+'" href="'+id+'"><i class="fa fa-trash"></i></a></li>');
+						}
+						else
+						{
+							$('.getcontent .customer-list').append('<li><input type="checkbox" name="mrgcus[]" class="mrgcus" value="'+id+'"> <a class="vcus" href="'+id+'" data-src="'+src+'">'+note+'</a> <a class="text-right mcus" href="'+id+'"><i class="fa fa-check"></i></a><a class="text-right dcus" href="'+id+'" data-src="'+src+'" title="delete"><i class="fa fa-trash"></i></a></li>');
+						}
 					}
 
 				},errorCB);
@@ -108,7 +144,13 @@
 			// Insert record
 			db.transaction(insertNote, errorCB, successCB);
 		}
+		function deleteData(id){
 
+		 db.transaction(function (tx){
+			tx.executeSql('delete from notes where id='+id+';');}, 
+				errorCB, successCB);
+		}
+		
 		function insertNote(tx){
 			var note = document.getElementById('note').value;
 
@@ -116,7 +158,7 @@
 			tx.executeSql("INSERT INTO notes(note) VALUES (?)",[note]);
 
 			// Append new list item
-			var ul = document.getElementById("list");
+			var ul = document.getElementById("customer-list");
 			var li = document.createElement("li");
 			li.appendChild(document.createTextNode(note));
 			ul.appendChild(li);
@@ -184,6 +226,22 @@
 		$(function()
 		{
 			getmydet();
+			// Delete data from table
+			$("body").on('click','.dcus',function(e){
+				e.preventDefault();	
+				var arr =$(this).attr('href');	
+				var s =$(this).attr('data-src');
+				var message = "Are you sure want to delete?";
+				var title = "CONFIRM";
+				var buttonLabels = "YES,NO";
+				navigator.notification.confirm(message, confirmCallback, title, buttonLabels);
+				function confirmCallback(buttonIndex) {
+					if(buttonIndex == 1)
+					{							
+						deleteData(arr);
+					}					
+				}				
+			});
 			
 		});
 		
