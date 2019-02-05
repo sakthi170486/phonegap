@@ -113,18 +113,14 @@
 		function fetchData(){
 			db.transaction(function(tx){
 
-				tx.executeSql("select * from notes",[],function(tx1,result){
+				tx.executeSql("select id,note from notes",[],function(tx1,result){
 					var len = result.rows.length;
 					$('.getcontent .customer-list').html('');
+					$('#loader').hide();
 					for (var i=0; i<len; i++){
 						var note = result.rows.item(i).note;
 						var id = result.rows.item(i).id;
-						var src=0;
-						// Add list item
-						/*var ul = document.getElementById("list");
-						var li = document.createElement("li");
-						li.appendChild(document.createTextNode(note));
-						ul.appendChild(li);*/
+						var src=0;						
 						if(src == 1)
 						{
 							$('.getcontent .customer-list').append('<li><a class="vcus" href="'+id+'" data-src="'+src+'">'+name+'</a><a class="text-right dcus" data-src="'+src+'" href="'+id+'"><i class="fa fa-trash"></i></a></li>');
@@ -240,6 +236,7 @@
 					if(buttonIndex == 1)
 					{							
 						deleteData(arr);
+						fetchData();
 					}					
 				}				
 			});
