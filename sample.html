@@ -19,9 +19,7 @@
 						</div>
 						<ul class="list-unstyled components">
 							<p id="uname">Welcome Guest</p><hr/>							
-							<li class="active"><a href="MyAccount" class="lnk"><i class="fa fa-user"></i> My Account</a></li>
-							<li><a href="AddCustomer" class="lnk"><i class="fa fa-user-plus"></i> Add Customer</a></li>
-							<li><a href="Dashboard" class="lnk"><i class="fa fa-search"></i> Search Customer</a></li>
+							<li class="active"><a href="dashboard.html"><i class="fa fa-user"></i> Dashboard</a></li>
 							<li><a href="#" id="logout"><i class="fa fa-sign-out"></i> Logout</a></li>					
 						</ul>
 					</nav>
@@ -131,6 +129,64 @@
 		function successCB() {
 		 alert("success!");
 		}
+		
+		function getmydet()
+		{
+			var uid=window.localStorage.getItem('uid');
+			$.ajax({
+				type: "POST",
+				url:"http://www.azillesoft.com/phonegap/database/json.php",
+				data : 'u='+uid, // post data || get data
+				dataType : 'json', // data type
+				crossDomain: true,
+				cache: false,
+				beforeSend: function(){ $('.getcontent #myaccloader').show();$('.getcontent #vprofile').hide();},
+				success: function(result){
+					if( result.length > 0) 
+					{
+						$.each(result, function(i, field){
+							var id=field.id;
+							var cname=field.company_name;
+							var name=field.name;
+							var mobile=field.phonenumber;
+							var emailid=field.emailid;
+							var altnum=field.alternumber;
+							var img=field.profilepic;
+							if(img != '')
+							{
+								$('#uimg').attr('src','http://www.azillesoft.com/phonegap/database/upload/'+img);
+								$('#profimg').attr('src','http://www.azillesoft.com/phonegap/database/upload/'+img);
+							}
+							$('.getcontent #mcompname').text('Company Name : '+cname);
+							$('.getcontent #mname').text('Name : '+name);
+							$('.getcontent #memail').text('Email Id : '+emailid);
+							$('.getcontent #mphone').text('Contact Number : '+mobile);
+							$('.getcontent #maltnum').text('Alternate Number : '+altnum);
+							
+							$('.getcontent #ecname').val(cname);
+							$('.getcontent #ename').val(name);
+							$('.getcontent #eemail').val(emailid);
+							$('.getcontent #emobile').val(mobile);
+							$('.getcontent #altmobile').val(altnum);
+							$('.getcontent #imgname').val(img);
+							$('.getcontent #eid').val(id);
+							
+							$('#uname').text('Welcome '+name);
+						});						
+						$('.getcontent #myaccloader').hide();
+						$('.getcontent #vprofile').show();
+					}					
+				}
+			});
+		}
+		
+				
+		$(function()
+		{
+			getmydet();
+			
+		});
+		
 				
 	</script>
 </html>
