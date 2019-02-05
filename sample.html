@@ -143,6 +143,7 @@
 
 			// Insert record
 			db.transaction(insertNote, errorCB, successCB);
+			fetchData();
 		}
 		function deleteData(id){
 
@@ -158,10 +159,10 @@
 			tx.executeSql("INSERT INTO notes(note) VALUES (?)",[note]);
 
 			// Append new list item
-			var ul = document.getElementById("customer-list");
+			/*var ul = document.getElementById("customer-list");
 			var li = document.createElement("li");
 			li.appendChild(document.createTextNode(note));
-			ul.appendChild(li);
+			ul.appendChild(li);*/
 		}
 
 		function errorCB(err) {
