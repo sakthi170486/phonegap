@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Navigator</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+		<link rel="stylesheet" href="css/bootstrap.css">
+		<link rel="stylesheet" href="css/jquery.mCustomScrollbar.css">
+	</head>
+	<body>
+		<div class="inner-content">
+			<div class="maincontent bg-color">
+				<div class="wrapper">
+					<!-- Sidebar -->
+					<nav id="sidebar">
+						<div class="sidebar-header">
+							<img src="img/camera.png" id="uimg" class="img-responsive" alt="Profile Image"/>
+						</div>
+						<ul class="list-unstyled components">
+							<p id="uname">Welcome Guest</p><hr/>							
+							<li class="active"><a href="MyAccount" class="lnk"><i class="fa fa-user"></i> My Account</a></li>
+							<li><a href="AddCustomer" class="lnk"><i class="fa fa-user-plus"></i> Add Customer</a></li>
+							<li><a href="Dashboard" class="lnk"><i class="fa fa-search"></i> Search Customer</a></li>
+							<li><a href="#" id="logout"><i class="fa fa-sign-out"></i> Logout</a></li>					
+						</ul>
+					</nav>
+					<div id="content">
+						 <nav class="navbar navbar-expand-lg">
+							<div class="container-fluid">
+								<span id="sidebarCollapse" class="text-white">
+									<i class="fa fa-bars"></i> 
+								</span>
+							</div>
+						</nav>																
+					</div>
+					
+					<div class="getcontent">
+							<input type='text' id='note' >
+							<button onclick='insertData()' id='submit'>Submit</button><br>
+							<ul id='list'></ul>
+					</div>
+					
+				</div>
+			</div>
+		</div>
+	</body>
+	
+	
+	
+	<script src="phonegap.js"></script>
+	<script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+	<script src="js/jquery.min.js"></script>
+	<script src="js/popper.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>	
+	<script src="lib/handlebars.js"></script>
+	<script src="js/jquery-ui.js"></script>
+	<script src="js/jquery.mCustomScrollbar.concat.min.js"></script>
+	<script type="text/javascript">
+		window.onload = function()
+		{
+			var lgn=window.localStorage.getItem('loginstatus');
+			if(lgn != 'true')
+			{
+				window.location.href="index.html";
+			}
+		}
+		
+		
+		// window.openDatabase("database-name","version","database description","database size in bytes")
+		var db = window.openDatabase("customerdb", "1.0", "customer database", 1000000); //will create database Dummy_DB or open it
+		document.addEventListener("deviceready", onDeviceReady, false);
+
+		function onDeviceReady() {
+
+		// Create Table
+		db.transaction(populateDB, errorCB, successCB);
+
+		// Select records
+		fetchData();
+		}
+
+		function populateDB(tx){
+			tx.executeSql('CREATE TABLE IF NOT EXISTS notes (id INTEGER PRIMARY KEY AUTOINCREMENT,note TEXT NOT NULL)');
+		}
+
+		// Fetch all records
+		function fetchData(){
+			db.transaction(function(tx){
+
+				tx.executeSql("select * from notes",[],function(tx1,result){
+					var len = result.rows.length;
+
+					for (var i=0; i<len; i++){
+						var note = result.rows.item(i).note;
+
+						// Add list item
+						var ul = document.getElementById("list");
+						var li = document.createElement("li");
+						li.appendChild(document.createTextNode(note));
+						ul.appendChild(li);
+					}
+
+				},errorCB);
+			}, errorCB, successCB);
+		}
+
+		function insertData(){
+
+			// Insert record
+			db.transaction(insertNote, errorCB, successCB);
+		}
+
+		function insertNote(tx){
+			var note = document.getElementById('note').value;
+
+			// Insert query
+			tx.executeSql("INSERT INTO notes(note) VALUES (?)",[note]);
+
+			// Append new list item
+			var ul = document.getElementById("list");
+			var li = document.createElement("li");
+			li.appendChild(document.createTextNode(note));
+			ul.appendChild(li);
+		}
+
+		function errorCB(err) {
+		alert("Error processing SQL: "+err.code);
+		}
+
+		function successCB() {
+		 alert("success!");
+		}
+				
+	</script>
+</html>

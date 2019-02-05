@@ -36,6 +36,7 @@
 							<li class="active"><a href="MyAccount" class="lnk"><i class="fa fa-user"></i> My Account</a></li>
 							<li><a href="AddCustomer" class="lnk"><i class="fa fa-user-plus"></i> Add Customer</a></li>
 							<li><a href="Dashboard" class="lnk"><i class="fa fa-search"></i> Search Customer</a></li>
+							<li><a href="sample.html" class="lnk"><i class="fa fa-search"></i> Sample</a></li>
 							<li><a href="#" id="logout"><i class="fa fa-sign-out"></i> Logout</a></li>					
 						</ul>
 					</nav>
@@ -519,8 +520,77 @@
 		}		
 		*/
 		
+		// window.openDatabase("database-name","version","database description","database size in bytes")
+		var db = window.openDatabase("customerdb", "1.0", "customer database", 524288000); //will create database Dummy_DB or open it
+		document.addEventListener("deviceready", onDeviceReady, false);
+
+		function onDeviceReady() {
+
+		// Create Table
+		db.transaction(populateDB, errorCB, successCB);
+
+		// Select records
+		fetchData();
+		}
+
+		function populateDB(tx){
+		tx.executeSql('CREATE TABLE IF NOT EXISTS notes (id INTEGER PRIMARY KEY AUTOINCREMENT,note TEXT NOT NULL)');
+		}
+
+		// Fetch all records
+		function fetchData(){
+			db.transaction(function(tx){
+
+				tx.executeSql("select * from notes",[],function(tx1,result){
+					var len = result.rows.length;
+
+					for (var i=0; i<len; i++){
+						var note = result.rows.item(i).note;
+
+						// Add list item
+						var ul = document.getElementById("list");
+						var li = document.createElement("li");
+						li.appendChild(document.createTextNode(note));
+						ul.appendChild(li);
+					}
+
+				},errorCB);
+			}, errorCB, successCB);
+		}
+
+		function insertData(){
+
+			// Insert record
+			db.transaction(insertNote, errorCB, successCB);
+		}
+
+		function insertNote(tx){
+			var note = document.getElementById('note').value;
+
+			// Insert query
+			tx.executeSql("INSERT INTO notes(note) VALUES (?)",[note]);
+
+			// Append new list item
+			var ul = document.getElementById("list");
+			var li = document.createElement("li");
+			li.appendChild(document.createTextNode(note));
+			ul.appendChild(li);
+		}
+
+		function errorCB(err) {
+		alert("Error processing SQL: "+err.code);
+		}
+
+		function successCB() {
+		// alert("success!");
+		}
+		
+		
+		
+		
 		$(function()
 		{
+			
 			getmydet();
 			getlist();
 			
