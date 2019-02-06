@@ -1,8 +1,7 @@
 var app = {
     renderHome: function() {
-		$('.maincontent').html(this.homeTpl());
-		window.localStorage.setItem('firstpage',1);
-		/*  setTimeout(function(){ 
+		$('.maincontent').html(this.welcomeTpl());
+		 setTimeout(function(){ 
 			// Run the effect
 			var options = {direction: 'right' };
 			$('.maincontent').html('');
@@ -10,7 +9,7 @@ var app = {
 				$('.maincontent').html(app.homeTpl());
 				window.localStorage.setItem('firstpage',1);
             });			
-		 }, 1500);  */
+		 }, 1500);  
 		
     },	
 	// Bind Event Listeners
@@ -35,6 +34,7 @@ var app = {
 				history.go(-1);
 			} 
 		}, false);
+		
     },
     initialize: function() {
 		var self = this;

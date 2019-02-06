@@ -20,7 +20,7 @@
 				<div class="col-md-1 d-none d-md-block">
 				</div>
 				<div class="col-md-10 col-sm-12 mx-auto text-center" id="lgmid">
-					<!--<img src="img/logo.png" class="img-responsive" alt="">	-->
+					<!--<img src="img/logo.png" class="img-responsive" alt="">-->
 				</div>
 				<div class="col-md-1"></div>
 			</div>
@@ -89,7 +89,7 @@
 						</div>
 						<div class="form-group">
 							<input type="email" class="form-control" placeholder="Email address *" required name="email" id="email">
-							<input type="hidden" class="form-control" name="imgname" id="imgname">
+							<input type="text" class="form-control" name="imgname" id="imgname">
 						</div>	
 						<div class="form-group text-center">
 						<a id="" href="Home" class="btn form-btn pt-3 lnk">Home</a>
@@ -153,6 +153,8 @@
 	<script src="lib/handlebars.js"></script>
 	<script src="js/main.js"></script> 
 	<script src="js/jquery-ui.js"></script>
+	<script src="js/imgcache.js"></script>
+	<script src="js/imgcache-promise.js"></script>
 	<script type="text/javascript">
 		// If logged in then move to dashboard
 		window.onload = function()
@@ -180,50 +182,64 @@
 
 			options.params = params;
 			options.chunkedMode = false;
-
-			var ft = new FileTransfer();
+			
+			//ImgCache.cacheFile(imageURI);
+			
+			var target = $('#profimg');
+			ImgCache.isCached(target.attr('src'), function(imageURI, success) {
+			  if (success) {
+				// already cached
+				ImgCache.useCachedFile(target);
+			  } else {
+				// not there, need to cache the image
+				ImgCache.cacheFile(imageURI, function () {
+				  ImgCache.useCachedFile(target);
+				});
+			  }
+			});
+			
+			
+			$('#imgname').val(ImgCache.getCachedFile());
+			
+			$('#photo').modal('hide');
+			
+			
+			/*var ft = new FileTransfer();
 			ft.upload(imageURI, "http://www.azillesoft.com/phonegap/database/upload.php", function(result){
 				//alert('successfully uploaded ' + result.response);
 				$('#imgname').val(result.response);
 				$('#photo').modal('hide');				
 			}, function(error){
 				alert('error : ' + JSON.stringify(error));
-			}, options);
+			}, options);*/
 		}
 		function onFail(message) {
 			alert('Failed because: ' + message);
 		}
 		
-	/*	
-		function onLoad() {
-			document.addEventListener("deviceready", onDeviceReady, false);
-		}
-
-		// PhoneGap is loaded and it is now safe to call PhoneGap methods
-		//
-		function onDeviceReady() {
-			// Register the event listener
-			document.addEventListener("backbutton", onBackKeyDown, false);
-		}
-
-		// Handle the back button
-		//
-		function onBackKeyDown() {
-			if(window.localStorage.getItem('firstpage') == 1)
-			{
-				localStorage.clear();
-				navigator.app.exitApp();
-			}
-			else
-			{
-				history.go(-1);
-				navigator.app.backHistory();
-			}
-		}
-		*/
+	
 		
 	$(function()
 	{
+	
+		var cache = require("imgcache");
+		// write log to console
+		ImgCache.options.debug = true;
+
+		// increase allocated space on Chrome to 50MB, default was 10MB
+		ImgCache.options.chromeQuota = 50*1024*1024;
+	
+		// Instead of using the PERSISTENT or TEMPORARY filesystems, use one of the
+		// Cordova File plugin's app directories
+		// (https://github.com/apache/cordova-plugin-file#where-to-store-files).
+		// This is friendlier in a mobile application environment as we are able to store
+		// files in the correct platform-recommended/enforced directories.
+		// WARNING: Make sure this points to a __directory__!
+		// NOTE: Only has effect when running in a Cordova environment
+		ImgCache.options.cordovaFilesystemRoot = cordova.file.dataDirectory;		
+		ImgCache.init();
+	
+	
 		// open the corresponding page
 		$('body').on('click','.lnk',function(e){
 			e.preventDefault();
