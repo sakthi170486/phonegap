@@ -89,7 +89,7 @@
 						</div>
 						<div class="form-group">
 							<input type="email" class="form-control" placeholder="Email address *" required name="email" id="email">
-							<input type="text" class="form-control" name="imgname" id="imgname">
+							<input type="hidden" class="form-control" name="imgname" id="imgname">
 						</div>	
 						<div class="form-group text-center">
 						<a id="" href="Home" class="btn form-btn pt-3 lnk">Home</a>
@@ -165,6 +165,16 @@
 				window.location.href="dashboard.html";
 			}
 		}
+		function checkInternet() {
+			var networkState = navigator.connection.type;
+			if(networkState == Connection.NONE || networkState == Connection.UNKNOWN) {
+				onConnexionError();
+				return false;
+
+			} else {
+			   return true;
+			}
+		}
 		// Change image source and upload photo to server
 		function onSuccess(imageURI) {
 			// Set image source
@@ -192,27 +202,25 @@
 				ImgCache.useCachedFile(target);
 			  } else {
 				// not there, need to cache the image
-				ImgCache.cacheFile(imageURI, function () {					
-				  ImgCache.useCachedFile(target);
+					ImgCache.cacheFile(imageURI, function () {					
+					ImgCache.useCachedFile(target);
 				});
 			  }			 
 			  $('#imgname').val(target.attr('src'));
-			});
-			
-			
-			
-			
+			});			
 			$('#photo').modal('hide');
 			
-			
-			/*var ft = new FileTransfer();
-			ft.upload(imageURI, "http://www.azillesoft.com/phonegap/database/upload.php", function(result){
-				//alert('successfully uploaded ' + result.response);
-				$('#imgname').val(result.response);
-				$('#photo').modal('hide');				
-			}, function(error){
-				alert('error : ' + JSON.stringify(error));
-			}, options);*/
+			if(checkInternet())
+			{
+				var ft = new FileTransfer();
+				ft.upload(imageURI, "http://www.azillesoft.com/phonegap/database/upload.php", function(result){
+					//alert('successfully uploaded ' + result.response);
+					$('#imgname').val(result.response);
+					$('#photo').modal('hide');				
+				}, function(error){
+					alert('error : ' + JSON.stringify(error));
+				}, options);
+			}
 		}
 		function onFail(message) {
 			alert('Failed because: ' + message);
@@ -242,8 +250,7 @@
 		// open the corresponding page
 		$('body').on('click','.lnk',function(e){
 			e.preventDefault();
-			// Most effect types need no options passed by default
-			
+			// Most effect types need no options passed by default			
 			var l=$(this).attr('href').toLowerCase();
 			if(l != '#' && l != '')
 			{
