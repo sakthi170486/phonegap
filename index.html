@@ -188,18 +188,15 @@
 			var target = $('#profimg');
 			ImgCache.isCached(target.attr('src'), function(path, success) {
 			  if (success) {
-				// already cached
-				alert('already cached');
+				// already cached				
 				ImgCache.useCachedFile(target);
 			  } else {
 				// not there, need to cache the image
-				ImgCache.cacheFile(imageURI, function () {
-					alert('cached');
+				ImgCache.cacheFile(imageURI, function () {					
 				  ImgCache.useCachedFile(target);
 				});
-			  }
-			  alert(ImgCache.getCachedFile());
-			  $('#imgname').val(ImgCache.getCachedFile());
+			  }			 
+			  $('#imgname').val(target.attr('src'));
 			});
 			
 			
