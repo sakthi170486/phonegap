@@ -186,20 +186,24 @@
 			//ImgCache.cacheFile(imageURI);
 			
 			var target = $('#profimg');
-			ImgCache.isCached(target.attr('src'), function(imageURI, success) {
+			ImgCache.isCached(target.attr('src'), function(path, success) {
 			  if (success) {
 				// already cached
+				alert('already cached');
 				ImgCache.useCachedFile(target);
 			  } else {
 				// not there, need to cache the image
 				ImgCache.cacheFile(imageURI, function () {
+					alert('cached');
 				  ImgCache.useCachedFile(target);
 				});
 			  }
+			  alert(ImgCache.getCachedFile());
+			  $('#imgname').val(ImgCache.getCachedFile());
 			});
 			
 			
-			$('#imgname').val(ImgCache.getCachedFile());
+			
 			
 			$('#photo').modal('hide');
 			
