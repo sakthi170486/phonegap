@@ -243,9 +243,9 @@
 			
 			db.transaction(
 				function (tx) {
-					tx.executeSql("SELECT name FROM sqlite_master WHERE type='table'", [], function (tx, result) {
+					tx.executeSql("SELECT name FROM sqlite_master WHERE type='table' and name='userdetails'", [], function (tx, result) {
 						if (result.rows.length > 0) {
-							alert(result.rows.length);
+							alert(result.rows[0].name);
 						} else {
 							alert('no table');
 						}
