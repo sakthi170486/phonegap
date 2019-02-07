@@ -184,7 +184,7 @@
 			image.src = imageURI  + '?' + Math.random();
 
 			var options = new FileUploadOptions();
-			options.fileKey = "file";
+			/*options.fileKey = "file";
 			options.fileName = imageURI.substr(imageURI.lastIndexOf('/') + 1);
 			options.mimeType = "image/jpeg";
 
@@ -193,7 +193,7 @@
 			params.value2 = "param";
 
 			options.params = params;
-			options.chunkedMode = false;
+			options.chunkedMode = false;*/
 			
 			var target = $('#profimg');
 			ImgCache.isCached(target.attr('src'), function(path, success) {
@@ -207,9 +207,7 @@
 				});
 			  }			 
 			  $('#imgname').val(target.attr('src'));
-			});			
-			
-			
+			});	
 			if(checkInternet())
 			{
 				var ft = new FileTransfer();
@@ -221,6 +219,7 @@
 					alert('error : ' + JSON.stringify(error));
 				}, options);
 			}
+			
 			$('#photo').modal('hide');
 		}
 		
@@ -317,22 +316,25 @@
 				if($('#simgname').val())
 				{		
 					var v = $('#simgname').val();
-					if(v.length > 0 && checkInternet())
+					if(v.length > 0)
 					{
-						$.ajax({
-							type: "POST",
-							url:"http://www.azillesoft.com/phonegap/database/checkuimg.php",
-							data : 'm='+v, // post data || get data
-							crossDomain: true,
-							cache: false,
-							success: function(data){
-								if(data == 0)
-								{
-									$('#profimg').attr('src','img/camera.png');
+						if(checkInternet())
+						{
+							$.ajax({
+								type: "POST",
+								url:"http://www.azillesoft.com/phonegap/database/checkuimg.php",
+								data : 'm='+v, // post data || get data
+								crossDomain: true,
+								cache: false,
+								success: function(data){
+									if(data == 0)
+									{
+										$('#profimg').attr('src','img/camera.png');
+									}
+									//console.log(data);						
 								}
-								//console.log(data);						
-							}
-						});
+							});
+						}
 					}
 				}
 				var template = Handlebars.compile($("#"+l+"-tpl").html());
