@@ -208,7 +208,7 @@
 			  }			 
 			  $('#imgname').val(target.attr('src'));
 			});			
-			$('#photo').modal('hide');
+			
 			
 			if(checkInternet())
 			{
@@ -221,6 +221,7 @@
 					alert('error : ' + JSON.stringify(error));
 				}, options);
 			}
+			$('#photo').modal('hide');
 		}
 		
 		function onFail(message) {
