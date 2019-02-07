@@ -256,8 +256,7 @@
 			
 			//ImgCache.options.cordovaFilesystemRoot = cordova.file.dataDirectory;		
 			
-			ImgCache.options.usePersistentCache = true;
-            ImgCache.init();
+			ImgCache.init();
 			
 		}
 
@@ -470,7 +469,7 @@
 				}
 				
 				db.transaction(function(tx){
-var qry="INSERT INTO userdetails (company_name,name,phonenumber,alternumber,emailid,profilepic,dateofcreation,dateofupdate) VALUES (?,?,?,?,?,?,?,?)";
+					var qry="INSERT INTO userdetails (company_name,name,phonenumber,alternumber,emailid,profilepic,dateofcreation,dateofupdate) VALUES (?,?,?,?,?,?,?,?)";
 					tx.executeSql(qry, [cname,name,mobile,amobile,email,cimagename,dt,dt], function(tx1,result){
 						alert("inserted");
 						$("#insert").text('Submit');
