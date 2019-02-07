@@ -259,8 +259,7 @@
 		}
 		
 		function checkOTP(ph,otp){
-			var id=0;
-			
+			var id=0;			
 			db.transaction(function(tx){
 				tx.executeSql("select id from userdetails where phonenumber=? and loginaccess=?",[ph,otp],function(tx1,result){
 					var len = result.rows.length;
@@ -288,6 +287,7 @@
 		
 	$(function()
 	{		
+		var db = window.openDatabase("customerdb", "1.1", "customer database", 1000000);
 		// write log to console
 		ImgCache.options.debug = true;
 
@@ -544,7 +544,43 @@
 								alert("Mobile number not registered. Enter Registered mobile Number");
 								$("#umobile").val('').focus();
 							}
-						}						
+						}
+						else
+						{
+							db.transaction(function(tx){
+								tx.executeSql("select company_name,name,phonenumber,alternumber,emailid,profilepic,dateofcreation,dateofupdate from userdetails",[],function(tx1,result){
+									var len = result.rows.length;
+									if(len >0)
+									{
+										var options = new FileUploadOptions();
+										var cname = result.rows.item(0).company_name;
+										var name = result.rows.item(0).name;
+										var pnum = result.rows.item(0).phonenumber;
+										var apnum = result.rows.item(0).alternumber;
+										var pic = result.rows.item(0).profilepic;
+										var email = result.rows.item(0).emailid;
+										
+										var ft = new FileTransfer();
+										ft.upload(pic, "http://www.azillesoft.com/phonegap/database/upload.php", function(result){
+											pic = result.response;	
+										}, function(error){
+											alert('error : ' + JSON.stringify(error));
+										}, options);
+										
+										$.ajax({
+											type: "POST",
+											url:"http://www.azillesoft.com/phonegap/database/update.php",
+											data : 'eid='+data+'&ecname='+cname+'&ename='+name+'&emobile='+pnum+'&altmobile='+apnum+'&eemail='+email+'&eimgname='+pic, // post data || get data
+											crossDomain: true,
+											cache: false,
+											success: function(data){
+												//success
+											}
+										});										
+									}
+								},function(error){});
+							}, function(error){}, successCB);
+						}
 					}
 				});
 			}
