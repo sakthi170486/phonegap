@@ -228,13 +228,13 @@
 		}
 		
 		// window.openDatabase("database-name","version","database description","database size in bytes")
-		//var db = window.openDatabase("customerdb", "1.1", "customer database", 1000000); //will create database Dummy_DB or open it
+		var db = window.openDatabase("customerdb", "1.1", "customer database", 1000000); //will create database Dummy_DB or open it
 		
-		var db = null;
+		//var db = null;
 		document.addEventListener("deviceready", onDeviceReady, false);
 
 		function onDeviceReady() {
-			db = window.sqlitePlugin.openDatabase({name: "customerdb.db", location: 'default'});
+			//db = window.sqlitePlugin.openDatabase({name: "customerdb.db", location: 'default'});
 			// Create Table
 			db.transaction(populateDB, errorCB, successCB);
 		}
@@ -288,8 +288,7 @@
 	
 	
 		
-	$(function()
-	{		
+			
 		// write log to console
 		ImgCache.options.debug = true;
 
@@ -699,7 +698,7 @@
 				alert("Enter OTP.");
 			}
 		});
-	});
+	
 	
 	// Delete image from server using cordova plugin file	
 	function delImg()
