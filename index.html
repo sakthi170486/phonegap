@@ -184,7 +184,7 @@
 			image.src = imageURI  + '?' + Math.random();
 
 			var options = new FileUploadOptions();
-			/*options.fileKey = "file";
+			options.fileKey = "file";
 			options.fileName = imageURI.substr(imageURI.lastIndexOf('/') + 1);
 			options.mimeType = "image/jpeg";
 
@@ -193,7 +193,7 @@
 			params.value2 = "param";
 
 			options.params = params;
-			options.chunkedMode = false;*/
+			options.chunkedMode = false;
 			
 			var target = $('#profimg');
 			ImgCache.isCached(target.attr('src'), function(path, success) {
@@ -208,6 +208,7 @@
 			  }			 
 			  $('#imgname').val(target.attr('src'));
 			});	
+			
 			if(checkInternet())
 			{
 				var ft = new FileTransfer();
@@ -228,13 +229,13 @@
 		}
 		
 		// window.openDatabase("database-name","version","database description","database size in bytes")
-		var db = window.openDatabase("customerdb", "1.1", "customer database", 1000000); //will create database Dummy_DB or open it
+		//var db = window.openDatabase("customerdb", "1.0", "customer database", 1000000); //will create database Dummy_DB or open it
+		var db = null;
 		
-		//var db = null;
 		document.addEventListener("deviceready", onDeviceReady, false);
 
 		function onDeviceReady() {
-			//db = window.sqlitePlugin.openDatabase({name: "customerdb.db", location: 'default'});
+			db = window.sqlitePlugin.openDatabase({name: "customerdb.db", location: 'default'});
 			// Create Table
 			db.transaction(populateDB, errorCB, successCB);
 		}
@@ -459,7 +460,8 @@
 						cache: false,
 						beforeSend: function(){ $("#insert").text('Connecting...');},
 						success: function(data){
-							if(data=="error")
+							alert(data);
+							if(data == "fail")
 							{				
 								delImg();								
 							}
@@ -467,8 +469,9 @@
 					});
 				}
 				
-				db.transaction(function(tx){					
-					tx.executeSql("INSERT INTO userdetails (company_name,name,phonenumber,alternumber,emailid,profilepic,dateofcreation,dateofupdate) VALUES (?,?,?,?,?,?,?,?)",[cname,name,mobile,amobile,email,cimagename,dt,dt],function(tx1,result){
+				db.transaction(function(tx){
+					var qry="INSERT INTO userdetails (company_name,name,phonenumber,alternumber,emailid,profilepic,dateofcreation,dateofupdate) VALUES (?,?,?,?,?,?,?,?)";
+					tx.executeSql(qry, [cname,name,mobile,amobile,email,cimagename,dt,dt], function(tx1,result){
 						alert("inserted");
 						$("#insert").text('Submit');
 						$("#reg")[0].reset();
