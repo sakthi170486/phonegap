@@ -238,20 +238,7 @@
 			//db = window.sqlitePlugin.openDatabase({name: "customerdb.db", location: 'default'});
 			db = window.openDatabase("customerdb", "1.1", "customer database", 1000000);
 			// Create Table
-			db.transaction(populateDB, errorCB, successCB);
-			
-			
-			db.transaction(
-				function (tx) {
-					tx.executeSql("SELECT name FROM sqlite_master WHERE type='table' and name='userdetails'", [], function (tx, result) {
-						if (result.rows.length > 0) {
-							alert(result.rows[0].name);
-						} else {
-							alert('no table');
-						}
-					});
-				}
-			);
+			db.transaction(populateDB, errorCB, successCB);				
 			
 			// write log to console
 			ImgCache.options.debug = true;
@@ -480,6 +467,17 @@
 						}
 					});
 				}
+				db.transaction(
+					function (tx) {
+						tx.executeSql("SELECT count(*) as tot FROM userdetails", [], function (tx, result) {
+							if (result.rows.length > 0) {
+								alert(result.rows[0].tot);
+							} else {
+								alert('no table');
+							}
+						});
+					}
+				);
 				
 				db.transaction(function(tx){
 					var qry="INSERT INTO userdetails (company_name,name,phonenumber,alternumber,emailid,profilepic,dateofcreation,dateofupdate) VALUES (?,?,?,?,?,?,?,?)";
