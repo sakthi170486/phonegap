@@ -235,8 +235,8 @@
 		document.addEventListener("deviceready", onDeviceReady, false);
 
 		function onDeviceReady() {
-			//db = window.sqlitePlugin.openDatabase({name: "customerdb.db", location: 'default'});
-			db = window.openDatabase("customerdb", "1.1", "customer database", 1000000);
+			db = window.sqlitePlugin.openDatabase({name: "customerdb.db", location: 'default'});
+			//db = window.openDatabase("customerdb", "1.1.0", "customer database", 1000000);
 			// Create Table
 			db.transaction(populateDB, errorCB, successCB);				
 			
@@ -466,33 +466,38 @@
 							}
 						}
 					});
-				}
-				db.transaction(
-					function (tx) {
-						tx.executeSql("SELECT count(*) as tot FROM userdetails", [], function (tx, result) {
-							if (result.rows.length > 0) {
-								alert(result.rows[0].tot);
-							} else {
-								alert('no table');
-							}
+					db.transaction(function(tx){
+						var qry="INSERT INTO userdetails (company_name,name,phonenumber,alternumber,emailid,profilepic,dateofcreation,dateofupdate) VALUES (?,?,?,?,?,?,?,?)";
+						tx.executeSql(qry, [cname,name,mobile,amobile,email,cimagename,dt,dt], function(tx1,result){
+							alert("inserted");
+							$("#insert").text('Submit');
+							$("#reg")[0].reset();
+							var signinTpl = Handlebars.compile($("#signin-tpl").html());	
+							$('.maincontent').html(signinTpl);
+						},function(error){
+							ImgCache.removeFile(cimgname);
+							$('#profimg').attr('src','img/camera.png');
+							alert("error");
 						});
-					}
-				);
-				
-				db.transaction(function(tx){
-					var qry="INSERT INTO userdetails (company_name,name,phonenumber,alternumber,emailid,profilepic,dateofcreation,dateofupdate) VALUES (?,?,?,?,?,?,?,?)";
-					tx.executeSql(qry, [cname,name,mobile,amobile,email,cimagename,dt,dt], function(tx1,result){
-						alert("inserted");
-						$("#insert").text('Submit');
-						$("#reg")[0].reset();
-						var signinTpl = Handlebars.compile($("#signin-tpl").html());	
-						$('.maincontent').html(signinTpl);
-					},function(error){
-						ImgCache.removeFile(cimgname);
-						$('#profimg').attr('src','img/camera.png');
-						alert("error");
-					});
-				}, errorCB, successCB);		
+					}, errorCB, successCB);	
+				}
+				else
+				{
+					db.transaction(function(tx){
+						var qry="INSERT INTO userdetails (company_name,name,phonenumber,alternumber,emailid,profilepic,dateofcreation,dateofupdate) VALUES (?,?,?,?,?,?,?,?)";
+						tx.executeSql(qry, [cname,name,mobile,amobile,email,cimagename,dt,dt], function(tx1,result){
+							alert("inserted");
+							$("#insert").text('Submit');
+							$("#reg")[0].reset();
+							var signinTpl = Handlebars.compile($("#signin-tpl").html());	
+							$('.maincontent').html(signinTpl);
+						},function(error){
+							ImgCache.removeFile(cimgname);
+							$('#profimg').attr('src','img/camera.png');
+							alert("error");
+						});
+					}, errorCB, successCB);	
+				}				
 				
 			}
 			else 
