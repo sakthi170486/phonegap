@@ -171,7 +171,7 @@
 		//var db = window.openDatabase("customerdb", "1.0", "customer database", 1000000); //will create database Dummy_DB or open it
 		
 		var db = null;
-		var internet=0;
+		
 		document.addEventListener("deviceready", onDeviceReady, false);
 		
 		function onDeviceReady() {
@@ -194,8 +194,7 @@
 			// WARNING: Make sure this points to a __directory__!
 			// NOTE: Only has effect when running in a Cordova environment			
 			ImgCache.options.cordovaFilesystemRoot = cordova.file.dataDirectory;	
-			ImgCache.init();
-			internet = checkInternet();
+			ImgCache.init();			
 		}
 		
 		
@@ -242,7 +241,7 @@
 			  }			 
 			  $('#imgname').val(target.attr('src'));
 			});	
-			internet = checkInternet();
+			var internet = checkInternet();
 			if(internet > 0)
 			{
 				var ft = new FileTransfer();
@@ -326,7 +325,7 @@
 					var v = $('#simgname').val();
 					if(v.length > 0)
 					{
-						internet = checkInternet();
+						var internet = checkInternet();
 						if(internet > 0)
 						{
 							$.ajax({
@@ -372,7 +371,7 @@
 			if(v.length > 0 )
 			{
 				alert('1');
-				internet = checkInternet();
+				var internet = checkInternet();
 				if(internet > 0)
 				{
 					alert('2');
@@ -466,7 +465,7 @@
 					return false;
 				 }		
 				$("#insert").text('Connecting...');
-				internet = checkInternet();
+				var internet = checkInternet();
 				if(internet > 0)
 				{
 					$.ajax({
@@ -517,7 +516,7 @@
 			var v=$(this).val();
 			if(v.length > 0 )
 			{
-				internet = checkInternet();
+				var internet = checkInternet();
 				if(internet > 0)
 				{
 					$.ajax({
@@ -671,7 +670,7 @@
 			var o=$('#otp').val();
 			if(o.length > 0)
 			{
-				internet = checkInternet();
+				var internet = checkInternet();
 				if(internet > 0)
 				{
 					$.ajax({
