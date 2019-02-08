@@ -175,9 +175,9 @@
 		document.addEventListener("deviceready", onDeviceReady, false);
 		
 		function onDeviceReady() {
-			db = window.sqlitePlugin.openDatabase({name: "customerdb.db", location: 'default'});
+			//db = window.sqlitePlugin.openDatabase({name: "customerdb.db", location: 'default'});
 			//db = window.openDatabase("customerdb", "1.1.0", "customer database", 1000000);	
-			
+			db = sqlitePlugin.openDatabase({name: 'cusdirectory.db'});
 			// Create Table
 			db.transaction(populateDB, errorCB, successCB);				
 			
