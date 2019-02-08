@@ -185,7 +185,7 @@
 			var dt = date+' '+time;
 			// Insert query
 			var qry="INSERT INTO userdetails (company_name,name,phonenumber,alternumber,emailid,profilepic,dateofcreation,dateofupdate) VALUES (?,?,?,?,?,?,?,?)";
-			tx.executeSql(qry, [cname,name,mobile,amobile,email,cimagename,dt,dt]);
+			tx.executeSql(qry , [cname,name,mobile,amobile,email,cimgname,dt,dt]);
 			//tx.executeSql("INSERT INTO notes(note) VALUES (?)",[note]);
 
 			// Append new list item
