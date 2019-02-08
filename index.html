@@ -278,13 +278,14 @@
 			db.transaction(function(tx){
 				tx.executeSql("select id from userdetails where phonenumber=?",[ph],function(tx1,result){
 					var len = result.rows.length;
-					for (var i=0; i<len; i++){
+					alert(len);
+					for (var i=0; i<=len; i++){
 						id = result.rows.item(i).id;						
 					}
 					
 				},errorCB);
 			}, errorCB, successCB);
-			alert(id+' - '+ph);
+			
 			return id;
 		}
 		
@@ -293,7 +294,7 @@
 			db.transaction(function(tx){
 				tx.executeSql("select id from userdetails where phonenumber=? and loginaccess=?",[ph,otp],function(tx1,result){
 					var len = result.rows.length;
-					for (var i=0; i<len; i++){
+					for (var i=0; i<=len; i++){
 						id = result.rows.item(i).id;						
 					}
 				},errorCB);
