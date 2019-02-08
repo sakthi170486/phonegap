@@ -177,6 +177,21 @@
 		function onDeviceReady() {
 			//db = window.sqlitePlugin.openDatabase({name: "customerdb.db", location: 'default'});
 			db = window.openDatabase("customerdb", "1.1.0", "customer database", 1000000);
+			
+			
+			var tables = ["notes", "userdetails", "customerdetails"];
+			for(var i=0;i<tables;i++)
+			{
+				db.transaction(function(tx){
+					var qry="DROP TABLE IF EXISTS"+tables[i];
+					tx.executeSql(qry, [], function(tx1,result){
+						console.log('dropped');
+					},function(error){
+						
+					});
+				}, errorCB, successCB);				
+			}
+			
 			// Create Table
 			db.transaction(populateDB, errorCB, successCB);				
 			
@@ -554,7 +569,7 @@
 							else
 							{
 								alert("Mobile number not registered. Enter Registered mobile Number");
-								$("#umobile").val('').focus();
+								$("#umobile").focus();
 							}
 						}
 						else
@@ -602,7 +617,7 @@
 				if(c == 0)
 				{
 					alert("Mobile number not registered. Enter Registered mobile Number");
-					$("#umobile").val('').focus();
+					$("#umobile").focus();
 				}
 			}
 		});
