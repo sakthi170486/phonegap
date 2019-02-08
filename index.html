@@ -242,7 +242,7 @@
 			  }			 
 			  $('#imgname').val(target.attr('src'));
 			});	
-			
+			internet = checkInternet();
 			if(internet > 0)
 			{
 				var ft = new FileTransfer();
@@ -326,6 +326,7 @@
 					var v = $('#simgname').val();
 					if(v.length > 0)
 					{
+						internet = checkInternet();
 						if(internet > 0)
 						{
 							$.ajax({
@@ -367,39 +368,43 @@
 		$("body").on('blur','#mobile',function(e){
 			var v=$(this).val();
 			var im = $('#simgname').val();
-			if(v.length > 0 && internet > 0)
+			if(v.length > 0 )
 			{
-				$.ajax({
-					type: "POST",
-					url:"http://www.azillesoft.com/phonegap/database/checkumobile.php",
-					data : 'm='+v+'&im='+im, // post data || get data
-					crossDomain: true,
-					cache: false,
-					success: function(data){
-						if(data == "exists")
-						{			
-							$('#profimg').attr('src','img/camera.png');
-							alert("Mobile number already registered.");
-							$("#mobile").val('');
-							$("#reg")[0].reset();
-							var signinTpl = Handlebars.compile($("#signin-tpl").html());	
-							$('.maincontent').html(signinTpl);							
-						}						
-					}
-				});
-			}
-			else
-			{
-				alert('checked');
-				var c = checkMobile(v);
-				if(c > 0)
+				internet = checkInternet();
+				if(internet > 0)
 				{
-					$('#profimg').attr('src','img/camera.png');
-					alert("Mobile number already registered.");
-					$("#mobile").val('');
-					$("#reg")[0].reset();
-					var signinTpl = Handlebars.compile($("#signin-tpl").html());	
-					$('.maincontent').html(signinTpl);
+					$.ajax({
+						type: "POST",
+						url:"http://www.azillesoft.com/phonegap/database/checkumobile.php",
+						data : 'm='+v+'&im='+im, // post data || get data
+						crossDomain: true,
+						cache: false,
+						success: function(data){
+							if(data == "exists")
+							{			
+								$('#profimg').attr('src','img/camera.png');
+								alert("Mobile number already registered.");
+								$("#mobile").val('');
+								$("#reg")[0].reset();
+								var signinTpl = Handlebars.compile($("#signin-tpl").html());	
+								$('.maincontent').html(signinTpl);							
+							}						
+						}
+					});
+				}
+				else
+				{
+					alert('checked');
+					var c = checkMobile(v);
+					if(c > 0)
+					{
+						$('#profimg').attr('src','img/camera.png');
+						alert("Mobile number already registered.");
+						$("#mobile").val('');
+						$("#reg")[0].reset();
+						var signinTpl = Handlebars.compile($("#signin-tpl").html());	
+						$('.maincontent').html(signinTpl);
+					}
 				}
 			}
 		});
@@ -456,7 +461,7 @@
 					return false;
 				 }		
 				$("#insert").text('Connecting...');
-				
+				internet = checkInternet();
 				if(internet > 0)
 				{
 					$.ajax({
@@ -505,19 +510,64 @@
 		// Check mobile number registered or not
 		$("body").on('blur','#umobile',function(e){
 			var v=$(this).val();
-			if(v.length > 0 && internet > 0)
+			if(v.length > 0 )
 			{
-				$.ajax({
-					type: "POST",
-					url:"http://www.azillesoft.com/phonegap/database/checkumobile.php",
-					data : 'm='+v, // post data || get data
-					crossDomain: true,
-					cache: false,
-					success: function(data){
-						if(data == 0)
-						{
-							var c = checkMobile(v);
-							if(c > 0)
+				internet = checkInternet();
+				if(internet > 0)
+				{
+					$.ajax({
+						type: "POST",
+						url:"http://www.azillesoft.com/phonegap/database/checkumobile.php",
+						data : 'm='+v, // post data || get data
+						crossDomain: true,
+						cache: false,
+						success: function(data){
+							if(data == 0)
+							{
+								var c = checkMobile(v);
+								if(c > 0)
+								{
+									db.transaction(function(tx){
+										tx.executeSql("select company_name,name,phonenumber,alternumber,emailid,profilepic,dateofcreation,dateofupdate from userdetails",[],function(tx1,result){
+											var len = result.rows.length;
+											if(len >0)
+											{
+												var options = new FileUploadOptions();
+												var cname = result.rows.item(0).company_name;
+												var name = result.rows.item(0).name;
+												var pnum = result.rows.item(0).phonenumber;
+												var apnum = result.rows.item(0).alternumber;
+												var pic = result.rows.item(0).profilepic;
+												var email = result.rows.item(0).emailid;
+												
+												var ft = new FileTransfer();
+												ft.upload(pic, "http://www.azillesoft.com/phonegap/database/upload.php", function(result){
+													pic = result.response;	
+												}, function(error){
+													alert('error : ' + JSON.stringify(error));
+												}, options);
+												
+												$.ajax({
+													type: "POST",
+													url:"http://www.azillesoft.com/phonegap/database/insert.php",
+													data : 'cname='+cname+'&name='+name+'&mobile='+pnum+'&altmobile='+apnum+'&email='+email+'&imgname='+pic, // post data || get data
+													crossDomain: true,
+													cache: false,
+													success: function(data){
+														//success
+													}
+												});										
+											}
+										},function(error){});
+									}, function(error){}, successCB);
+								}
+								else
+								{
+									alert("Mobile number not registered. Enter Registered mobile Number");
+									//$("#umobile").focus();
+								}
+							}
+							else
 							{
 								db.transaction(function(tx){
 									tx.executeSql("select company_name,name,phonenumber,alternumber,emailid,profilepic,dateofcreation,dateofupdate from userdetails",[],function(tx1,result){
@@ -541,8 +591,8 @@
 											
 											$.ajax({
 												type: "POST",
-												url:"http://www.azillesoft.com/phonegap/database/insert.php",
-												data : 'cname='+cname+'&name='+name+'&mobile='+pnum+'&altmobile='+apnum+'&email='+email+'&imgname='+pic, // post data || get data
+												url:"http://www.azillesoft.com/phonegap/database/update.php",
+												data : 'eid='+data+'&ecname='+cname+'&ename='+name+'&emobile='+pnum+'&altmobile='+apnum+'&eemail='+email+'&eimgname='+pic, // post data || get data
 												crossDomain: true,
 												cache: false,
 												success: function(data){
@@ -553,58 +603,17 @@
 									},function(error){});
 								}, function(error){}, successCB);
 							}
-							else
-							{
-								alert("Mobile number not registered. Enter Registered mobile Number");
-								//$("#umobile").focus();
-							}
 						}
-						else
-						{
-							db.transaction(function(tx){
-								tx.executeSql("select company_name,name,phonenumber,alternumber,emailid,profilepic,dateofcreation,dateofupdate from userdetails",[],function(tx1,result){
-									var len = result.rows.length;
-									if(len >0)
-									{
-										var options = new FileUploadOptions();
-										var cname = result.rows.item(0).company_name;
-										var name = result.rows.item(0).name;
-										var pnum = result.rows.item(0).phonenumber;
-										var apnum = result.rows.item(0).alternumber;
-										var pic = result.rows.item(0).profilepic;
-										var email = result.rows.item(0).emailid;
-										
-										var ft = new FileTransfer();
-										ft.upload(pic, "http://www.azillesoft.com/phonegap/database/upload.php", function(result){
-											pic = result.response;	
-										}, function(error){
-											alert('error : ' + JSON.stringify(error));
-										}, options);
-										
-										$.ajax({
-											type: "POST",
-											url:"http://www.azillesoft.com/phonegap/database/update.php",
-											data : 'eid='+data+'&ecname='+cname+'&ename='+name+'&emobile='+pnum+'&altmobile='+apnum+'&eemail='+email+'&eimgname='+pic, // post data || get data
-											crossDomain: true,
-											cache: false,
-											success: function(data){
-												//success
-											}
-										});										
-									}
-								},function(error){});
-							}, function(error){}, successCB);
-						}
-					}
-				});
-			}
-			else
-			{
-				var c = checkMobile(v);
-				if(c == 0)
+					});
+				}
+				else
 				{
-					alert("Mobile number not registered. Enter Registered mobile Number");
-					//$("#umobile").focus();
+					var c = checkMobile(v);
+					if(c == 0)
+					{
+						alert("Mobile number not registered. Enter Registered mobile Number");
+						//$("#umobile").focus();
+					}
 				}
 			}
 		});
@@ -657,6 +666,7 @@
 			var o=$('#otp').val();
 			if(o.length > 0)
 			{
+				internet = checkInternet();
 				if(internet > 0)
 				{
 					$.ajax({
