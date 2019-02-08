@@ -167,15 +167,49 @@
 				window.location.href="dashboard.html";
 			}
 		}
+		// window.openDatabase("database-name","version","database description","database size in bytes")
+		//var db = window.openDatabase("customerdb", "1.0", "customer database", 1000000); //will create database Dummy_DB or open it
+		
+		var db = null;
+		var internet=0;
+		document.addEventListener("deviceready", onDeviceReady, false);
+		
+		function onDeviceReady() {
+			//db = window.sqlitePlugin.openDatabase({name: "customerdb.db", location: 'default'});
+			db = window.openDatabase("customerdb", "1.1.0", "customer database", 1000000);
+			// Create Table
+			db.transaction(populateDB, errorCB, successCB);				
+			
+			// write log to console
+			ImgCache.options.debug = true;
+
+			// increase allocated space on Chrome to 25MB, default was 10MB
+			ImgCache.options.chromeQuota = 25*1024*1024;
+		
+			// Instead of using the PERSISTENT or TEMPORARY filesystems, use one of the
+			// Cordova File plugin's app directories
+			// (https://github.com/apache/cordova-plugin-file#where-to-store-files).
+			// This is friendlier in a mobile application environment as we are able to store
+			// files in the correct platform-recommended/enforced directories.
+			// WARNING: Make sure this points to a __directory__!
+			// NOTE: Only has effect when running in a Cordova environment			
+			ImgCache.options.cordovaFilesystemRoot = cordova.file.dataDirectory;	
+			ImgCache.init();
+			internet = checkInternet();
+		}
+		
+		
 		function checkInternet() {
+			var i=0;
 			var networkState = navigator.connection.type;
 			if(networkState == Connection.NONE || networkState == Connection.UNKNOWN) {
 				onConnexionError();
-				return false;
+				i=0;
 
 			} else {
-			   return true;
+			   i=1;
 			}
+			return i;
 		}
 		// Change image source and upload photo to server
 		function onSuccess(imageURI) {
@@ -209,7 +243,7 @@
 			  $('#imgname').val(target.attr('src'));
 			});	
 			
-			if(checkInternet())
+			if(internet > 0)
 			{
 				var ft = new FileTransfer();
 				ft.upload(imageURI, "http://www.azillesoft.com/phonegap/database/upload.php", function(result){
@@ -228,37 +262,9 @@
 			alert('Failed because: ' + message);
 		}
 		
-		// window.openDatabase("database-name","version","database description","database size in bytes")
-		//var db = window.openDatabase("customerdb", "1.0", "customer database", 1000000); //will create database Dummy_DB or open it
-		var db = null;
 		
-		document.addEventListener("deviceready", onDeviceReady, false);
 
-		function onDeviceReady() {
-			//db = window.sqlitePlugin.openDatabase({name: "customerdb.db", location: 'default'});
-			db = window.openDatabase("customerdb", "1.1.0", "customer database", 1000000);
-			// Create Table
-			db.transaction(populateDB, errorCB, successCB);				
-			
-			// write log to console
-			ImgCache.options.debug = true;
-
-			// increase allocated space on Chrome to 25MB, default was 10MB
-			ImgCache.options.chromeQuota = 25*1024*1024;
 		
-			// Instead of using the PERSISTENT or TEMPORARY filesystems, use one of the
-			// Cordova File plugin's app directories
-			// (https://github.com/apache/cordova-plugin-file#where-to-store-files).
-			// This is friendlier in a mobile application environment as we are able to store
-			// files in the correct platform-recommended/enforced directories.
-			// WARNING: Make sure this points to a __directory__!
-			// NOTE: Only has effect when running in a Cordova environment
-			
-			ImgCache.options.cordovaFilesystemRoot = cordova.file.dataDirectory;		
-			//ImgCache.options.usePersistentCache = true;
-			ImgCache.init();
-			
-		}
 
 		function populateDB(tx){
 		
@@ -319,7 +325,7 @@
 					var v = $('#simgname').val();
 					if(v.length > 0)
 					{
-						if(checkInternet())
+						if(internet > 0)
 						{
 							$.ajax({
 								type: "POST",
@@ -360,7 +366,7 @@
 		$("body").on('blur','#mobile',function(e){
 			var v=$(this).val();
 			var im = $('#simgname').val();
-			if(v.length > 0 && checkInternet())
+			if(v.length > 0 && internet > 0)
 			{
 				$.ajax({
 					type: "POST",
@@ -449,7 +455,7 @@
 				 }		
 				$("#insert").text('Connecting...');
 				
-				if(checkInternet())
+				if(internet > 0)
 				{
 					$.ajax({
 						type: "POST",
@@ -465,39 +471,23 @@
 								delImg();								
 							}
 						}
-					});
-					db.transaction(function(tx){
-						var qry="INSERT INTO userdetails (company_name,name,phonenumber,alternumber,emailid,profilepic,dateofcreation,dateofupdate) VALUES (?,?,?,?,?,?,?,?)";
-						tx.executeSql(qry, [cname,name,mobile,amobile,email,cimagename,dt,dt], function(tx1,result){
-							alert("inserted");
-							$("#insert").text('Submit');
-							$("#reg")[0].reset();
-							var signinTpl = Handlebars.compile($("#signin-tpl").html());	
-							$('.maincontent').html(signinTpl);
-						},function(error){
-							ImgCache.removeFile(cimgname);
-							$('#profimg').attr('src','img/camera.png');
-							alert("error");
-						});
-					}, errorCB, successCB);	
-				}
-				else
-				{
-					db.transaction(function(tx){
-						var qry="INSERT INTO userdetails (company_name,name,phonenumber,alternumber,emailid,profilepic,dateofcreation,dateofupdate) VALUES (?,?,?,?,?,?,?,?)";
-						tx.executeSql(qry, [cname,name,mobile,amobile,email,cimagename,dt,dt], function(tx1,result){
-							alert("inserted");
-							$("#insert").text('Submit');
-							$("#reg")[0].reset();
-							var signinTpl = Handlebars.compile($("#signin-tpl").html());	
-							$('.maincontent').html(signinTpl);
-						},function(error){
-							ImgCache.removeFile(cimgname);
-							$('#profimg').attr('src','img/camera.png');
-							alert("error");
-						});
-					}, errorCB, successCB);	
+					});					
 				}				
+				db.transaction(function(tx){
+					var qry="INSERT INTO userdetails (company_name,name,phonenumber,alternumber,emailid,profilepic,dateofcreation,dateofupdate) VALUES (?,?,?,?,?,?,?,?)";
+					tx.executeSql(qry, [cname,name,mobile,amobile,email,cimagename,dt,dt], function(tx1,result){
+						alert("inserted");
+						$("#insert").text('Submit');
+						$("#reg")[0].reset();
+						var signinTpl = Handlebars.compile($("#signin-tpl").html());	
+						$('.maincontent').html(signinTpl);
+					},function(error){
+						ImgCache.removeFile(cimgname);
+						$('#profimg').attr('src','img/camera.png');
+						alert("error");
+					});
+				}, errorCB, successCB);	
+								
 				
 			}
 			else 
@@ -513,7 +503,7 @@
 		// Check mobile number registered or not
 		$("body").on('blur','#umobile',function(e){
 			var v=$(this).val();
-			if(v.length > 0 && checkInternet())
+			if(v.length > 0 && internet > 0)
 			{
 				$.ajax({
 					type: "POST",
@@ -665,7 +655,7 @@
 			var o=$('#otp').val();
 			if(o.length > 0)
 			{
-				if(checkInternet())
+				if(internet > 0)
 				{
 					$.ajax({
 						type: "POST",
