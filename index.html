@@ -282,7 +282,7 @@
 					for (var i=0; i<len; i++){
 						id = result.rows.item(i).id;						
 					}
-					alert(id);
+					alert('checked');
 				},errorCB);
 			}, errorCB, successCB);
 			
@@ -368,11 +368,14 @@
 		$("body").on('blur','#mobile',function(e){
 			var v=$(this).val();
 			var im = $('#simgname').val();
+			alert('0');
 			if(v.length > 0 )
 			{
+				alert('1');
 				internet = checkInternet();
 				if(internet > 0)
 				{
+					alert('2');
 					$.ajax({
 						type: "POST",
 						url:"http://www.azillesoft.com/phonegap/database/checkumobile.php",
@@ -394,10 +397,12 @@
 				}
 				else
 				{
-					alert('checked');
+					alert('3');
+					
 					var c = checkMobile(v);
 					if(c > 0)
 					{
+						alert('4');
 						$('#profimg').attr('src','img/camera.png');
 						alert("Mobile number already registered.");
 						$("#mobile").val('');
@@ -702,7 +707,7 @@
 					if(o == '1234')
 					{						
 						db.transaction(function(tx){					
-							tx.executeSql("UPDATE userdetailsSET lastlogin=? where phonenumber=?",[dt,m],function(tx1,result){
+							tx.executeSql("UPDATE userdetails SET lastlogin=? where phonenumber=?",[dt,m],function(tx1,result){
 								//success
 								window.localStorage.setItem('loginstatus','true');
 								window.localStorage.setItem('lgnid',checkMobile(m));
