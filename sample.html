@@ -48,7 +48,24 @@
 									<hr/>
 									<div class="details">
 										<div class="scroll">
-											<input type='text' class='form-control' id='note' >
+											<div class="form-group">
+												<input type="text" class="form-control" required placeholder="Company Name *" name="cname" id="cname">
+											</div>
+											<div class="form-group">
+												<input type="text" class="form-control" required placeholder="Your Name *" name="name" id="name">
+											</div>
+											<div class="form-group">
+												<input type="tel" class="form-control" required placeholder="Mobile Number *" name="mobile" id="mobile">
+											</div>
+											<div class="form-group">
+												<input type="tel" class="form-control" placeholder="Alternative Number" name="altmobile" id="altmobile">
+											</div>
+											<div class="form-group">
+												<input type="email" class="form-control" placeholder="Email address *" required name="email" id="email">
+												<input type="hidden" class="form-control" name="imgname" id="imgname">
+												<input type="hidden" class="form-control" name="simgname" id="simgname">
+												
+											</div>	
 											<button onclick='insertData()' class="btn btn-primary" id='submit'>Submit</button><br>
 											<div class="text-center mt-5" id="loader">
 												<img src="img/ajax-loader.gif" alt="" class="img-responsive"/>
@@ -106,27 +123,31 @@
 		}
 
 		function populateDB(tx){
-			tx.executeSql('CREATE TABLE IF NOT EXISTS notes (id INTEGER PRIMARY KEY AUTOINCREMENT,note TEXT NOT NULL)');
+		
+			tx.executeSql('CREATE TABLE IF NOT EXISTS customerdetails (id INTEGER PRIMARY KEY AUTOINCREMENT, companyid INTEGER NOT NULL , name TEXT NOT NULL, emailid TEXT NOT NULL, phonenumber TEXT NOT NULL, address TEXT, city TEXT DEFAULT NULL, state TEXT DEFAULT NULL, country TEXT DEFAULT NULL, pincode INTEGER NOT NULL, source INTEGER NOT NULL DEFAULT 0, dateofcreation TEXT NOT NULL, dateofupdate TEXT NOT NULL)');
+			
+			tx.executeSql('CREATE TABLE IF NOT EXISTS userdetails (id INTEGER PRIMARY KEY AUTOINCREMENT, company_name TEXT NOT NULL , name TEXT NOT NULL, emailid TEXT NOT NULL, phonenumber TEXT NOT NULL, alternumber TEXT, profilepic TEXT DEFAULT NULL, loginaccess TEXT DEFAULT NULL, accessexpiry TEXT DEFAULT NULL, lastlogin TEXT DEFAULT NULL,dateofcreation TEXT NOT NULL, dateofupdate TEXT NOT NULL)');			
 		}
 
 		// Fetch all records
 		function fetchData(){
 			db.transaction(function(tx){
-				tx.executeSql("select id,note from notes",[],function(tx1,result){
+				tx.executeSql("select id,company_name,name from userdetails",[],function(tx1,result){
 					var len = result.rows.length;
 					$('.getcontent .customer-list').html('');
 					$('#loader').hide();
 					for (var i=0; i<len; i++){
-						var note = result.rows.item(i).note;
+						var name = result.rows.item(i).name;
+						var company_name = result.rows.item(i).company_name;
 						var id = result.rows.item(i).id;
 						var src=0;						
 						if(src == 1)
 						{
-							$('.getcontent .customer-list').append('<li><a class="vcus" href="'+id+'" data-src="'+src+'">'+name+'</a><a class="text-right dcus" data-src="'+src+'" href="'+id+'"><i class="fa fa-trash"></i></a></li>');
+							$('.getcontent .customer-list').append('<li><a class="vcus" href="'+id+'" data-src="'+src+'">'+company_name+' - '+name+'</a><a class="text-right dcus" data-src="'+src+'" href="'+id+'"><i class="fa fa-trash"></i></a></li>');
 						}
 						else
 						{
-							$('.getcontent .customer-list').append('<li><input type="checkbox" name="mrgcus[]" class="mrgcus" value="'+id+'"> <a class="vcus" href="'+id+'" data-src="'+src+'">'+note+'</a> <a class="text-right mcus" href="'+id+'"><i class="fa fa-check"></i></a><a class="text-right dcus" href="'+id+'" data-src="'+src+'" title="delete"><i class="fa fa-trash"></i></a></li>');
+							$('.getcontent .customer-list').append('<li><input type="checkbox" name="mrgcus[]" class="mrgcus" value="'+id+'"> <a class="vcus" href="'+id+'" data-src="'+src+'">'+company_name+' - '+name+'</a> <a class="text-right mcus" href="'+id+'"><i class="fa fa-check"></i></a><a class="text-right dcus" href="'+id+'" data-src="'+src+'" title="delete"><i class="fa fa-trash"></i></a></li>');
 						}
 					}
 
@@ -148,10 +169,24 @@
 		}
 		
 		function insertNote(tx){
-			var note = document.getElementById('note').value;
-
+			//var note = document.getElementById('note').value;
+			
+			var cname=$("#cname").val();
+			var name=$("#name").val();
+			var mobile=$("#mobile").val();
+			var amobile=$("#altmobile").val();
+			var email=$("#email").val();
+			var cimgname=$("#imgname").val();			
+			var imgname=$("#simgname").val();
+			
+			var today = new Date();
+			var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+			var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+			var dt = date+' '+time;
 			// Insert query
-			tx.executeSql("INSERT INTO notes(note) VALUES (?)",[note]);
+			var qry="INSERT INTO userdetails (company_name,name,phonenumber,alternumber,emailid,profilepic,dateofcreation,dateofupdate) VALUES (?,?,?,?,?,?,?,?)";
+			tx.executeSql(qry, [cname,name,mobile,amobile,email,cimagename,dt,dt]);
+			//tx.executeSql("INSERT INTO notes(note) VALUES (?)",[note]);
 
 			// Append new list item
 			/*var ul = document.getElementById("customer-list");
