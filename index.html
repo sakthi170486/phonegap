@@ -281,10 +281,10 @@
 					for (var i=0; i<len; i++){
 						id = result.rows.item(i).id;						
 					}
-					alert('checked');
+					
 				},errorCB);
 			}, errorCB, successCB);
-			
+			alert(id+' - '+ph);
 			return id;
 		}
 		
@@ -367,12 +367,10 @@
 		$("body").on('blur','#mobile',function(e){
 			var v=$(this).val();
 			var im = $('#simgname').val();
-			alert('0');
 			if(v.length > 0 )
 			{
-				alert('1');
+				
 				var internet = checkInternet();
-				alert(internet);
 				if(internet > 0)
 				{
 					alert('2');
@@ -397,12 +395,9 @@
 				}
 				else
 				{
-					alert('3');
-					
 					var c = checkMobile(v);
 					if(c > 0)
-					{
-						alert('4');
+					{						
 						$('#profimg').attr('src','img/camera.png');
 						alert("Mobile number already registered.");
 						$("#mobile").val('');
