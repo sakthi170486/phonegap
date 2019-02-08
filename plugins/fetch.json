@@ -168,10 +168,10 @@
         "variables": {}
     }
 	,
-    "cordova-plugin-sqlite-2": {
+    "cordova-sqlite-storage": {
         "source": {
             "type": "registry",
-            "id": "cordova-plugin-sqlite-2@~1.0.5"
+            "id": "cordova-sqlite-storage@~3.0.0"
         },
         "is_top_level": true,
         "variables": {}
