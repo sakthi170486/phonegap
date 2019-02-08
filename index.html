@@ -202,7 +202,7 @@
 			var i=0;
 			var networkState = navigator.connection.type;
 			if(networkState == Connection.NONE || networkState == Connection.UNKNOWN) {
-				onConnexionError();
+				//onConnexionError();
 				i=0;
 
 			} else {
@@ -372,6 +372,7 @@
 			{
 				alert('1');
 				var internet = checkInternet();
+				alert(internet);
 				if(internet > 0)
 				{
 					alert('2');
