@@ -38,7 +38,7 @@
 				</div>
 				<div class="col-md-10 col-sm-12">
 					<a class="d-block m-3 pt-3 text-white lnk" href="SignUp"><h4><i class="fa fa-plane"></i> Sign Up</h4></a>
-					<a class="d-block m-3 pt-3 text-white" href="sample.html"><h4><i class="fa fa-lock"></i> Sign In</h4></a>
+					<a class="d-block m-3 pt-3 text-white lnk" href="SignIn"><h4><i class="fa fa-lock"></i> Sign In</h4></a>
 					<a class="d-block m-3 pt-3 text-white lnk" href=""><h4><i class="fa fa-video-camera"></i> Watch Video</h4></a>
 				</div>
 				<div class="col-md-1">
@@ -82,7 +82,7 @@
 							<input type="text" class="form-control" required placeholder="Your Name *" name="name" id="name">
 						</div>
 						<div class="form-group">
-							<input type="tel" class="form-control" required placeholder="Mobile Number *" name="mobile" id="mobile">
+							<input type="tel" class="form-control" required placeholder="Mobile Number *" onblur="checkMobile(this.value)" name="mobile" id="mobile">
 						</div>
 						<div class="form-group">
 							<input type="tel" class="form-control" placeholder="Alternative Number" name="altmobile" id="altmobile">
@@ -170,12 +170,12 @@
 		// window.openDatabase("database-name","version","database description","database size in bytes")
 		//var db = window.openDatabase("customerdb", "1.0", "customer database", 1000000); //will create database Dummy_DB or open it
 		
-		
+		var db = null;
 		
 		document.addEventListener("deviceready", onDeviceReady, false);
 		
 		function onDeviceReady() {
-			var db = window.openDatabase("customerdb", "1.1", "customer database", 1000000);	
+			db = window.openDatabase("customerdb", "1.1", "customer database", 1000000);	
 			//db = sqlitePlugin.openDatabase({name: 'cusdirectory.db'});
 			// Create Table
 			db.transaction(populateDB, errorCB, successCB);				
@@ -241,7 +241,7 @@
 			  }			 
 			  $('#imgname').val(target.attr('src'));
 			});	
-			/*var internet = checkInternet();
+			var internet = checkInternet();
 			if(internet > 0)
 			{
 				var ft = new FileTransfer();
@@ -252,7 +252,7 @@
 				}, function(error){
 					alert('error : ' + JSON.stringify(error));
 				}, options);
-			}*/
+			}
 			
 			$('#photo').modal('hide');
 		}
@@ -272,26 +272,34 @@
 			tx.executeSql('CREATE TABLE IF NOT EXISTS userdetails (id INTEGER PRIMARY KEY AUTOINCREMENT, company_name TEXT NOT NULL , name TEXT NOT NULL, emailid TEXT NOT NULL, phonenumber TEXT NOT NULL, alternumber TEXT, profilepic TEXT DEFAULT NULL, loginaccess TEXT DEFAULT NULL, accessexpiry TEXT DEFAULT NULL, lastlogin TEXT DEFAULT NULL,dateofcreation TEXT NOT NULL, dateofupdate TEXT NOT NULL)');			
 		}
 		
-		function checkMobile(){
+		function checkMobile(ph){
 			var id=0;
-			var ph=1;
-			var db = window.openDatabase("customerdb", "1.1", "customer database", 1000000);
 			db.transaction(function(tx){
-				tx.executeSql('select id from userdetails where phonenumber="'+ph+'"',[],function(tx1,result){
-					var len = result.rows.length;					
-					/*for (var i=0; i<len; i++){*/
-						id = result.rows.item(0).id;						
-					/*}*/
+				tx.executeSql("select id from userdetails where phonenumber=?",[ph],function(tx1,result){
+					var len = result.rows.length;
+					
+					for (var i=0; i<len; i++){
+						id = result.rows.item(i).id;						
+					}
 					
 				},errorCB);
 			}, errorCB, successCB);
-			alert(id);
-			return id;
+			
+			if(id > 0)
+			{						
+				$('#profimg').attr('src','img/camera.png');
+				alert("Mobile number already registered.");
+				$("#mobile").val('');
+				$("#reg")[0].reset();
+				var signinTpl = Handlebars.compile($("#signin-tpl").html());	
+				$('.maincontent').html(signinTpl);
+			}
+			
+			//return id;
 		}
 		
 		function checkOTP(ph,otp){
-			var id=0;	
-			var db = window.openDatabase("customerdb", "1.1", "customer database", 1000000);			
+			var id=0;			
 			db.transaction(function(tx){
 				tx.executeSql("select id from userdetails where phonenumber=? and loginaccess=?",[ph,otp],function(tx1,result){
 					var len = result.rows.length;
@@ -320,7 +328,7 @@
 			e.preventDefault();
 			// Most effect types need no options passed by default			
 			var l=$(this).attr('href').toLowerCase();
-			/*if(l != '#' && l != '')
+			if(l != '#' && l != '')
 			{
 				if($('#simgname').val())
 				{		
@@ -346,7 +354,7 @@
 							});
 						}
 					}
-				}*/
+				}
 				var template = Handlebars.compile($("#"+l+"-tpl").html());
 				
 				if(l == 'home' || l == 'welcome'){
@@ -361,17 +369,17 @@
 				$( ".maincontent" ).effect( 'slide', options, 300, function(){
 					$('.maincontent').html(template);
 				});
-			/*}*/
+			}
 			
 		});
 		
 		// Check mobile number already registered or not
-		$("body").on('blur','#mobile',function(e){
+		/*$("body").on('blur','#mobile',function(e){
 			var v=$(this).val();
 			var im = $('#simgname').val();
 			if(v.length > 0 )
 			{
-				/*
+				
 				var internet = checkInternet();
 				if(internet > 0)
 				{
@@ -396,7 +404,7 @@
 					});
 				}
 				else
-				{*/
+				{
 					var c = checkMobile(v);
 					if(c > 0)
 					{						
@@ -407,9 +415,9 @@
 						var signinTpl = Handlebars.compile($("#signin-tpl").html());	
 						$('.maincontent').html(signinTpl);
 					}
-				/*}*/
+				}
 			}
-		});
+		});*/
 	
 		// take picture from camera
 		$('body').on('click','#but_take',function(){
@@ -464,7 +472,7 @@
 				 }		
 				$("#insert").text('Connecting...');
 				var internet = checkInternet();
-				/*if(internet > 0)
+				if(internet > 0)
 				{
 					$.ajax({
 						type: "POST",
@@ -481,8 +489,7 @@
 							}
 						}
 					});					
-				}	*/		
-					var db = window.openDatabase("customerdb", "1.1", "customer database", 1000000);
+				}				
 				db.transaction(function(tx){
 					var qry="INSERT INTO userdetails (company_name,name,phonenumber,alternumber,emailid,profilepic,dateofcreation,dateofupdate) VALUES (?,?,?,?,?,?,?,?)";
 					tx.executeSql(qry, [cname,name,mobile,amobile,email,cimgname,dt,dt], function(tx1,result){
@@ -515,7 +522,7 @@
 			var v=$(this).val();
 			if(v.length > 0 )
 			{
-				/*var internet = checkInternet();
+				var internet = checkInternet();
 				if(internet > 0)
 				{
 					$.ajax({
@@ -610,14 +617,14 @@
 					});
 				}
 				else
-				{*/
+				{
 					var c = checkMobile(v);
 					if(c == 0)
 					{
 						alert("Mobile number not registered. Enter Registered mobile Number");
 						//$("#umobile").focus();
 					}
-				/*}*/
+				}
 			}
 		});
 		
@@ -669,7 +676,7 @@
 			var o=$('#otp').val();
 			if(o.length > 0)
 			{
-				/*var internet = checkInternet();
+				var internet = checkInternet();
 				if(internet > 0)
 				{
 					$.ajax({
@@ -699,30 +706,25 @@
 					});
 				}
 				else
-				{*/
+				{
 				
 					//var cotp=checkOTP(m,o);
 					if(o == '1234')
-					{		
-						var today = new Date();
-						var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
-						var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-						var dt = date+' '+time;
-						var db = window.openDatabase("customerdb", "1.1", "customer database", 1000000);
+					{						
 						db.transaction(function(tx){					
 							tx.executeSql("UPDATE userdetails SET lastlogin=? where phonenumber=?",[dt,m],function(tx1,result){
 								//success
 								window.localStorage.setItem('loginstatus','true');
 								window.localStorage.setItem('lgnid',checkMobile(m));
 								window.localStorage.setItem('uid',m);
-								window.location.href="sample.html";
+								window.location.href="dashboard.html";
 							},function(error){								
 								alert("Incorrect OTP");							
 								$("#otp").val('').focus();
 							});
 						}, errorCB, successCB);							
 					}
-				/*}*/
+				}
 			}
 			else
 			{

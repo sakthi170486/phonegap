@@ -111,9 +111,8 @@
 
 		// Fetch all records
 		function fetchData(){
-			var id=1;
 			db.transaction(function(tx){
-				tx.executeSql("select id,note from notes where id=?",[id],function(tx1,result){
+				tx.executeSql("select id,note from notes",[],function(tx1,result){
 					var len = result.rows.length;
 					$('.getcontent .customer-list').html('');
 					$('#loader').hide();
