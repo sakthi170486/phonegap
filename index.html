@@ -273,7 +273,7 @@
 		function checkMobile(ph){
 			var id=0;
 			db.transaction(function(tx){
-				tx.executeSql("select id from userdetails where phonenumber=?",[ph],function(tx1,result){
+				tx.executeSql("select id from userdetails where phonenumber="+ph,[],function(tx1,result){
 					var len = result.rows.length;
 					alert(len + ' - '+ result.rows.item(0).id);						
 					for (var i=0; i < len; i++){
