@@ -38,7 +38,7 @@
 				</div>
 				<div class="col-md-10 col-sm-12">
 					<a class="d-block m-3 pt-3 text-white lnk" href="SignUp"><h4><i class="fa fa-plane"></i> Sign Up</h4></a>
-					<a class="d-block m-3 pt-3 text-white " href="sample.html"><h4><i class="fa fa-lock"></i> Sign In</h4></a>
+					<a class="d-block m-3 pt-3 text-white" href="sample.html"><h4><i class="fa fa-lock"></i> Sign In</h4></a>
 					<a class="d-block m-3 pt-3 text-white lnk" href=""><h4><i class="fa fa-video-camera"></i> Watch Video</h4></a>
 				</div>
 				<div class="col-md-1">
@@ -170,12 +170,12 @@
 		// window.openDatabase("database-name","version","database description","database size in bytes")
 		//var db = window.openDatabase("customerdb", "1.0", "customer database", 1000000); //will create database Dummy_DB or open it
 		
-		var db = null;
+		
 		
 		document.addEventListener("deviceready", onDeviceReady, false);
 		
 		function onDeviceReady() {
-			db = window.openDatabase("customerdb", "1.1", "customer database", 1000000);	
+			var db = window.openDatabase("customerdb", "1.1", "customer database", 1000000);	
 			//db = sqlitePlugin.openDatabase({name: 'cusdirectory.db'});
 			// Create Table
 			db.transaction(populateDB, errorCB, successCB);				
@@ -277,7 +277,7 @@
 			var ph=1;
 			var db = window.openDatabase("customerdb", "1.1", "customer database", 1000000);
 			db.transaction(function(tx){
-				tx.executeSql("select id from userdetails where phonenumber=?",[ph],function(tx1,result){
+				tx.executeSql('select id from userdetails where phonenumber="'+ph+'"',[],function(tx1,result){
 					var len = result.rows.length;					
 					/*for (var i=0; i<len; i++){*/
 						id = result.rows.item(0).id;						
