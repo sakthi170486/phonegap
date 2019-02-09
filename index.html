@@ -272,8 +272,9 @@
 			tx.executeSql('CREATE TABLE IF NOT EXISTS userdetails (id INTEGER PRIMARY KEY AUTOINCREMENT, company_name TEXT NOT NULL , name TEXT NOT NULL, emailid TEXT NOT NULL, phonenumber TEXT NOT NULL, alternumber TEXT, profilepic TEXT DEFAULT NULL, loginaccess TEXT DEFAULT NULL, accessexpiry TEXT DEFAULT NULL, lastlogin TEXT DEFAULT NULL,dateofcreation TEXT NOT NULL, dateofupdate TEXT NOT NULL)');			
 		}
 		
-		function checkMobile(ph){
+		function checkMobile(){
 			var id=0;
+			var ph=1;
 			var db = window.openDatabase("customerdb", "1.1", "customer database", 1000000);
 			db.transaction(function(tx){
 				tx.executeSql("select id from userdetails where phonenumber=?",[ph],function(tx1,result){
