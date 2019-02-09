@@ -274,13 +274,13 @@
 		
 		function checkMobile(ph){
 			var id=0;
-			
+			var db = window.openDatabase("customerdb", "1.1", "customer database", 1000000);
 			db.transaction(function(tx){
 				tx.executeSql("select id from userdetails where phonenumber=?",[ph],function(tx1,result){
 					var len = result.rows.length;					
-					for (var i=0; i<len; i++){
-						id = result.rows.item(i).id;						
-					}
+					/*for (var i=0; i<len; i++){*/
+						id = result.rows.item(0).id;						
+					/*}*/
 					
 				},errorCB);
 			}, errorCB, successCB);
@@ -289,7 +289,8 @@
 		}
 		
 		function checkOTP(ph,otp){
-			var id=0;			
+			var id=0;	
+			var db = window.openDatabase("customerdb", "1.1", "customer database", 1000000);			
 			db.transaction(function(tx){
 				tx.executeSql("select id from userdetails where phonenumber=? and loginaccess=?",[ph,otp],function(tx1,result){
 					var len = result.rows.length;
@@ -479,7 +480,8 @@
 							}
 						}
 					});					
-				}	*/			
+				}	*/		
+					var db = window.openDatabase("customerdb", "1.1", "customer database", 1000000);
 				db.transaction(function(tx){
 					var qry="INSERT INTO userdetails (company_name,name,phonenumber,alternumber,emailid,profilepic,dateofcreation,dateofupdate) VALUES (?,?,?,?,?,?,?,?)";
 					tx.executeSql(qry, [cname,name,mobile,amobile,email,cimgname,dt,dt], function(tx1,result){
@@ -700,8 +702,12 @@
 				
 					//var cotp=checkOTP(m,o);
 					if(o == '1234')
-					{					
-						alert(o);
+					{		
+						var today = new Date();
+						var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+						var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+						var dt = date+' '+time;
+						var db = window.openDatabase("customerdb", "1.1", "customer database", 1000000);
 						db.transaction(function(tx){					
 							tx.executeSql("UPDATE userdetails SET lastlogin=? where phonenumber=?",[dt,m],function(tx1,result){
 								//success
