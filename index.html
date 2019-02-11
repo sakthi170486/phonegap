@@ -431,7 +431,8 @@
 			var email=$("#email").val();
 			var cimgname=$("#imgname").val();			
 			var imgname=$("#simgname").val();			
-			var accesskey = Math.floor(Math.random() * 1000000); 
+			//var accesskey = Math.floor(Math.random() * 1000000); 
+			var accesskey = '123456'; 
 			$("#accesskey").val(accesskey);
 			
 			var today = new Date();
@@ -465,7 +466,7 @@
 					tx.executeSql(qry, [cname,name,mobile,amobile,email,cimgname,accesskey,dt,dt], function(tx1,result){
 						alert("inserted");
 						
-						var internet = checkInternet();
+						/*var internet = checkInternet();
 						if(internet > 0)
 						{
 							$.ajax({
@@ -483,7 +484,7 @@
 									}
 								}
 							});					
-						}
+						}*/
 							
 						$("#insert").text('Submit');
 						$("#reg")[0].reset();
