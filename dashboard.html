@@ -364,19 +364,22 @@
 			db.transaction(function(tx){
 				tx.executeSql("select * from customerdetails where accesskey=?",[accesskey],function(tx1,result){
 					var len = result.rows.length;
-					$('.getcontent .customer-list').html('');
-					$('#cusloader').hide();
-					for (var i=0; i<len; i++){
-						var id = result.rows.item(i).cusuniqueid;
-						var name=result.rows.item(i).name;
-						var src=result.rows.item(i).source;
-						if(src == 1)
-						{
-							$('.getcontent .customer-list').append('<li><a class="vcus" href="'+id+'" data-src="'+src+'">'+name+'</a><a class="text-right dcus" data-src="'+src+'" href="'+id+'"><i class="fa fa-trash"></i></a></li>');
-						}
-						else
-						{
-							$('.getcontent .customer-list').append('<li><input type="checkbox" name="mrgcus[]" class="mrgcus" value="'+id+'"> <a class="vcus" href="'+id+'" data-src="'+src+'">'+name+'</a> <a class="text-right mcus" href="'+id+'"><i class="fa fa-check"></i></a><a class="text-right dcus" href="'+id+'" data-src="'+src+'" title="delete"><i class="fa fa-trash"></i></a></li>');
+					if(len >0)
+					{
+						$('.getcontent .customer-list').html('');
+						$('#cusloader').hide();
+						for (var i=0; i<len; i++){
+							var id = result.rows.item(i).cusuniqueid;
+							var name=result.rows.item(i).name;
+							var src=result.rows.item(i).source;
+							if(src == 1)
+							{
+								$('.getcontent .customer-list').append('<li><a class="vcus" href="'+id+'" data-src="'+src+'">'+name+'</a><a class="text-right dcus" data-src="'+src+'" href="'+id+'"><i class="fa fa-trash"></i></a></li>');
+							}
+							else
+							{
+								$('.getcontent .customer-list').append('<li><input type="checkbox" name="mrgcus[]" class="mrgcus" value="'+id+'"> <a class="vcus" href="'+id+'" data-src="'+src+'">'+name+'</a> <a class="text-right mcus" href="'+id+'"><i class="fa fa-check"></i></a><a class="text-right dcus" href="'+id+'" data-src="'+src+'" title="delete"><i class="fa fa-trash"></i></a></li>');
+							}
 						}
 					}
 				},errorCB);
@@ -423,43 +426,46 @@
 			$('.getcontent #myaccloader').show();$('.getcontent #vprofile').hide();
 			db.transaction(function(tx){
 				tx.executeSql("select * from userdetails where phonenumber=?",[uid],function(tx1,result){
-					var len = result.rows.length;					
-					for (var i=0; i<len; i++){
-						var id = result.rows.item(i).id;
-						var name=result.rows.item(i).name;
-						var mobile=result.rows.item(i).phonenumber;
-						var cname=result.rows.item(i).company_name;
-						var emailid=result.rows.item(i).emailid;
-						var altnum=result.rows.item(i).alternumber;
-						var img=result.rows.item(i).profilepic;
-						var accesskey=result.rows.item(i).accesskey;
-						if(img != '')
-						{
-							$('#uimg').attr('src',img);
-							$('#profimg').attr('src',img);
-							/*$('#uimg').attr('src','http://www.azillesoft.com/phonegap/database/upload/'+img);
-							$('#profimg').attr('src','http://www.azillesoft.com/phonegap/database/upload/'+img);*/
+					var len = result.rows.length;
+					if(len >0)
+					{
+						for (var i=0; i<len; i++){
+							var id = result.rows.item(i).id;
+							var name=result.rows.item(i).name;
+							var mobile=result.rows.item(i).phonenumber;
+							var cname=result.rows.item(i).company_name;
+							var emailid=result.rows.item(i).emailid;
+							var altnum=result.rows.item(i).alternumber;
+							var img=result.rows.item(i).profilepic;
+							var accesskey=result.rows.item(i).accesskey;
+							if(img != '')
+							{
+								$('#uimg').attr('src',img);
+								$('#profimg').attr('src',img);
+								/*$('#uimg').attr('src','http://www.azillesoft.com/phonegap/database/upload/'+img);
+								$('#profimg').attr('src','http://www.azillesoft.com/phonegap/database/upload/'+img);*/
+							}
+							
+							$('.getcontent #mcompname').text('Company Name : '+cname);
+							$('.getcontent #mname').text('Name : '+name);
+							$('.getcontent #memail').text('Email Id : '+emailid);
+							$('.getcontent #mphone').text('Contact Number : '+mobile);
+							$('.getcontent #maltnum').text('Alternate Number : '+altnum);
+							
+							$('.getcontent #ecname').val(cname);
+							$('.getcontent #ename').val(name);
+							$('.getcontent #eemail').val(emailid);
+							$('.getcontent #emobile').val(mobile);
+							$('.getcontent #altmobile').val(altnum);
+							$('.getcontent #simgname').val(img);
+							$('.getcontent #accesskey').val(accesskey);
+							$('.getcontent #eid').val(accesskey);
+							
+							$('#uname').text('Welcome '+name);
 						}
-						
-						$('.getcontent #mcompname').text('Company Name : '+cname);
-						$('.getcontent #mname').text('Name : '+name);
-						$('.getcontent #memail').text('Email Id : '+emailid);
-						$('.getcontent #mphone').text('Contact Number : '+mobile);
-						$('.getcontent #maltnum').text('Alternate Number : '+altnum);
-						
-						$('.getcontent #ecname').val(cname);
-						$('.getcontent #ename').val(name);
-						$('.getcontent #eemail').val(emailid);
-						$('.getcontent #emobile').val(mobile);
-						$('.getcontent #altmobile').val(altnum);
-						$('.getcontent #simgname').val(img);
-						$('.getcontent #accesskey').val(accesskey);
-						$('.getcontent #eid').val(accesskey);
-						
-						$('#uname').text('Welcome '+name);
+						$('.getcontent #myaccloader').hide();
+						$('.getcontent #vprofile').show();
 					}
-					$('.getcontent #myaccloader').hide();
-					$('.getcontent #vprofile').show();
 				},errorCB);
 			}, errorCB, successCB);
 			
@@ -517,43 +523,46 @@
 			var accesskey=window.localStorage.getItem('accesskey');
 			db.transaction(function(tx){
 				tx.executeSql("select * from customerdetails where id=? and accesskey=?",[id,accesskey],function(tx1,result){
-					var len = result.rows.length;					
-					for (var i=0; i<len; i++){
-						var id = result.rows.item(i).id;
-						var cname=result.rows.item(i).name;
-						var addr=result.rows.item(i).address;
-						var mobile=result.rows.item(i).phonenumber;
-						var emailid=result.rows.item(i).emailid;
-						var city=result.rows.item(i).city;
-						var state=result.rows.item(i).state;
-						var country=result.rows.item(i).country;
-						var pincode=result.rows.item(i).pincode;
-						var source=result.rows.item(i).source;
-						var cusuid=result.rows.item(i).cusuniqueid;
-						
-						$('.getcontent #vcusname').text('Name : '+cname);
-						$('.getcontent #vcusemail').text('Email Id : '+emailid);
-						$('.getcontent #vcusphone').text('Contact Number : '+mobile);
-						$('.getcontent #vcusaddr').text('Address : '+addr);
-						$('.getcontent #vcuscity').text('City : '+city);
-						$('.getcontent #vcusstate').text('State : '+state);
-						$('.getcontent #vcuscountry').text('Country : '+country);
-						$('.getcontent #vcuspincode').text('Pincode : '+pincode);
-						
-						$('.getcontent #ecusname').val(cname);
-						$('.getcontent #email').val(emailid);
-						$('.getcontent #mobile').val(mobile);
-						$('.getcontent #ecusaddr').val(addr);
-						$('.getcontent #ecuscity').val(city);
-						$('.getcontent #ecusstate').val(state);
-						$('.getcontent #ecuscountry').val(country);
-						$('.getcontent #ecuspincode').val(pincode);
-						$('.getcontent #source').val(source);
-						$('.getcontent #ecusid').val(id);
-						$('.getcontent #ecusuid').val(cusuid);
-					});	
-					$('.getcontent #cusloader').hide();
-					$('.getcontent #vcusprofile').show();
+					var len = result.rows.length;
+					if(len >0)
+					{
+						for (var i=0; i<len; i++){
+							var id = result.rows.item(i).id;
+							var cname=result.rows.item(i).name;
+							var addr=result.rows.item(i).address;
+							var mobile=result.rows.item(i).phonenumber;
+							var emailid=result.rows.item(i).emailid;
+							var city=result.rows.item(i).city;
+							var state=result.rows.item(i).state;
+							var country=result.rows.item(i).country;
+							var pincode=result.rows.item(i).pincode;
+							var source=result.rows.item(i).source;
+							var cusuid=result.rows.item(i).cusuniqueid;
+							
+							$('.getcontent #vcusname').text('Name : '+cname);
+							$('.getcontent #vcusemail').text('Email Id : '+emailid);
+							$('.getcontent #vcusphone').text('Contact Number : '+mobile);
+							$('.getcontent #vcusaddr').text('Address : '+addr);
+							$('.getcontent #vcuscity').text('City : '+city);
+							$('.getcontent #vcusstate').text('State : '+state);
+							$('.getcontent #vcuscountry').text('Country : '+country);
+							$('.getcontent #vcuspincode').text('Pincode : '+pincode);
+							
+							$('.getcontent #ecusname').val(cname);
+							$('.getcontent #email').val(emailid);
+							$('.getcontent #mobile').val(mobile);
+							$('.getcontent #ecusaddr').val(addr);
+							$('.getcontent #ecuscity').val(city);
+							$('.getcontent #ecusstate').val(state);
+							$('.getcontent #ecuscountry').val(country);
+							$('.getcontent #ecuspincode').val(pincode);
+							$('.getcontent #source').val(source);
+							$('.getcontent #ecusid').val(id);
+							$('.getcontent #ecusuid').val(cusuid);
+						});	
+						$('.getcontent #cusloader').hide();
+						$('.getcontent #vcusprofile').show();
+					}
 				},errorCB);
 			}, errorCB, successCB);
 			
@@ -730,13 +739,16 @@
 				{
 					db.transaction(function(tx){
 						tx.executeSql("select id from userdetails where phonenumber=? and accesskey != ?",[v,accesskey],function(tx1,result){
-							var len = result.rows.length;	
-							id = result.rows.item(0).id;
-							if(id > 0)
-							{
-								alert("Mobile number already registered.");
-								$("#emobile").val('').focus();
-							}										
+							var len = result.rows.length;
+							if(len >0)
+							{							
+								id = result.rows.item(0).id;
+								if(id > 0)
+								{
+									alert("Mobile number already registered.");
+									$("#emobile").val('').focus();
+								}
+							}							
 						},errorCB);
 					}, errorCB, successCB);	
 					
@@ -775,13 +787,16 @@
 				{
 					db.transaction(function(tx){
 						tx.executeSql("select id from customerdetails where phonenumber=? and id != ? and accesskey = ? ",[v,cid,accesskey],function(tx1,result){
-							var len = result.rows.length;	
-							id = result.rows.item(0).id;
-							if(id > 0)
+							var len = result.rows.length;
+							if(len >0)
 							{
-								alert("Mobile number already registered.");
-								$("#mobile").val('').focus();
-							}										
+								id = result.rows.item(0).id;
+								if(id > 0)
+								{
+									alert("Mobile number already registered.");
+									$("#mobile").val('').focus();
+								}	
+							}
 						},errorCB);
 					}, errorCB, successCB);
 					

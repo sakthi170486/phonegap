@@ -273,17 +273,20 @@
 			var id=0;
 			db.transaction(function(tx){
 				tx.executeSql("select id from userdetails where phonenumber=? ",[ph],function(tx1,result){
-					var len = result.rows.length;	
-					id = result.rows.item(0).id;
-					if(id > 0)
-					{
-						$('#profimg').attr('src','img/camera.png');
-						alert("Mobile number already registered.");
-						$("#mobile").val('');
-						$("#reg")[0].reset();
-						var signinTpl = Handlebars.compile($("#signin-tpl").html());	
-						$('.maincontent').html(signinTpl);
-					}										
+					var len = result.rows.length;
+					if(len >0)
+					{					
+						id = result.rows.item(0).id;
+						if(id > 0)
+						{
+							$('#profimg').attr('src','img/camera.png');
+							alert("Mobile number already registered.");
+							$("#mobile").val('');
+							$("#reg")[0].reset();
+							var signinTpl = Handlebars.compile($("#signin-tpl").html());	
+							$('.maincontent').html(signinTpl);
+						}	
+					}					
 				},errorCB);
 			}, errorCB, successCB);	
 		}
@@ -293,8 +296,11 @@
 			db.transaction(function(tx){
 				tx.executeSql("select id from userdetails where phonenumber=? and loginaccess=?",[ph,otp],function(tx1,result){
 					var len = result.rows.length;
-					for (var i=0; i<len; i++){
-						id = result.rows.item(i).id;						
+					if(len >0)
+					{
+						for (var i=0; i<len; i++){
+							id = result.rows.item(i).id;						
+						}
 					}
 				},errorCB);
 			}, errorCB, successCB);
@@ -523,49 +529,52 @@
 								var id=0;
 								db.transaction(function(tx){
 									tx.executeSql("select id from userdetails where phonenumber=? ",[v],function(tx1,result){
-										var len = result.rows.length;	
-										id = result.rows.item(0).id;
-										if(id > 0)
-										{
-											db.transaction(function(tx){
-												tx.executeSql("select company_name,name,phonenumber,alternumber,emailid,profilepic,accesskey,dateofcreation,dateofupdate from userdetails",[],function(tx1,result){
-													var len = result.rows.length;
-													if(len >0)
-													{
-														var options = new FileUploadOptions();
-														var cname = result.rows.item(0).company_name;
-														var name = result.rows.item(0).name;
-														var pnum = result.rows.item(0).phonenumber;
-														var apnum = result.rows.item(0).alternumber;
-														var pic = result.rows.item(0).profilepic;
-														var email = result.rows.item(0).emailid;
-														var accesskey = result.rows.item(0).accesskey;
-														
-														var ft = new FileTransfer();
-														ft.upload(pic, "http://www.azillesoft.com/phonegap/database/upload.php", function(result){
-															pic = result.response;	
-														}, function(error){
-															alert('error : ' + JSON.stringify(error));
-														}, options);
-														
-														$.ajax({
-															type: "POST",
-															url:"http://www.azillesoft.com/phonegap/database/insert.php",
-															data : 'cname='+cname+'&name='+name+'&mobile='+pnum+'&altmobile='+apnum+'&email='+email+'&imgname='+pic+'&accesskey='+accesskey, // post data || get data
-															crossDomain: true,
-															cache: false,
-															success: function(data){
-																//success
-															}
-														});										
-													}
-												},function(error){});
-											}, function(error){}, successCB);
-										}
-										else
-										{
-											alert("Mobile number not registered. Enter Registered mobile Number");
-										}									
+										var len = result.rows.length;
+										if(len >0)
+										{										
+											id = result.rows.item(0).id;
+											if(id > 0)
+											{
+												db.transaction(function(tx){
+													tx.executeSql("select company_name,name,phonenumber,alternumber,emailid,profilepic,accesskey,dateofcreation,dateofupdate from userdetails",[],function(tx1,result){
+														var len = result.rows.length;
+														if(len >0)
+														{
+															var options = new FileUploadOptions();
+															var cname = result.rows.item(0).company_name;
+															var name = result.rows.item(0).name;
+															var pnum = result.rows.item(0).phonenumber;
+															var apnum = result.rows.item(0).alternumber;
+															var pic = result.rows.item(0).profilepic;
+															var email = result.rows.item(0).emailid;
+															var accesskey = result.rows.item(0).accesskey;
+															
+															var ft = new FileTransfer();
+															ft.upload(pic, "http://www.azillesoft.com/phonegap/database/upload.php", function(result){
+																pic = result.response;	
+															}, function(error){
+																alert('error : ' + JSON.stringify(error));
+															}, options);
+															
+															$.ajax({
+																type: "POST",
+																url:"http://www.azillesoft.com/phonegap/database/insert.php",
+																data : 'cname='+cname+'&name='+name+'&mobile='+pnum+'&altmobile='+apnum+'&email='+email+'&imgname='+pic+'&accesskey='+accesskey, // post data || get data
+																crossDomain: true,
+																cache: false,
+																success: function(data){
+																	//success
+																}
+															});										
+														}
+													},function(error){});
+												}, function(error){}, successCB);
+											}
+											else
+											{
+												alert("Mobile number not registered. Enter Registered mobile Number");
+											}
+										}										
 									},errorCB);
 								}, errorCB, successCB);									
 							}
