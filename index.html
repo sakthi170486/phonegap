@@ -91,6 +91,7 @@
 							<input type="email" class="form-control" placeholder="Email address *" required name="email" id="email">
 							<input type="hidden" class="form-control" name="imgname" id="imgname">
 							<input type="hidden" class="form-control" name="simgname" id="simgname">
+							<input type="hidden" class="form-control" name="accesskey" id="accesskey">
 							
 						</div>	
 						<div class="form-group text-center">
@@ -156,6 +157,7 @@
 	<script src="js/main.js"></script> 
 	<script src="js/jquery-ui.js"></script>
 	<script src="js/imgcache.js"></script>
+		<script src="js/md5.min.js"></script>
 	<!-- <script src="js/imgcache-promise.js"></script> -->
 	<script type="text/javascript">
 		// If logged in then move to dashboard
@@ -260,14 +262,11 @@
 		}
 		
 		
-
-		
-
 		function populateDB(tx){
 		
-			tx.executeSql('CREATE TABLE IF NOT EXISTS customerdetails (id INTEGER PRIMARY KEY AUTOINCREMENT, companyid INTEGER NOT NULL , name TEXT NOT NULL, emailid TEXT NOT NULL, phonenumber TEXT NOT NULL, address TEXT, city TEXT DEFAULT NULL, state TEXT DEFAULT NULL, country TEXT DEFAULT NULL, pincode INTEGER NOT NULL, source INTEGER NOT NULL DEFAULT 0, dateofcreation TEXT NOT NULL, dateofupdate TEXT NOT NULL)');
+			tx.executeSql('CREATE TABLE IF NOT EXISTS customerdetails (id INTEGER PRIMARY KEY AUTOINCREMENT, accesskey TEXT NOT NULL , name TEXT NOT NULL, emailid TEXT NOT NULL, phonenumber TEXT NOT NULL, address TEXT, city TEXT DEFAULT NULL, state TEXT DEFAULT NULL, country TEXT DEFAULT NULL, pincode INTEGER NOT NULL, source INTEGER NOT NULL DEFAULT 0,cusuniqueid TEXT NOT NULL, dateofcreation TEXT NOT NULL, dateofupdate TEXT NOT NULL)');
 			
-			tx.executeSql('CREATE TABLE IF NOT EXISTS userdetails (id INTEGER PRIMARY KEY AUTOINCREMENT, company_name TEXT NOT NULL , name TEXT NOT NULL, emailid TEXT NOT NULL, phonenumber TEXT NOT NULL, alternumber TEXT, profilepic TEXT DEFAULT NULL, loginaccess TEXT DEFAULT NULL, accessexpiry TEXT DEFAULT NULL, lastlogin TEXT DEFAULT NULL,dateofcreation TEXT NOT NULL, dateofupdate TEXT NOT NULL)');			
+			tx.executeSql('CREATE TABLE IF NOT EXISTS userdetails (id INTEGER PRIMARY KEY AUTOINCREMENT, company_name TEXT NOT NULL , name TEXT NOT NULL, emailid TEXT NOT NULL, phonenumber TEXT NOT NULL, alternumber TEXT, profilepic TEXT DEFAULT NULL, loginaccess TEXT DEFAULT NULL, accessexpiry TEXT DEFAULT NULL, lastlogin TEXT DEFAULT NULL,accesskey TEXT NOT NULL ,dateofcreation TEXT NOT NULL, dateofupdate TEXT NOT NULL)');			
 		}
 		
 		function checkMobile(ph){
@@ -419,13 +418,16 @@
 		// insert data to server
 		$("body").on('click','#insert',function(e){
 			e.preventDefault();	
+			
 			var cname=$("#cname").val();
 			var name=$("#name").val();
 			var mobile=$("#mobile").val();
 			var amobile=$("#altmobile").val();
 			var email=$("#email").val();
 			var cimgname=$("#imgname").val();			
-			var imgname=$("#simgname").val();
+			var imgname=$("#simgname").val();			
+			var accesskey = md5(Math.floor(Math.random() * 100000)); 
+			$("#accesskey").val(accesskey);
 			
 			var today = new Date();
 			var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
@@ -470,10 +472,11 @@
 							}
 						}
 					});					
-				}				
+				}
+					
 				db.transaction(function(tx){
-					var qry="INSERT INTO userdetails (company_name,name,phonenumber,alternumber,emailid,profilepic,dateofcreation,dateofupdate) VALUES (?,?,?,?,?,?,?,?)";
-					tx.executeSql(qry, [cname,name,mobile,amobile,email,cimgname,dt,dt], function(tx1,result){
+					var qry="INSERT INTO userdetails (company_name,name,phonenumber,alternumber,emailid,profilepic,accesskey,dateofcreation,dateofupdate) VALUES (?,?,?,?,?,?,?,?)";
+					tx.executeSql(qry, [cname,name,mobile,amobile,email,cimgname,accesskey,dt,dt], function(tx1,result){
 						alert("inserted");
 						$("#insert").text('Submit');
 						$("#reg")[0].reset();
@@ -523,7 +526,7 @@
 										if(id > 0)
 										{
 											db.transaction(function(tx){
-												tx.executeSql("select company_name,name,phonenumber,alternumber,emailid,profilepic,dateofcreation,dateofupdate from userdetails",[],function(tx1,result){
+												tx.executeSql("select company_name,name,phonenumber,alternumber,emailid,profilepic,accesskey,dateofcreation,dateofupdate from userdetails",[],function(tx1,result){
 													var len = result.rows.length;
 													if(len >0)
 													{
@@ -534,6 +537,7 @@
 														var apnum = result.rows.item(0).alternumber;
 														var pic = result.rows.item(0).profilepic;
 														var email = result.rows.item(0).emailid;
+														var accesskey = result.rows.item(0).accesskey;
 														
 														var ft = new FileTransfer();
 														ft.upload(pic, "http://www.azillesoft.com/phonegap/database/upload.php", function(result){
@@ -545,7 +549,7 @@
 														$.ajax({
 															type: "POST",
 															url:"http://www.azillesoft.com/phonegap/database/insert.php",
-															data : 'cname='+cname+'&name='+name+'&mobile='+pnum+'&altmobile='+apnum+'&email='+email+'&imgname='+pic, // post data || get data
+															data : 'cname='+cname+'&name='+name+'&mobile='+pnum+'&altmobile='+apnum+'&email='+email+'&imgname='+pic+'&accesskey='+accesskey, // post data || get data
 															crossDomain: true,
 															cache: false,
 															success: function(data){
@@ -566,7 +570,7 @@
 							else
 							{
 								db.transaction(function(tx){
-									tx.executeSql("select company_name,name,phonenumber,alternumber,emailid,profilepic,dateofcreation,dateofupdate from userdetails",[],function(tx1,result){
+									tx.executeSql("select company_name,name,phonenumber,alternumber,emailid,profilepic,accesskey,dateofcreation,dateofupdate from userdetails",[],function(tx1,result){
 										var len = result.rows.length;
 										if(len >0)
 										{
@@ -577,6 +581,7 @@
 											var apnum = result.rows.item(0).alternumber;
 											var pic = result.rows.item(0).profilepic;
 											var email = result.rows.item(0).emailid;
+											var accesskey = result.rows.item(0).accesskey;
 											
 											var ft = new FileTransfer();
 											ft.upload(pic, "http://www.azillesoft.com/phonegap/database/upload.php", function(result){
@@ -588,7 +593,7 @@
 											$.ajax({
 												type: "POST",
 												url:"http://www.azillesoft.com/phonegap/database/update.php",
-												data : 'eid='+data+'&ecname='+cname+'&ename='+name+'&emobile='+pnum+'&altmobile='+apnum+'&eemail='+email+'&eimgname='+pic, // post data || get data
+												data : 'eid='+data+'&ecname='+cname+'&ename='+name+'&emobile='+pnum+'&altmobile='+apnum+'&eemail='+email+'&eimgname='+pic+'&accesskey='+accesskey, // post data || get data
 												crossDomain: true,
 												cache: false,
 												success: function(data){
@@ -688,7 +693,7 @@
 							else
 							{
 								window.localStorage.setItem('loginstatus','true');
-								window.localStorage.setItem('lgnid',data);
+								window.localStorage.setItem('accesskey',data);
 								window.localStorage.setItem('uid',m);
 								window.location.href="dashboard.html";
 							}						
@@ -701,13 +706,13 @@
 					//var cotp=checkOTP(m,o);
 					
 					
-					var c=0;var lid=0;
+					var c=0;var lid='';
 					db.transaction(function(tx){
-						tx.executeSql("select id from userdetails where phonenumber=? ",[v],function(tx1,result){
+						tx.executeSql("select accesskey from userdetails where phonenumber=? ",[m],function(tx1,result){
 							c = result.rows.length;								
 							if(c > 0)
 							{
-								lid = result.rows.item(0).id;
+								lid = result.rows.item(0).accesskey;
 							}
 						},errorCB());
 					}, function(error){}, successCB);
@@ -718,7 +723,7 @@
 							tx.executeSql("UPDATE userdetails SET lastlogin=? where phonenumber=?",[dt,m],function(tx1,result){
 								//success
 								window.localStorage.setItem('loginstatus','true');
-								window.localStorage.setItem('lgnid',lid);
+								window.localStorage.setItem('accesskey',lid);
 								window.localStorage.setItem('uid',m);
 								window.location.href="dashboard.html";
 							},function(error){								
