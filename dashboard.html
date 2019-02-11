@@ -928,27 +928,31 @@
 					 }	
 					$("#update").text('Connecting...');
 					
-					var internet = checkInternet();
-					if(internet > 0)
-					{
-						$.ajax({
-							type: "POST",
-							url:"http://www.azillesoft.com/phonegap/database/update.php",
-							//dataType : 'json', // data type
-							data : $("#reg").serialize(), // post data || get data
-							crossDomain: true,
-							cache: false,
-							beforeSend: function(){ $("#update").text('Connecting...');},
-							success: function(data){
 								
-							}
-						});
-					}					
 					
 					db.transaction(function(tx){					
 						tx.executeSql("UPDATE userdetails SET company_name=?,name=?,phonenumber=?,emailid=?,alternumber=?,dateofupdate=? where accesskey=?",[cname,name,mobile,email,amobile,dt,accesskey],function(tx1,result){
 							//success
 							alert("updated");
+							
+							var internet = checkInternet();
+							if(internet > 0)
+							{
+								$.ajax({
+									type: "POST",
+									url:"http://www.azillesoft.com/phonegap/database/update.php",
+									//dataType : 'json', // data type
+									data : $("#reg").serialize(), // post data || get data
+									crossDomain: true,
+									cache: false,
+									beforeSend: function(){ $("#update").text('Connecting...');},
+									success: function(data){
+										
+									}
+								});
+							}		
+							
+							
 							$("#update").text('Update');
 							getlist();
 							
@@ -1011,25 +1015,29 @@
 						return false;
 					 }	
 					 $("#cusupdate").text('Connecting...');
-					var internet = checkInternet();
-					if(internet > 0 && src == 1)
-					{
-						$.ajax({
-							type: "POST",
-							url:"http://www.azillesoft.com/phonegap/database/updatecustomer.php",
-							data : $("#ecusreg").serialize(), // post data || get data
-							crossDomain: true,
-							cache: false,
-							beforeSend: function(){ $("#cusupdate").text('Connecting...');},
-							success: function(data){								
-							}
-						});
-					}
+					
 					
 					db.transaction(function(tx){					
 						tx.executeSql("UPDATE customerdetails SET name=?,phonenumber=?,emailid=?,address=?,city=?,state=?,country=?,pincode=?,dateofupdate=? where cusuniqueid=?",[cname,mobile,email,addr,city,state,country,pincode,dt,cusuid],function(tx1,result){
 							//success
 							alert("updated");
+							
+							var internet = checkInternet();
+							if(internet > 0 && src == 1)
+							{
+								$.ajax({
+									type: "POST",
+									url:"http://www.azillesoft.com/phonegap/database/updatecustomer.php",
+									data : $("#ecusreg").serialize(), // post data || get data
+									crossDomain: true,
+									cache: false,
+									beforeSend: function(){ $("#cusupdate").text('Connecting...');},
+									success: function(data){								
+									}
+								});
+							}
+							
+							
 							$("#cusupdate").text('Update');								
 							getcusdet(id);
 							$('#ecusprofile').addClass('d-none');

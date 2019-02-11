@@ -371,8 +371,7 @@
 			{				
 				var internet = checkInternet();
 				if(internet > 0)
-				{
-					alert('2');
+				{					
 					$.ajax({
 						type: "POST",
 						url:"http://www.azillesoft.com/phonegap/database/checkumobile.php",
@@ -426,7 +425,7 @@
 			var email=$("#email").val();
 			var cimgname=$("#imgname").val();			
 			var imgname=$("#simgname").val();			
-			var accesskey = md5(Math.floor(Math.random() * 100000)); 
+			var accesskey = Math.floor(Math.random() * 1000000); 
 			$("#accesskey").val(accesskey);
 			
 			var today = new Date();
@@ -453,35 +452,38 @@
 					$("#altmobile").focus() ;
 					return false;
 				 }		
-				$("#insert").text('Connecting...');
-				var internet = checkInternet();
-				if(internet > 0)
-				{
-					$.ajax({
-						type: "POST",
-						url:"http://www.azillesoft.com/phonegap/database/insert.php",
-						//dataType : 'json', // data type
-						data : $("#reg").serialize(), // post data || get data
-						crossDomain: true,
-						cache: false,
-						beforeSend: function(){ $("#insert").text('Connecting...');},
-						success: function(data){
-							if(data == "fail")
-							{				
-								delImg();								
-							}
-						}
-					});					
-				}
+				$("#insert").text('Connecting...');				
 					
 				db.transaction(function(tx){
 					var qry="INSERT INTO userdetails (company_name,name,phonenumber,alternumber,emailid,profilepic,accesskey,dateofcreation,dateofupdate) VALUES (?,?,?,?,?,?,?,?)";
 					tx.executeSql(qry, [cname,name,mobile,amobile,email,cimgname,accesskey,dt,dt], function(tx1,result){
 						alert("inserted");
+						
+						var internet = checkInternet();
+						if(internet > 0)
+						{
+							$.ajax({
+								type: "POST",
+								url:"http://www.azillesoft.com/phonegap/database/insert.php",
+								//dataType : 'json', // data type
+								data : $("#reg").serialize(), // post data || get data
+								crossDomain: true,
+								cache: false,
+								beforeSend: function(){ $("#insert").text('Connecting...');},
+								success: function(data){
+									if(data == "fail")
+									{				
+										delImg();								
+									}
+								}
+							});					
+						}
+							
 						$("#insert").text('Submit');
 						$("#reg")[0].reset();
 						var signinTpl = Handlebars.compile($("#signin-tpl").html());	
 						$('.maincontent').html(signinTpl);
+						
 					},function(error){
 						ImgCache.removeFile(cimgname);
 						$('#profimg').attr('src','img/camera.png');
