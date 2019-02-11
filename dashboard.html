@@ -435,8 +435,10 @@
 						var accesskey=result.rows.item(i).accesskey;
 						if(img != '')
 						{
-							$('#uimg').attr('src','http://www.azillesoft.com/phonegap/database/upload/'+img);
-							$('#profimg').attr('src','http://www.azillesoft.com/phonegap/database/upload/'+img);
+							$('#uimg').attr('src',img);
+							$('#profimg').attr('src',img);
+							/*$('#uimg').attr('src','http://www.azillesoft.com/phonegap/database/upload/'+img);
+							$('#profimg').attr('src','http://www.azillesoft.com/phonegap/database/upload/'+img);*/
 						}
 						
 						$('.getcontent #mcompname').text('Company Name : '+cname);
