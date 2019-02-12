@@ -464,8 +464,7 @@
 				db.transaction(function(tx){
 					var qry="INSERT INTO userdetails (company_name,name,phonenumber,alternumber,emailid,profilepic,accesskey,dateofcreation,dateofupdate) VALUES (?,?,?,?,?,?,?,?,?)";
 					tx.executeSql(qry, [cname,name,mobile,amobile,email,cimgname,accesskey,dt,dt], function(tx1,result){
-						alert("inserted");
-						
+						alert("inserted");						
 						var internet = checkInternet();
 						if(internet > 0)
 						{
@@ -614,10 +613,11 @@
 				else
 				{
 					var c=0;
+					alert(c);
 					db.transaction(function(tx){
-						tx.executeSql("select id from userdetails where phonenumber=? ",[v],function(tx1,result){
+						tx.executeSql("select id from userdetails where phonenumber=?",[v],function(tx1,result){
 							c = result.rows.length;
-							alert(c);							
+														
 							if(c == 0)
 							{
 								alert("Mobile number not registered. Enter Registered mobile Number");
@@ -628,8 +628,8 @@
 								$('.maincontent').html(otpTpl);
 								$('#cumobile').val(v);
 							}
-						},errorCB());
-					}, function(error){}, successCB);
+						},errorCB);
+					}, errorCB, successCB);
 				}
 			
 			
