@@ -274,12 +274,7 @@
 			if(lgn != 'true')
 			{				
 				window.location.href="index.html";
-			}
-			else
-			{
-				getmydet();
-				getlist();
-			}
+			}			
 		}
 		var db = window.openDatabase("customerdb", "1.1", "customer database", 1000000);		
 		
@@ -364,7 +359,8 @@
 			
 		function getlist(s = '')
 		{
-			var accesskey=window.localStorage.getItem('accesskey');
+			var accesskey = window.localStorage.getItem('accesskey');
+			alert(accesskey);
 			$('.getcontent .customer-list').html('');			
 			db.transaction(function(tx){
 				tx.executeSql("select cusuniqueid,name,source from customerdetails where accesskey=?",[accesskey],function(tx1,result){
@@ -427,6 +423,7 @@
 		
 		function getmydet()
 		{	
+			alert(123);
 			var uid=window.localStorage.getItem('uid');	
 			$('.getcontent #myaccloader').show();
 			$('.getcontent #vprofile').hide();			
@@ -622,15 +619,11 @@
 			});*/
 		}
 		
-		document.addEventListener("deviceready", onDeviceReady, false);
-		
-		function onDeviceReady() {
+				
+		$(function()
+		{	
 			getmydet();
 			getlist();	
-		}	
-		
-		$(function()
-		{			
 			$('#sidebar').removeClass('active');
 			// take picture from camera
 			$('body').on('click','#but_take',function(){
