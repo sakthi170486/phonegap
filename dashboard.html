@@ -359,7 +359,8 @@
 			
 		function getlist(s = '')
 		{
-			var accesskey = window.localStorage.getItem('accesskey');			
+			var accesskey = window.localStorage.getItem('accesskey');
+			alert(accesskey);			
 			$('.getcontent .customer-list').html('');			
 			db.transaction(function(tx){
 				tx.executeSql("select cusuniqueid,name,source from customerdetails where accesskey=?",[accesskey],function(tx1,result){

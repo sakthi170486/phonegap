@@ -522,6 +522,9 @@
 						data : 'm='+v, // post data || get data
 						crossDomain: true,
 						cache: false,
+						beforeSend: function(){
+							SpinnerDialog.show(null, "Processing");
+						},
 						success: function(data){
 							if(data == 0)
 							{
@@ -621,22 +624,28 @@
 									},errorCB);
 								}, errorCB, successCB);
 							}
+						},
+						complete:function(){
+						SpinnerDialog.hide();
 						}
 					});
 				}
 				else
 				{
 					var c=0;
+					SpinnerDialog.show(null, "Processing");
 					db.transaction(function(tx){
 						tx.executeSql("select id from userdetails where phonenumber=?",[v],function(tx1,result){
 							c = result.rows.length;	
 							if(c == 0)
 							{
+								SpinnerDialog.hide();
 								alert("Mobile number not registered. Enter Registered mobile Number");
 								$('#umobile').val('').focus();
 							}
 							else
 							{
+								SpinnerDialog.hide();
 								var otpTpl = Handlebars.compile($("#otp-tpl").html());	
 								$('.maincontent').html(otpTpl);
 								$('#cumobile').val(v);
@@ -697,8 +706,7 @@
 						beforeSend: function(){
 							SpinnerDialog.show(null, "Processing");
 						},
-						success: function(data){
-							SpinnerDialog.hide();
+						success: function(data){							
 							if(data == 0)
 							{
 								alert("Incorrect OTP");							
@@ -712,6 +720,7 @@
 							}						
 						},
 						complete: function() {
+							SpinnerDialog.hide();
 							window.location.href="dashboard.html";
 						}
 					});
