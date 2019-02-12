@@ -63,3 +63,54 @@ database/getcustomer.php
 database/delcus.php
 database/synctoserver.php
 dashboard.html.bak
+extra plugins and config/browser.json
+*.xml
+*.md
+extra plugins and config/cordova-plugin-battery-status/LICENSE
+*.json
+*.js
+*.cpp
+*.h
+*.m
+*.java
+extra plugins and config/cordova-plugin-whitelist/NOTICE
+*.ts
+*.cs
+*.csproj
+*.hpp
+*.so
+*.html
+*.pdf
+*.css
+*.png
+*.qml
+extra plugins and config/cordova-plugin-statusbar/NOTICE
+extra plugins and config/cordova-plugin-statusbar/LICENSE
+*.properties
+*.sln
+*.winmd
+*.inl
+*.ini
+*.cproject
+extra plugins and config/cordova-plugin-globalization/LICENSE
+extra plugins and config/cordova-plugin-geolocation/NOTICE
+extra plugins and config/cordova-plugin-geolocation/LICENSE
+extra plugins and config/cordova-plugin-device-orientation/NOTICE
+extra plugins and config/cordova-plugin-device-orientation/LICENSE
+extra plugins and config/cordova-plugin-globalization/NOTICE
+extra plugins and config/cordova-plugin-device-motion/LICENSE
+*.xaml
+extra plugins and config/cordova-plugin-globalization/src/blackberry10/native/.project
+extra plugins and config/cordova-plugin-contacts/LICENSE
+extra plugins and config/cordova-plugin-console/NOTICE
+extra plugins and config/cordova-plugin-device-motion/NOTICE
+extra plugins and config/cordova-plugin-inappbrowser/LICENSE
+extra plugins and config/cordova-plugin-contacts/NOTICE
+extra plugins and config/cordova-plugin-battery-status/NOTICE
+*.npmignore
+extra plugins and config/cordova-plugin-console/LICENSE
+extra plugins and config/cordova-plugin-inappbrowser/NOTICE
+extra plugins and config/cordova-plugin-vibration/LICENSE
+*.project
+extra plugins and config/cordova-plugin-whitelist/LICENSE
+extra plugins and config/cordova-plugin-vibration/NOTICE
