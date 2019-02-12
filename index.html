@@ -623,7 +623,8 @@
 					var c=0;
 					db.transaction(function(tx){
 						tx.executeSql("select id from userdetails where phonenumber=? ",[v],function(tx1,result){
-							c = result.rows.length;								
+							c = result.rows.length;
+							alert(c);							
 							if(c == 0)
 							{
 								alert("Mobile number not registered. Enter Registered mobile Number");
@@ -682,7 +683,7 @@
 			var o=$('#otp').val();
 			if(o.length > 0)
 			{
-				var internet = checkInternet();
+				/*var internet = checkInternet();
 				if(internet > 0)
 				{
 					$.ajax({
@@ -712,39 +713,35 @@
 					});
 				}
 				else
-				{
-				
-					//var cotp=checkOTP(m,o);
-					
-					
+				{	*/			
+					//var cotp=checkOTP(m,o);					
 					var c=0;var lid='';
 					db.transaction(function(tx){
-						tx.executeSql("select accesskey from userdetails where phonenumber=? ",[m],function(tx1,result){
+						tx.executeSql("select accesskey from userdetails where phonenumber = ?",[m],function(tx1,result){
 							c = result.rows.length;								
 							if(c > 0)
 							{
-								lid = result.rows.item(0).accesskey;
-								alert(lid);
+								lid = result.rows.item(0).accesskey;								
+							}
+							if(o == '1234')
+							{
+								db.transaction(function(txs){					
+									txs.executeSql("UPDATE userdetails SET lastlogin=? where phonenumber=?",[dt,m],function(txs1,result){
+										//success
+										window.localStorage.setItem('loginstatus','true');
+										window.localStorage.setItem('accesskey',lid);
+										window.localStorage.setItem('uid',m);
+										window.location.href="dashboard.html";
+									},function(error){								
+										alert("Incorrect OTP");							
+										$("#otp").val('').focus();
+									});
+								}, errorCB, successCB);							
 							}
 						},errorCB());
 					}, function(error){}, successCB);
-					if(o == '1234')
-					{		
-						
-						db.transaction(function(tx){					
-							tx.executeSql("UPDATE userdetails SET lastlogin=? where phonenumber=?",[dt,m],function(tx1,result){
-								//success
-								window.localStorage.setItem('loginstatus','true');
-								window.localStorage.setItem('accesskey',lid);
-								window.localStorage.setItem('uid',m);
-								window.location.href="dashboard.html";
-							},function(error){								
-								alert("Incorrect OTP");							
-								$("#otp").val('').focus();
-							});
-						}, errorCB, successCB);							
-					}
-				}
+					
+				/*}*/
 			}
 			else
 			{
