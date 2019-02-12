@@ -685,7 +685,7 @@
 			var o=$('#otp').val();
 			if(o.length > 0)
 			{
-				/*var internet = checkInternet();
+				var internet = checkInternet();
 				if(internet > 0)
 				{
 					$.ajax({
@@ -715,8 +715,7 @@
 					});
 				}
 				else
-				{	*/		
-					
+				{	
 					//var cotp=checkOTP(m,o);
 					var today = new Date();
 					var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
@@ -736,7 +735,8 @@
 							{									
 								db.transaction(function(txs){					
 									txs.executeSql("UPDATE userdetails SET lastlogin=? where phonenumber=?",[dt,m],function(txs1,result){
-										//success																			
+										//success
+										SpinnerDialog.hide();
 										window.localStorage.setItem('loginstatus','true');
 										window.localStorage.setItem('accesskey',lid);
 										window.localStorage.setItem('uid',m);
@@ -751,7 +751,7 @@
 						},errorCB);
 					}, errorCB, successCB);
 					
-				/*}*/
+				}
 			}
 			else
 			{
