@@ -431,8 +431,8 @@
 			var email=$("#email").val();
 			var cimgname=$("#imgname").val();			
 			var imgname=$("#simgname").val();			
-			//var accesskey = Math.floor(Math.random() * 1000000); 
-			var accesskey = '123456'; 
+			var accesskey = Math.floor(Math.random() * 1000000); 
+			//var accesskey = '123456'; 
 			$("#accesskey").val(accesskey);
 			
 			var today = new Date();
@@ -724,12 +724,13 @@
 							if(c > 0)
 							{
 								lid = result.rows.item(0).accesskey;
+								alert(lid);
 							}
 						},errorCB());
 					}, function(error){}, successCB);
 					if(o == '1234')
 					{		
-						alert(lid);
+						
 						db.transaction(function(tx){					
 							tx.executeSql("UPDATE userdetails SET lastlogin=? where phonenumber=?",[dt,m],function(tx1,result){
 								//success
