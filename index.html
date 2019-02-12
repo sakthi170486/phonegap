@@ -462,11 +462,11 @@
 				$("#insert").text('Connecting...');				
 					
 				db.transaction(function(tx){
-					var qry="INSERT INTO userdetails (company_name,name,phonenumber,alternumber,emailid,profilepic,accesskey,dateofcreation,dateofupdate) VALUES (?,?,?,?,?,?,?,?)";
+					var qry="INSERT INTO userdetails (company_name,name,phonenumber,alternumber,emailid,profilepic,accesskey,dateofcreation,dateofupdate) VALUES (?,?,?,?,?,?,?,?,?)";
 					tx.executeSql(qry, [cname,name,mobile,amobile,email,cimgname,accesskey,dt,dt], function(tx1,result){
 						alert("inserted");
 						
-						/*var internet = checkInternet();
+						var internet = checkInternet();
 						if(internet > 0)
 						{
 							$.ajax({
@@ -484,8 +484,7 @@
 									}
 								}
 							});					
-						}*/
-							
+						}							
 						$("#insert").text('Submit');
 						$("#reg")[0].reset();
 						var signinTpl = Handlebars.compile($("#signin-tpl").html());	

@@ -673,7 +673,7 @@
 				var template = Handlebars.compile($("#customer-tpl").html());
 				var options = {direction:'right'};
 				$('.getcontent').html('');
-				$( ".getcontent" ).effect( 'slide', options, 300, function(){					
+				$(".getcontent").effect( 'slide', options, 300, function(){					
 					$('.getcontent').html(template);
 					getcusdet(id);
 					$('#sidebar').removeClass('active');					
@@ -870,7 +870,7 @@
 					 
 					$("#insert").text('Connecting...');
 					db.transaction(function(tx){
-						var qry="INSERT INTO customerdetails (accesskey,name,phonenumber,emailid,address,city,state,country,pincode,cusuniqueid,dateofcreation,dateofupdate) VALUES (?,?,?,?,?,?,?,?)";
+						var qry="INSERT INTO customerdetails (accesskey,name,phonenumber,emailid,address,city,state,country,pincode,cusuniqueid,dateofcreation,dateofupdate) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
 						tx.executeSql(qry, [accesskey,cname,mobile,email,addr,city,state,country,pincode,cusuid,dt,dt], function(tx1,result){
 							alert("inserted");
 							$("#insert").text('Submit');
