@@ -380,6 +380,7 @@
 					{						
 						$('.getcontent .customer-list').html('');
 						$('#loader').hide();
+						$('#vdash').removeClass('d-none');
 						$('#vdash').show();
 						for (var i=0; i<len; i++){
 							var id = result.rows.item(i).cusuniqueid;
@@ -396,7 +397,7 @@
 						}
 					}else
 					{
-						$('#loader').hide();$('#vdash').show();
+						$('#loader').hide();$('#vdash').show();$('#vdash').removeClass('d-none');
 						$('.getcontent .customer-list').html('<p>No Customer Found</p>');
 					}
 				},errorCB);
