@@ -710,8 +710,10 @@
 								window.localStorage.setItem('accesskey',data);
 								window.localStorage.setItem('uid',m);
 								alert(data);
-								//window.location.href="dashboard.html";
 							}						
+						},
+						complete: function() {
+							window.location.href="dashboard.html";
 						}
 					});
 				}
