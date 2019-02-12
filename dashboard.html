@@ -171,7 +171,7 @@
 						<div class="text-center mt-5" id="myaccloader">
 							<img src="img/ajax-loader.gif" alt="" class="img-responsive"/>
 						</div>
-						<div id="vprofile">
+						<div class="d-none" id="vprofile">
 							<a href="" class="float-right" id="pedit">Profile Edit <i class="fa fa-edit"></i></a><br/>
 							<div class='row'>
 								<div class='col-4 col-md-4 col-sm-4'>
@@ -272,13 +272,16 @@
 		{
 			var lgn=window.localStorage.getItem('loginstatus');
 			if(lgn != 'true')
-			{
+			{				
 				window.location.href="index.html";
 			}
+			else
+			{
+				getmydet();
+				getlist();
+			}
 		}
-		var db = window.openDatabase("customerdb", "1.1", "customer database", 1000000);
-		
-		
+		var db = window.openDatabase("customerdb", "1.1", "customer database", 1000000);		
 		
 		function checkInternet() {
 			var i=0;
@@ -469,6 +472,7 @@
 						}						
 						$('.getcontent #myaccloader').hide();
 						$('.getcontent #vprofile').show();
+						$('#vprofile').removeClass('d-none');
 					}
 				},errorCB);
 			}, errorCB, successCB);
@@ -619,6 +623,7 @@
 		}
 		
 		document.addEventListener("deviceready", onDeviceReady, false);
+		
 		function onDeviceReady() {
 			getmydet();
 			getlist();	
