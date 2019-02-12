@@ -373,7 +373,8 @@
 				{
 					qry="select cusuniqueid,name,source from customerdetails where accesskey=?";
 				}*/
-				qry="select cusuniqueid,name,source from customerdetails where accesskey=?";
+				
+				qry = "select cusuniqueid,name,source from customerdetails where accesskey=?";
 				tx.executeSql(qry,[accesskey],function(tx1,result){
 					var len = result.rows.length;
 					if(len > 0)
