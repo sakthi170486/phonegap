@@ -1131,7 +1131,7 @@
 					else
 					{
 						db.transaction(function(tx){
-							tx.executeSql("select name,address,city,state,country,pincode,emailid,phonenumber,source,cusuniqueid from customerdetails where cusuniqueid in (?) ", [arr], function(tx, res) {
+							tx.executeSql("select accesskey,name,address,city,state,country,pincode,emailid,phonenumber,source,cusuniqueid,dateofcreation,dateofupdate from customerdetails where cusuniqueid in (?) ", [arr], function(tx, res) {
 								var all_rows = [];
 								for (i=0; i < res.rows.length; ++i)
 								{
@@ -1172,7 +1172,7 @@
 				{
 					var arr =$(this).attr('href');	
 					db.transaction(function(tx){
-						tx.executeSql("select name,address,city,state,country,pincode,emailid,phonenumber,source,cusuniqueid from customerdetails where cusuniqueid in (?) ", [arr], function(tx, res) {
+						tx.executeSql("select accesskey,name,address,city,state,country,pincode,emailid,phonenumber,source,cusuniqueid,dateofcreation,dateofupdate from customerdetails where cusuniqueid in (?) ", [arr], function(tx, res) {
 							var all_rows = [];
 							for (i=0; i < res.rows.length; ++i)
 							{
