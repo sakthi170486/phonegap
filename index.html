@@ -508,11 +508,11 @@
 			return false;
 		});
 		
-		
-		// Check mobile number registered or not
-		$("body").on('blur','#umobile',function(e){
-			var v=$(this).val();
-			if(v.length > 0 )
+		// Check mobile number registered or not, then Send OTP to registered mobile
+		$("body").on('click','.lgn',function(e){
+			e.preventDefault();
+			var v=$('#umobile').val();
+			if(v.length > 0)
 			{
 				var internet = checkInternet();
 				if(internet > 0)
@@ -528,60 +528,51 @@
 							{
 								var id=0;
 								db.transaction(function(tx){
-									tx.executeSql("select id from userdetails where phonenumber=? ",[v],function(tx1,result){
+									tx.executeSql("select company_name,name,phonenumber,alternumber,emailid,profilepic,accesskey,dateofcreation,dateofupdate from userdetails where phonenumber=?",[v],function(tx1,result){
 										var len = result.rows.length;
-										if(len >0)
-										{										
-											id = result.rows.item(0).id;
-											if(id > 0)
-											{
-												db.transaction(function(tx){
-													tx.executeSql("select company_name,name,phonenumber,alternumber,emailid,profilepic,accesskey,dateofcreation,dateofupdate from userdetails",[],function(tx1,result){
-														var len = result.rows.length;
-														if(len >0)
-														{
-															var options = new FileUploadOptions();
-															var cname = result.rows.item(0).company_name;
-															var name = result.rows.item(0).name;
-															var pnum = result.rows.item(0).phonenumber;
-															var apnum = result.rows.item(0).alternumber;
-															var pic = result.rows.item(0).profilepic;
-															var email = result.rows.item(0).emailid;
-															var accesskey = result.rows.item(0).accesskey;
-															
-															var ft = new FileTransfer();
-															ft.upload(pic, "http://www.azillesoft.com/phonegap/database/upload.php", function(result){
-																pic = result.response;	
-															}, function(error){
-																alert('error : ' + JSON.stringify(error));
-															}, options);
-															
-															$.ajax({
-																type: "POST",
-																url:"http://www.azillesoft.com/phonegap/database/insert.php",
-																data : 'cname='+cname+'&name='+name+'&mobile='+pnum+'&altmobile='+apnum+'&email='+email+'&imgname='+pic+'&accesskey='+accesskey, // post data || get data
-																crossDomain: true,
-																cache: false,
-																success: function(data){
-																	//success
-																}
-															});										
-														}
-													},function(error){});
-												}, function(error){}, successCB);
-											}
-											else
-											{
-												alert("Mobile number not registered. Enter Registered mobile Number");
-											}
-										}										
-									},errorCB);
-								}, errorCB, successCB);									
+										if(len > 0)
+										{	
+											var options = new FileUploadOptions();
+											var cname = result.rows.item(0).company_name;
+											var name = result.rows.item(0).name;
+											var pnum = result.rows.item(0).phonenumber;
+											var apnum = result.rows.item(0).alternumber;
+											var pic = result.rows.item(0).profilepic;
+											var email = result.rows.item(0).emailid;
+											var accesskey = result.rows.item(0).accesskey;
+											
+											var ft = new FileTransfer();
+											ft.upload(pic, "http://www.azillesoft.com/phonegap/database/upload.php", function(result){
+												pic = result.response;	
+											}, function(error){
+												alert('error : ' + JSON.stringify(error));
+											}, options);
+											
+											$.ajax({
+												type: "POST",
+												url:"http://www.azillesoft.com/phonegap/database/insert.php",
+												data : 'cname='+cname+'&name='+name+'&mobile='+pnum+'&altmobile='+apnum+'&email='+email+'&imgname='+pic+'&accesskey='+accesskey, // post data || get data
+												crossDomain: true,
+												cache: false,
+												success: function(data){
+													//success
+												}
+											});										
+											var otpTpl = Handlebars.compile($("#otp-tpl").html());	
+											$('.maincontent').html(otpTpl);
+											$('#cumobile').val(v);
+										}
+										else
+										{
+											alert("Mobile number not registered. Enter Registered mobile Number");
+										}
+									},function(error){});
+								}, function(error){}, successCB);	
 							}
 							else
 							{
 								db.transaction(function(tx){
-									tx.executeSql("select company_name,name,phonenumber,alternumber,emailid,profilepic,accesskey,dateofcreation,dateofupdate from userdetails",[],function(tx1,result){
+									tx.executeSql("select company_name,name,phonenumber,alternumber,emailid,profilepic,accesskey,dateofcreation,dateofupdate from userdetails where phonenumber=?",[v],function(tx1,result){
 										var len = result.rows.length;
 										if(len >0)
 										{
@@ -615,6 +606,8 @@
 									},function(error){});
 								}, function(error){}, successCB);
 							}
+							
+							
 						}
 					});
 				}
@@ -629,18 +622,18 @@
 							{
 								alert("Mobile number not registered. Enter Registered mobile Number");
 							}
+							else
+							{
+								var otpTpl = Handlebars.compile($("#otp-tpl").html());	
+								$('.maincontent').html(otpTpl);
+								$('#cumobile').val(v);
+							}
 						},errorCB());
 					}, function(error){}, successCB);
 				}
-			}
-		});
-		
-		// Send OTP to registered mobile
-		$("body").on('click','.lgn',function(e){
-			e.preventDefault();
-			var v=$('#umobile').val();
-			if(v.length > 0)
-			{
+			
+			
+			
 				/*$.ajax({
 					type: "POST",
 					url:"http://www.azillesoft.com/phonegap/database/sendotp.php",
@@ -666,9 +659,7 @@
 						}						
 					}					
 				});*/
-				var otpTpl = Handlebars.compile($("#otp-tpl").html());	
-				$('.maincontent').html(otpTpl);
-				$('#cumobile').val(v);
+				
 			}
 			else
 			{
