@@ -362,7 +362,7 @@
 			var accesskey=window.localStorage.getItem('accesskey');
 			$('.getcontent .customer-list').html('');			
 			db.transaction(function(tx){
-				tx.executeSql("select * from customerdetails where accesskey=?",[accesskey],function(tx1,result){
+				tx.executeSql("select cusuniqueid,name,source from customerdetails where accesskey=?",[accesskey],function(tx1,result){
 					var len = result.rows.length;
 					if(len >0)
 					{
@@ -425,11 +425,13 @@
 			var uid=window.localStorage.getItem('uid');	
 			$('.getcontent #myaccloader').show();
 			$('.getcontent #vprofile').hide();
+			alert(uid);
 			db.transaction(function(tx){
-				tx.executeSql("select * from userdetails where phonenumber=?",[uid],function(tx1,result){
+				tx.executeSql("select id,name,phonenumber,company_name,emailid,alternumber,profilepic,accesskey from userdetails where phonenumber=?",[uid],function(tx1,result){
 					var len = result.rows.length;
 					if(len >0)
 					{
+						alert(1);
 						for (var i=0; i<len; i++){
 							var id = result.rows.item(i).id;
 							var name=result.rows.item(i).name;
@@ -463,8 +465,7 @@
 							$('.getcontent #eid').val(accesskey);
 							
 							$('#uname').text('Welcome '+name);
-						}
-						
+						}						
 						$('.getcontent #myaccloader').hide();
 						$('.getcontent #vprofile').show();
 					}
@@ -524,7 +525,7 @@
 			$('.getcontent #cusloader').show();$('.getcontent #vcusprofile').hide();
 			var accesskey=window.localStorage.getItem('accesskey');
 			db.transaction(function(tx){
-				tx.executeSql("select * from customerdetails where id=? and accesskey=?",[id,accesskey],function(tx1,result){
+				tx.executeSql("select id,name,address,city,state,country,pincode,emailid,phonenumber,source,cusuniqueid from customerdetails where id=? and accesskey=?",[id,accesskey],function(tx1,result){
 					var len = result.rows.length;
 					if(len >0)
 					{
@@ -1111,7 +1112,7 @@
 					else
 					{
 						db.transaction(function(tx){
-							tx.executeSql("select * from customerdetails where cusuniqueid in (?) ", [arr], function(tx, res) {
+							tx.executeSql("select name,address,city,state,country,pincode,emailid,phonenumber,source,cusuniqueid from customerdetails where cusuniqueid in (?) ", [arr], function(tx, res) {
 								var all_rows = [];
 								for (i=0; i < res.rows.length; ++i)
 								{
@@ -1153,7 +1154,7 @@
 				{
 					var arr =$(this).attr('href');	
 					db.transaction(function(tx){
-						tx.executeSql("select * from customerdetails where cusuniqueid in (?) ", [arr], function(tx, res) {
+						tx.executeSql("select name,address,city,state,country,pincode,emailid,phonenumber,source,cusuniqueid from customerdetails where cusuniqueid in (?) ", [arr], function(tx, res) {
 							var all_rows = [];
 							for (i=0; i < res.rows.length; ++i)
 							{
