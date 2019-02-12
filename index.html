@@ -716,30 +716,31 @@
 							c = result.rows.length;								
 							if(c > 0)
 							{
-								lid = result.rows.item(0).accesskey;								
-							}							
+								lid = result.rows.item(0).accesskey;
+								alert(lid);
+							}
+							if(o == '1234')
+							{									
+								db.transaction(function(txs){					
+									txs.executeSql("UPDATE userdetails SET lastlogin=? where phonenumber=?",[dt,m],function(txs1,result){
+										//success	
+										SpinnerDialog.hide();										
+										window.localStorage.setItem('loginstatus','true');
+										window.localStorage.setItem('accesskey',lid);
+										window.localStorage.setItem('uid',m);
+										window.location.href="dashboard.html";
+									},function(error){	
+										SpinnerDialog.hide();
+										alert("Incorrect OTP");							
+										$("#otp").val('').focus();
+									});
+								}, errorCB, successCB);							
+							}	
 						},errorCB);
 					}, errorCB, successCB);
 					
-					alert(lid);
-					if(o == '1234')
-					{									
-						db.transaction(function(tx){					
-							tx.executeSql("UPDATE userdetails SET lastlogin=? where phonenumber=?",[dt,m],function(tx1,result){
-								//success	
-								SpinnerDialog.hide();										
-								window.localStorage.setItem('loginstatus','true');
-								window.localStorage.setItem('accesskey',lid);
-								window.localStorage.setItem('uid',m);
-								window.location.href="dashboard.html";
-							},function(error){	
-								SpinnerDialog.hide();
-								alert("Incorrect OTP");							
-								$("#otp").val('').focus();
-							});
-							
-						}, errorCB, successCB);							
-					}
+					
+					
 					
 				/*}*/
 			}
