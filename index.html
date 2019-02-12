@@ -613,14 +613,13 @@
 				else
 				{
 					var c=0;
-					alert(c);
 					db.transaction(function(tx){
 						tx.executeSql("select id from userdetails where phonenumber=?",[v],function(tx1,result){
-							c = result.rows.length;
-														
+							c = result.rows.length;	
 							if(c == 0)
 							{
 								alert("Mobile number not registered. Enter Registered mobile Number");
+								$('#umobile').val('').focus();
 							}
 							else
 							{
@@ -630,9 +629,7 @@
 							}
 						},errorCB);
 					}, errorCB, successCB);
-				}
-			
-			
+				}	
 			
 				/*$.ajax({
 					type: "POST",
@@ -735,7 +732,7 @@
 									
 								}, errorCB, successCB);							
 							}
-						},errorCB());
+						},errorCB);
 					}, function(error){}, successCB);
 					
 				/*}*/
