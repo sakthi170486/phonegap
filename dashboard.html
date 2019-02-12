@@ -278,6 +278,8 @@
 		}
 		var db = window.openDatabase("customerdb", "1.1", "customer database", 1000000);
 		
+		
+		
 		function checkInternet() {
 			var i=0;
 			var networkState = navigator.connection.type;
@@ -424,8 +426,7 @@
 		{	
 			var uid=window.localStorage.getItem('uid');	
 			$('.getcontent #myaccloader').show();
-			$('.getcontent #vprofile').hide();
-			alert(uid);
+			$('.getcontent #vprofile').hide();			
 			db.transaction(function(tx){
 				tx.executeSql("select id,name,phonenumber,company_name,emailid,alternumber,profilepic,accesskey from userdetails where phonenumber=?",[uid],function(tx1,result){
 					var len = result.rows.length;
@@ -617,13 +618,14 @@
 			});*/
 		}
 		
-				
-		$(function()
-		{
-			
+		document.addEventListener("deviceready", onDeviceReady, false);
+		function onDeviceReady() {
 			getmydet();
-			getlist();
-			
+			getlist();	
+		}	
+		
+		$(function()
+		{			
 			$('#sidebar').removeClass('active');
 			// take picture from camera
 			$('body').on('click','#but_take',function(){
