@@ -423,7 +423,8 @@
 		function getmydet()
 		{	
 			var uid=window.localStorage.getItem('uid');	
-			$('.getcontent #myaccloader').show();$('.getcontent #vprofile').hide();
+			$('.getcontent #myaccloader').show();
+			$('.getcontent #vprofile').hide();
 			db.transaction(function(tx){
 				tx.executeSql("select * from userdetails where phonenumber=?",[uid],function(tx1,result){
 					var len = result.rows.length;
@@ -463,6 +464,7 @@
 							
 							$('#uname').text('Welcome '+name);
 						}
+						
 						$('.getcontent #myaccloader').hide();
 						$('.getcontent #vprofile').show();
 					}

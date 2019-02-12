@@ -565,8 +565,8 @@
 										{
 											alert("Mobile number not registered. Enter Registered mobile Number");
 										}
-									},function(error){});
-								}, function(error){}, successCB);	
+									},errorCB);
+								}, errorCB, successCB);	
 							}
 							else
 							{
@@ -594,7 +594,7 @@
 											$.ajax({
 												type: "POST",
 												url:"http://www.azillesoft.com/phonegap/database/update.php",
-												data : 'eid='+data+'&ecname='+cname+'&ename='+name+'&emobile='+pnum+'&altmobile='+apnum+'&eemail='+email+'&eimgname='+pic+'&accesskey='+accesskey, // post data || get data
+												data : 'eid='+accesskey+'&ecname='+cname+'&ename='+name+'&emobile='+pnum+'&altmobile='+apnum+'&eemail='+email+'&eimgname='+pic+'&accesskey='+accesskey, // post data || get data
 												crossDomain: true,
 												cache: false,
 												success: function(data){
@@ -602,8 +602,8 @@
 												}
 											});										
 										}
-									},function(error){});
-								}, function(error){}, successCB);
+									},errorCB);
+								}, errorCB, successCB);
 							}
 							
 							
@@ -716,15 +716,13 @@
 							c = result.rows.length;								
 							if(c > 0)
 							{
-								lid = result.rows.item(0).accesskey;
-								alert(lid);
+								lid = result.rows.item(0).accesskey;								
 							}
 							if(o == '1234')
 							{									
 								db.transaction(function(txs){					
 									txs.executeSql("UPDATE userdetails SET lastlogin=? where phonenumber=?",[dt,m],function(txs1,result){
-										//success	
-										SpinnerDialog.hide();										
+										//success																			
 										window.localStorage.setItem('loginstatus','true');
 										window.localStorage.setItem('accesskey',lid);
 										window.localStorage.setItem('uid',m);
