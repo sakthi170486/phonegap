@@ -704,8 +704,11 @@
 					});
 				}
 				else
-				{	*/			
-					//var cotp=checkOTP(m,o);					
+				{	*/		
+					
+					//var cotp=checkOTP(m,o);
+					
+					SpinnerDialog.show(null, "Processing");										
 					var c=0;var lid='';
 					db.transaction(function(tx){
 						tx.executeSql("select accesskey from userdetails where phonenumber = ?",[m],function(tx1,result){
@@ -715,18 +718,21 @@
 								lid = result.rows.item(0).accesskey;								
 							}
 							if(o == '1234')
-							{
+							{									
 								db.transaction(function(txs){					
 									txs.executeSql("UPDATE userdetails SET lastlogin=? where phonenumber=?",[dt,m],function(txs1,result){
-										//success
+										//success	
+										SpinnerDialog.hide();										
 										window.localStorage.setItem('loginstatus','true');
 										window.localStorage.setItem('accesskey',lid);
 										window.localStorage.setItem('uid',m);
 										window.location.href="dashboard.html";
-									},function(error){								
+									},function(error){	
+										SpinnerDialog.hide();
 										alert("Incorrect OTP");							
 										$("#otp").val('').focus();
 									});
+									
 								}, errorCB, successCB);							
 							}
 						},errorCB());
