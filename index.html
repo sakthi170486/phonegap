@@ -605,7 +605,16 @@
 												crossDomain: true,
 												cache: false,
 												success: function(data){
-													//success
+													if(data =='success')
+													{
+														var otpTpl = Handlebars.compile($("#otp-tpl").html());	
+														$('.maincontent').html(otpTpl);
+														$('#cumobile').val(v);
+													}
+													else
+													{
+														alert("Process Failed. Try Again with Registered mobile Number");
+													}
 												}
 											});										
 										}
