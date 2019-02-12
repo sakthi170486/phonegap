@@ -359,6 +359,7 @@
 		function getlist(s = '')
 		{
 			var accesskey = window.localStorage.getItem('accesskey');
+			$('#loader').show();
 			$('.getcontent .customer-list').html('');			
 			db.transaction(function(tx){
 				var qry='';
@@ -376,7 +377,7 @@
 					if(len > 0)
 					{						
 						$('.getcontent .customer-list').html('');
-						$('#cusloader').hide();
+						$('#loader').hide();
 						for (var i=0; i<len; i++){
 							var id = result.rows.item(i).cusuniqueid;
 							var name=result.rows.item(i).name;
@@ -392,7 +393,7 @@
 						}
 					}else
 					{
-						$('#cusloader').hide();
+						$('#loader').hide();
 						$('.getcontent .customer-list').html('<p>No Customer Found</p>');
 					}
 				},errorCB);
