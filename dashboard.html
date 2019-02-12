@@ -22,7 +22,6 @@
 							<li class="active"><a href="MyAccount" class="lnk"><i class="fa fa-user"></i> My Account</a></li>
 							<li><a href="AddCustomer" class="lnk"><i class="fa fa-user-plus"></i> Add Customer</a></li>
 							<li><a href="Dashboard" class="lnk"><i class="fa fa-search"></i> Search Customer</a></li>
-							<li><a href="sample.html"><i class="fa fa-search"></i> Sample</a></li>
 							<li><a href="#" id="logout"><i class="fa fa-sign-out"></i> Logout</a></li>					
 						</ul>
 					</nav>
@@ -360,13 +359,22 @@
 		function getlist(s = '')
 		{
 			var accesskey = window.localStorage.getItem('accesskey');
-			alert(accesskey);			
 			$('.getcontent .customer-list').html('');			
 			db.transaction(function(tx){
-				tx.executeSql("select cusuniqueid,name,source from customerdetails where accesskey=?",[accesskey],function(tx1,result){
+				var qry='';
+				if(s != '')
+				{	
+					qry="select cusuniqueid,name,source from customerdetails where accesskey=? and name like '%?%'";
+				}
+				else
+				{
+					qry="select cusuniqueid,name,source from customerdetails where accesskey=?";
+				}
+				
+				tx.executeSql(qry,[accesskey,s],function(tx1,result){
 					var len = result.rows.length;
-					if(len >0)
-					{
+					if(len > 0)
+					{						
 						$('.getcontent .customer-list').html('');
 						$('#cusloader').hide();
 						for (var i=0; i<len; i++){
@@ -382,6 +390,10 @@
 								$('.getcontent .customer-list').append('<li><input type="checkbox" name="mrgcus[]" class="mrgcus" value="'+id+'"> <a class="vcus" href="'+id+'" data-src="'+src+'">'+name+'</a> <a class="text-right mcus" href="'+id+'"><i class="fa fa-check"></i></a><a class="text-right dcus" href="'+id+'" data-src="'+src+'" title="delete"><i class="fa fa-trash"></i></a></li>');
 							}
 						}
+					}else
+					{
+						$('#cusloader').hide();
+						$('.getcontent .customer-list').html('<p>No Customer Found</p>');
 					}
 				},errorCB);
 			}, errorCB, successCB);
@@ -525,7 +537,7 @@
 			$('.getcontent #cusloader').show();$('.getcontent #vcusprofile').hide();
 			var accesskey=window.localStorage.getItem('accesskey');
 			db.transaction(function(tx){
-				tx.executeSql("select id,name,address,city,state,country,pincode,emailid,phonenumber,source,cusuniqueid from customerdetails where id=? and accesskey=?",[id,accesskey],function(tx1,result){
+				tx.executeSql("select id,name,address,city,state,country,pincode,emailid,phonenumber,source,cusuniqueid from customerdetails where cusuniqueid=? and accesskey=?",[id,accesskey],function(tx1,result){
 					var len = result.rows.length;
 					if(len >0)
 					{
@@ -565,6 +577,10 @@
 						}	
 						$('.getcontent #cusloader').hide();
 						$('.getcontent #vcusprofile').show();
+					}
+					else
+					{
+						getlist();
 					}
 				},errorCB);
 			}, errorCB, successCB);
@@ -623,6 +639,7 @@
 			
 			getmydet();
 			getlist();
+			
 			$('#sidebar').removeClass('active');
 			// take picture from camera
 			$('body').on('click','#but_take',function(){
