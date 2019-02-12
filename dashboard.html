@@ -1148,11 +1148,14 @@
 									cache: false,
 									beforeSend: function(){ $('#sync').html('<img src="img/reload.gif" class="img-responsive"> Sync');},
 									success: function(data){
-										if(data=="success")
-										{
-											$('#sync').html('<i class="fa fa-refresh"></i> Sync');
-											getlist();								
-										}
+										$('#sync').html('<i class="fa fa-refresh"></i> Sync');
+									},
+									complete:function(){
+										$('#sync').html('<i class="fa fa-refresh"></i> Sync');
+										db.transaction(function (tx){
+											tx.executeSql('update customerdetails set source="1" where cusuniqueid in ('+arr+');');}, 
+											errorCB, successCB);
+										getlist();	
 									}
 								});
 							},errorCB);
@@ -1190,11 +1193,14 @@
 								cache: false,
 								beforeSend: function(){ $('#sync').html('<img src="img/reload.gif" class="img-responsive"> Sync');},
 								success: function(data){
-									if(data=="success")
-									{
-										$('#sync').html('<i class="fa fa-refresh"></i> Sync');
-										getlist();								
-									}
+									$('#sync').html('<i class="fa fa-refresh"></i> Sync');
+								},
+								complete:function(){
+									$('#sync').html('<i class="fa fa-refresh"></i> Sync');
+									db.transaction(function (tx){
+										tx.executeSql('update customerdetails set source="1" where cusuniqueid in ('+arr+');');}, 
+										errorCB, successCB);
+									getlist();	
 								}
 							});
 						},errorCB);
