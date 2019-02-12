@@ -270,6 +270,8 @@
 	<script type="text/javascript">
 		window.onload = function()
 		{
+			getmydet();
+			getlist();
 			var lgn=window.localStorage.getItem('loginstatus');
 			if(lgn != 'true')
 			{				
@@ -422,8 +424,7 @@
 		}
 		
 		function getmydet()
-		{	
-			alert(123);
+		{
 			var uid=window.localStorage.getItem('uid');	
 			$('.getcontent #myaccloader').show();
 			$('.getcontent #vprofile').hide();			
@@ -431,8 +432,7 @@
 				tx.executeSql("select id,name,phonenumber,company_name,emailid,alternumber,profilepic,accesskey from userdetails where phonenumber=?",[uid],function(tx1,result){
 					var len = result.rows.length;
 					if(len >0)
-					{
-						alert(1);
+					{						
 						for (var i=0; i<len; i++){
 							var id = result.rows.item(i).id;
 							var name=result.rows.item(i).name;
@@ -622,8 +622,8 @@
 				
 		$(function()
 		{	
-			getmydet();
-			getlist();	
+			
+			
 			$('#sidebar').removeClass('active');
 			// take picture from camera
 			$('body').on('click','#but_take',function(){
