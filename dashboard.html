@@ -269,9 +269,7 @@
 	<script src="js/md5.min.js"></script>
 	<script type="text/javascript">
 		window.onload = function()
-		{
-			getmydet();
-			getlist();
+		{			
 			var lgn=window.localStorage.getItem('loginstatus');
 			if(lgn != 'true')
 			{				
@@ -361,8 +359,7 @@
 			
 		function getlist(s = '')
 		{
-			var accesskey = window.localStorage.getItem('accesskey');
-			alert(accesskey);
+			var accesskey = window.localStorage.getItem('accesskey');			
 			$('.getcontent .customer-list').html('');			
 			db.transaction(function(tx){
 				tx.executeSql("select cusuniqueid,name,source from customerdetails where accesskey=?",[accesskey],function(tx1,result){
@@ -564,7 +561,7 @@
 							$('.getcontent #source').val(source);
 							$('.getcontent #ecusid').val(id);
 							$('.getcontent #ecusuid').val(cusuid);
-						});	
+						}	
 						$('.getcontent #cusloader').hide();
 						$('.getcontent #vcusprofile').show();
 					}
@@ -623,7 +620,8 @@
 		$(function()
 		{	
 			
-			
+			getmydet();
+			getlist();
 			$('#sidebar').removeClass('active');
 			// take picture from camera
 			$('body').on('click','#but_take',function(){
