@@ -1137,8 +1137,7 @@
 								{
 									all_rows.push(res.rows.item(i));
 								}
-								cusJson = JSON.stringify(all_rows);
-								
+								cusJson = JSON.stringify(all_rows);								
 								$.ajax({
 									type: "POST",
 									url:"http://www.azillesoft.com/phonegap/database/synctoserver.php",
@@ -1211,9 +1210,11 @@
 			$("body").on('click','.dcus',function(e){
 				e.preventDefault();	
 				var internet = checkInternet();
+				var arr =$(this).attr('href');
+				var src =$(this).attr('data-src');
 				if(internet > 0)
 				{
-					var arr =$(this).attr('href');	
+						
 					var message = "Are you sure want to delete?";
 					var title = "CONFIRM";
 					var buttonLabels = "YES,NO";
@@ -1243,7 +1244,25 @@
 				}
 				else
 				{
-					alert('You are offline.');
+					if(src == 0)
+					{
+						var message = "Are you sure want to delete?";
+						var title = "CONFIRM";
+						var buttonLabels = "YES,NO";
+						navigator.notification.confirm(message, confirmCallback, title, buttonLabels);
+						function confirmCallback(buttonIndex) {
+							if(buttonIndex == 1)
+							{
+								db.transaction(function (tx){
+								tx.executeSql('delete from customerdetails where cusuniqueid='+arr+';');}, 
+									errorCB, successCB);
+							}
+						}
+					}
+					else
+					{
+						alert('You are offline.');
+					}
 				}
 			});
 		});
