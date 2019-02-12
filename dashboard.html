@@ -365,16 +365,16 @@
 			$('.getcontent .customer-list').html('');			
 			db.transaction(function(tx){
 				var qry='';
-				/*if(s != '')
+				if(s != '')
 				{	
-					qry="select cusuniqueid,name,source from customerdetails where accesskey=? and name like '%?%'";
+					qry="select cusuniqueid,name,source from customerdetails where accesskey=? and (name like ?)";
 				}
 				else
 				{
 					qry="select cusuniqueid,name,source from customerdetails where accesskey=?";
-				}*/
-				qry="select cusuniqueid,name,source from customerdetails where accesskey=?";
-				tx.executeSql(qry,[accesskey],function(tx1,result){
+				}
+				//qry="select cusuniqueid,name,source from customerdetails where accesskey=?";
+				tx.executeSql(qry,[accesskey,'%'+s+'%'],function(tx1,result){
 					var len = result.rows.length;
 					if(len > 0)
 					{						
