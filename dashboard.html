@@ -1132,7 +1132,7 @@
 					else
 					{
 						db.transaction(function(tx){
-							tx.executeSql("select accesskey,name,address,city,state,country,pincode,emailid,phonenumber,source,cusuniqueid,dateofcreation,dateofupdate from customerdetails where cusuniqueid in (?) ", [arr], function(tx, res) {
+							tx.executeSql("select accesskey,name,address,city,state,country,pincode,emailid,phonenumber,source,cusuniqueid,dateofcreation,dateofupdate from customerdetails where cusuniqueid in (?) ", [arr], function(tx1, res) {
 								var all_rows = [];
 								for (i=0; i < res.rows.length; ++i)
 								{
@@ -1149,12 +1149,14 @@
 									beforeSend: function(){ $('#sync').html('<img src="img/reload.gif" class="img-responsive"> Sync');},
 									success: function(data){
 										$('#sync').html('<i class="fa fa-refresh"></i> Sync');
+										
+										db.transaction(function (tx2){
+											tx2.executeSql('UPDATE customerdetails SET source="1" where cusuniqueid in ('+arr+');');}, 
+											errorCB, successCB);
 									},
 									complete:function(){
 										$('#sync').html('<i class="fa fa-refresh"></i> Sync');
-										db.transaction(function (tx){
-											tx.executeSql('update customerdetails set source="1" where cusuniqueid in ('+arr+');');}, 
-											errorCB, successCB);
+										
 										getlist();	
 									}
 								});
@@ -1176,7 +1178,7 @@
 				{
 					var arr =$(this).attr('href');	
 					db.transaction(function(tx){
-						tx.executeSql("select accesskey,name,address,city,state,country,pincode,emailid,phonenumber,source,cusuniqueid,dateofcreation,dateofupdate from customerdetails where cusuniqueid in (?) ", [arr], function(tx, res) {
+						tx.executeSql("select accesskey,name,address,city,state,country,pincode,emailid,phonenumber,source,cusuniqueid,dateofcreation,dateofupdate from customerdetails where cusuniqueid in (?) ", [arr], function(tx1, res) {
 							var all_rows = [];
 							for (i=0; i < res.rows.length; ++i)
 							{
@@ -1194,12 +1196,14 @@
 								beforeSend: function(){ $('#sync').html('<img src="img/reload.gif" class="img-responsive"> Sync');},
 								success: function(data){
 									$('#sync').html('<i class="fa fa-refresh"></i> Sync');
+									
+									db.transaction(function (tx2){
+										tx2.executeSql('update customerdetails set source="1" where cusuniqueid in ('+arr+');');}, 
+										errorCB, successCB);
 								},
 								complete:function(){
 									$('#sync').html('<i class="fa fa-refresh"></i> Sync');
-									db.transaction(function (tx){
-										tx.executeSql('update customerdetails set source="1" where cusuniqueid in ('+arr+');');}, 
-										errorCB, successCB);
+									
 									getlist();	
 								}
 							});
