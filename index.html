@@ -157,7 +157,7 @@
 	<script src="js/main.js"></script> 
 	<script src="js/jquery-ui.js"></script>
 	<script src="js/imgcache.js"></script>
-		<script src="js/md5.min.js"></script>
+	<script src="js/md5.min.js"></script>
 	<!-- <script src="js/imgcache-promise.js"></script> -->
 	<script type="text/javascript">
 		// If logged in then move to dashboard
@@ -192,7 +192,8 @@
 			// This is friendlier in a mobile application environment as we are able to store
 			// files in the correct platform-recommended/enforced directories.
 			// WARNING: Make sure this points to a __directory__!
-			// NOTE: Only has effect when running in a Cordova environment			
+			// NOTE: Only has effect when running in a Cordova environment	
+			
 			ImgCache.options.cordovaFilesystemRoot = cordova.file.dataDirectory;	
 			ImgCache.init();			
 		}
@@ -431,8 +432,7 @@
 			var email=$("#email").val();
 			var cimgname=$("#imgname").val();			
 			var imgname=$("#simgname").val();			
-			var accesskey = Math.floor(Math.random() * 1000000); 
-			//var accesskey = '123456'; 
+			var accesskey = md5(Math.round(Math.floor(Math.random() * 1000000)));
 			$("#accesskey").val(accesskey);
 			
 			var today = new Date();

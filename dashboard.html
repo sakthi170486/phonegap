@@ -582,6 +582,7 @@
 							$('.getcontent #ecusuid').val(cusuid);
 						}	
 						$('.getcontent #cusloader').hide();
+						$('.getcontent #vcusprofile').removeClass('d-none');
 						$('.getcontent #vcusprofile').show();
 					}
 					else
@@ -1078,12 +1079,15 @@
 								});
 							}					
 							
-							$("#cusupdate").text('Update');								
+							$("#cusupdate").text('Update');	
+							
 							getcusdet(cusuid);
+							
 							$('#ecusprofile').addClass('d-none');
 							$('#vcusprofile').removeClass('d-none');
 							$('#cptitle').text('Customer Profile');
 							$('#cusedit').show();
+							
 						},function(error){								
 							alert("error");	
 							$("#cusupdate").text('Update');	
@@ -1150,13 +1154,15 @@
 									success: function(data){
 										$('#sync').html('<i class="fa fa-refresh"></i> Sync');
 										
-										db.transaction(function (tx2){
-											tx2.executeSql('UPDATE customerdetails SET source="1" where cusuniqueid in ('+arr+');');}, 
-											errorCB, successCB);
+										
 									},
 									complete:function(){
-										$('#sync').html('<i class="fa fa-refresh"></i> Sync');
+										$('#sync').html('<i class="fa fa-refresh"></i> Sync');	
 										
+										db.transaction(function (tx2){										
+											tx2.executeSql('UPDATE customerdetails SET source="1" where cusuniqueid in (?)',[arr],successCB,errorCB);
+										},errorCB, successCB);
+											
 										getlist();	
 									}
 								});
@@ -1195,15 +1201,13 @@
 								cache: false,
 								beforeSend: function(){ $('#sync').html('<img src="img/reload.gif" class="img-responsive"> Sync');},
 								success: function(data){
-									$('#sync').html('<i class="fa fa-refresh"></i> Sync');
-									
-									db.transaction(function (tx2){
-										tx2.executeSql('update customerdetails set source="1" where cusuniqueid in ('+arr+');');}, 
-										errorCB, successCB);
+									$('#sync').html('<i class="fa fa-refresh"></i> Sync');									
 								},
 								complete:function(){
 									$('#sync').html('<i class="fa fa-refresh"></i> Sync');
-									
+									db.transaction(function (tx2){										
+										tx2.executeSql('UPDATE customerdetails SET source="1" where cusuniqueid in (?)',[arr],successCB,errorCB);
+									},errorCB, successCB);
 									getlist();	
 								}
 							});
