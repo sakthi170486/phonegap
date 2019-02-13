@@ -275,7 +275,8 @@
 			if(lgn != 'true')
 			{				
 				window.location.href="index.html";
-			}			
+			}
+			
 		}
 		var db = window.openDatabase("customerdb", "1.1", "customer database", 1000000);		
 		
@@ -356,7 +357,30 @@
 			//alert("success!");
 		}
 		
-
+		function synccusdet()
+		{
+			var accesskey = window.localStorage.getItem('accesskey');
+			db.transaction(function(tx){
+				tx.executeSql("select accesskey,name,address,city,state,country,pincode,emailid,phonenumber,cusuniqueid,dateofupdate from customerdetails where source=? and accesskey=? ", ['1',accesskey], function(tx1, res) {
+					var all_rows = [];
+					for (i=0; i < res.rows.length; ++i)
+					{
+						all_rows.push(res.rows.item(i));
+					}
+					cusJson = JSON.stringify(all_rows);								
+					$.ajax({
+						type: "POST",
+						url:"http://www.azillesoft.com/phonegap/database/updateallcustomer.php",
+						data: {cusdet: cusJson}, // post data || get data
+						dataType: "json",
+						crossDomain: true,
+						cache: false,
+						success: function(data){
+						}
+					});
+				},errorCB);
+			}, errorCB, successCB);	
+		}
 			
 		function getlist(s = '')
 		{
@@ -642,10 +666,15 @@
 		
 				
 		$(function()
-		{	
-			
+		{			
 			getmydet();
 			getlist();
+			
+			var internet = checkInternet();
+			if(internet > 0)
+			{
+				synccusdet();
+			}
 			
 			$('#sidebar').removeClass('active');
 			// take picture from camera
@@ -781,24 +810,21 @@
 					var internet = checkInternet();
 					if(internet > 0)
 					{
-						var internet = checkInternet();
-						if(internet > 0)
-						{
-							$.ajax({
-								type: "POST",
-								url:"http://www.azillesoft.com/phonegap/database/checkumobile.php",
-								data : 'm='+v+'&accesskey='+accesskey, // post data || get data
-								crossDomain: true,
-								cache: false,
-								success: function(data){
-									if(data == "exists")
-									{	
-										alert("Mobile number already registered.");
-										$("#emobile").val('').focus();							
-									}						
-								}
-							});
-						}
+						$.ajax({
+							type: "POST",
+							url:"http://www.azillesoft.com/phonegap/database/checkumobile.php",
+							data : 'm='+v+'&accesskey='+accesskey, // post data || get data
+							crossDomain: true,
+							cache: false,
+							success: function(data){
+								if(data == "exists")
+								{	
+									alert("Mobile number already registered.");
+									$("#emobile").val('').focus();							
+								}						
+							}
+						});
+						
 					}
 				}
 			});
