@@ -1226,8 +1226,7 @@
 				var arr =$(this).attr('href');
 				var src =$(this).attr('data-src');
 				if(internet > 0)
-				{
-						
+				{	
 					var message = "Are you sure want to delete?";
 					var title = "CONFIRM";
 					var buttonLabels = "YES,NO";
@@ -1246,12 +1245,13 @@
 									{
 										getlist();
 									}
+								},
+								complete:function(){
+									db.transaction(function (tx){
+										tx.executeSql('delete from customerdetails where cusuniqueid=?',[arr],successCB,errorCB)
+									},errorCB, successCB);
 								}
 							});
-							
-							db.transaction(function (tx){
-								tx.executeSql('delete from customerdetails where cusuniqueid='+arr+';');}, 
-									errorCB, successCB);
 						}					
 					}
 				}
@@ -1267,8 +1267,8 @@
 							if(buttonIndex == 1)
 							{
 								db.transaction(function (tx){
-								tx.executeSql('delete from customerdetails where cusuniqueid='+arr+';');}, 
-									errorCB, successCB);
+									tx.executeSql('delete from customerdetails where cusuniqueid=?',[arr],successCB,errorCB)
+								},errorCB, successCB);
 							}
 						}
 					}
