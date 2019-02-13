@@ -359,28 +359,32 @@
 		
 		function synccusdet()
 		{
-			var accesskey = window.localStorage.getItem('accesskey');
-			var src=1;
-			db.transaction(function(tx){
-				tx.executeSql("select accesskey,name,address,city,state,country,pincode,emailid,phonenumber,cusuniqueid,dateofupdate from customerdetails where source=? and accesskey=? ", [src,accesskey], function(tx1, res) {
-					var all_rows = [];
-					for (i=0; i < res.rows.length; ++i)
-					{
-						all_rows.push(res.rows.item(i));
-					}
-					cusJson = JSON.stringify(all_rows);								
-					$.ajax({
-						type: "POST",
-						url:"http://www.azillesoft.com/phonegap/database/updateallcustomer.php",
-						data: {cusdet: cusJson}, // post data || get data
-						dataType: "json",
-						crossDomain: true,
-						cache: false,
-						success: function(data){
+			var internet = checkInternet();
+			if(internet > 0)
+			{
+				var accesskey = window.localStorage.getItem('accesskey');
+				var src=1;
+				db.transaction(function(tx){
+					tx.executeSql("select accesskey,name,address,city,state,country,pincode,emailid,phonenumber,cusuniqueid,dateofupdate from customerdetails where source=? and accesskey=? ", [src,accesskey], function(tx1, res) {
+						var all_rows = [];
+						for (i=0; i < res.rows.length; ++i)
+						{
+							all_rows.push(res.rows.item(i));
 						}
-					});
-				},errorCB);
-			}, errorCB, successCB);	
+						cusJson = JSON.stringify(all_rows);								
+						$.ajax({
+							type: "POST",
+							url:"http://www.azillesoft.com/phonegap/database/updateallcustomer.php",
+							data: {cusdet: cusJson}, // post data || get data
+							dataType: "json",
+							crossDomain: true,
+							cache: false,
+							success: function(data){
+							}
+						});
+					},errorCB);
+				}, errorCB, successCB);	
+			}
 		}
 			
 		function getlist(s = '')
@@ -418,7 +422,8 @@
 							}
 							else
 							{
-								$('.getcontent .customer-list').append('<li><input type="checkbox" name="mrgcus[]" class="mrgcus" value="'+id+'"> <a class="vcus" href="'+id+'" data-src="'+src+'">'+name+'</a> <a class="text-right mcus" href="'+id+'"><i class="fa fa-check"></i></a> <a class="text-right dcus" href="'+id+'" data-src="'+src+'" style="margin-right:10px;" title="delete"><i class="fa fa-trash"></i></a></li>');
+								$('.getcontent .customer-list').append('<li><input type="checkbox" name="mrgcus[]" class="mrgcus" value="'+id+'"> <a class="vcus" href="'+id+'" data-src="'+src+'">'+name+'</a>  <a class="text-right dcus" href="'+id+'" data-src="'+src+'" title="delete"><i class="fa fa-trash"></i></a></li>');
+								//<a class="text-right mcus" href="'+id+'"><i class="fa fa-check"></i></a>
 							}
 						}
 					}else
@@ -671,11 +676,9 @@
 			getmydet();
 			getlist();
 			
-			/*var internet = checkInternet();
-			if(internet > 0)
-			{
-				synccusdet();
-			}*/
+			
+			synccusdet();
+			
 			
 			$('#sidebar').removeClass('active');
 			// take picture from camera
