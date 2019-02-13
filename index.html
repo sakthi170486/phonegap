@@ -319,6 +319,35 @@
 		 //alert("success!");
 		}
 		
+		function synccusdet()
+		{
+			var internet = checkInternet();
+			if(internet > 0)
+			{
+				var accesskey = window.localStorage.getItem('accesskey');
+				var src=1;
+				db.transaction(function(tx){
+					tx.executeSql("select accesskey,name,address,city,state,country,pincode,emailid,phonenumber,cusuniqueid,dateofupdate from customerdetails where source=? and accesskey=? ", [src,accesskey], function(tx1, res) {
+						var all_rows = [];
+						for (i=0; i < res.rows.length; ++i)
+						{
+							all_rows.push(res.rows.item(i));
+						}
+						cusJson = JSON.stringify(all_rows);								
+						$.ajax({
+							type: "POST",
+							url:"http://www.azillesoft.com/phonegap/database/updateallcustomer.php",
+							data: {cusdet: cusJson}, // post data || get data
+							dataType: "json",
+							crossDomain: true,
+							cache: false,
+							success: function(data){
+							}
+						});
+					},errorCB);
+				}, errorCB, successCB);	
+			}
+		}
 	
 		// open the corresponding page
 		$('body').on('click','.lnk',function(e){
@@ -721,7 +750,8 @@
 						},
 						complete: function() {
 							SpinnerDialog.hide();
-							window.location.href="dashboard.html";
+							synccusdet();
+							//window.location.href="dashboard.html";
 						}
 					});
 				}
