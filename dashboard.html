@@ -269,7 +269,7 @@
 	<script src="js/dashboard.js"></script>
 	<script src="js/md5.min.js"></script>
 	<script type="text/javascript">
-		/*window.onload = function()
+		window.onload = function()
 		{			
 			var lgn=window.localStorage.getItem('loginstatus');
 			if(lgn != 'true')
@@ -277,7 +277,7 @@
 				window.location.href="index.html";
 			}
 			
-		}*/
+		}
 		var db = window.openDatabase("customerdb", "1.1", "customer database", 1000000);		
 		
 		function checkInternet() {
@@ -367,44 +367,72 @@
 			$('.getcontent .customer-list').html('');			
 			db.transaction(function(tx){
 				var qry='';
-				/*if(s != '')
+				if(s != '')
 				{	
-					qry="select cusuniqueid,name,source from customerdetails where accesskey=? and (name like ?)";
+					qry="select cusuniqueid,name,source from customerdetails where accesskey='"+accesskey+"' and name like '%"+s+"%'";					
+					tx.executeSql(qry,[],function(tx1,result){
+						var len = result.rows.length;
+						if(len > 0)
+						{						
+							$('.getcontent .customer-list').html('');
+							$('#loader').hide();
+							$('#vdash').removeClass('d-none');
+							$('#vdash').show();
+							for (var i=0; i<len; i++){
+								var id = result.rows.item(i).cusuniqueid;
+								var name=result.rows.item(i).name;
+								var src=result.rows.item(i).source;
+								if(src == 1)
+								{
+									$('.getcontent .customer-list').append('<li><a class="vcus" href="'+id+'" data-src="'+src+'">'+name+'</a><a class="text-right dcus" data-src="'+src+'" href="'+id+'"><i class="fa fa-trash"></i></a></li>');
+								}
+								else
+								{
+									$('.getcontent .customer-list').append('<li><input type="checkbox" name="mrgcus[]" class="mrgcus" value="'+id+'"> <a class="vcus" href="'+id+'" data-src="'+src+'">'+name+'</a>  <a class="text-right dcus" href="'+id+'" data-src="'+src+'" title="delete"><i class="fa fa-trash"></i></a></li>');
+									//<a class="text-right mcus" href="'+id+'"><i class="fa fa-check"></i></a>
+								}
+							}
+						}else
+						{
+							$('#loader').hide();$('#vdash').show();$('#vdash').removeClass('d-none');
+							$('.getcontent .customer-list').html('<p>No Customer Found</p>');
+						}
+					},errorCB);
 				}
 				else
 				{
-					qry="select cusuniqueid,name,source from customerdetails where accesskey=?";
-				}*/
-				
-				qry = "select cusuniqueid,name,source from customerdetails where accesskey=?";
-				tx.executeSql(qry,[accesskey],function(tx1,result){
-					var len = result.rows.length;
-					if(len > 0)
-					{						
-						$('.getcontent .customer-list').html('');
-						$('#loader').hide();
-						$('#vdash').removeClass('d-none');
-						$('#vdash').show();
-						for (var i=0; i<len; i++){
-							var id = result.rows.item(i).cusuniqueid;
-							var name=result.rows.item(i).name;
-							var src=result.rows.item(i).source;
-							if(src == 1)
-							{
-								$('.getcontent .customer-list').append('<li><a class="vcus" href="'+id+'" data-src="'+src+'">'+name+'</a><a class="text-right dcus" data-src="'+src+'" href="'+id+'"><i class="fa fa-trash"></i></a></li>');
+					qry = "select cusuniqueid,name,source from customerdetails where accesskey=?";
+					tx.executeSql(qry,[accesskey],function(tx1,result){
+						var len = result.rows.length;
+						if(len > 0)
+						{						
+							$('.getcontent .customer-list').html('');
+							$('#loader').hide();
+							$('#vdash').removeClass('d-none');
+							$('#vdash').show();
+							for (var i=0; i<len; i++){
+								var id = result.rows.item(i).cusuniqueid;
+								var name=result.rows.item(i).name;
+								var src=result.rows.item(i).source;
+								if(src == 1)
+								{
+									$('.getcontent .customer-list').append('<li><a class="vcus" href="'+id+'" data-src="'+src+'">'+name+'</a><a class="text-right dcus" data-src="'+src+'" href="'+id+'"><i class="fa fa-trash"></i></a></li>');
+								}
+								else
+								{
+									$('.getcontent .customer-list').append('<li><input type="checkbox" name="mrgcus[]" class="mrgcus" value="'+id+'"> <a class="vcus" href="'+id+'" data-src="'+src+'">'+name+'</a>  <a class="text-right dcus" href="'+id+'" data-src="'+src+'" title="delete"><i class="fa fa-trash"></i></a></li>');
+									//<a class="text-right mcus" href="'+id+'"><i class="fa fa-check"></i></a>
+								}
 							}
-							else
-							{
-								$('.getcontent .customer-list').append('<li><input type="checkbox" name="mrgcus[]" class="mrgcus" value="'+id+'"> <a class="vcus" href="'+id+'" data-src="'+src+'">'+name+'</a>  <a class="text-right dcus" href="'+id+'" data-src="'+src+'" title="delete"><i class="fa fa-trash"></i></a></li>');
-								//<a class="text-right mcus" href="'+id+'"><i class="fa fa-check"></i></a>
-							}
+						}else
+						{
+							$('#loader').hide();$('#vdash').show();$('#vdash').removeClass('d-none');
+							$('.getcontent .customer-list').html('<p>No Customer Found</p>');
 						}
-					}else
-					{
-						$('#loader').hide();$('#vdash').show();$('#vdash').removeClass('d-none');
-						$('.getcontent .customer-list').html('<p>No Customer Found</p>');
-					}
-				},errorCB);
+					},errorCB);
+				}
+				
+				
 			}, errorCB, successCB);
 			
 			/* online code

@@ -392,8 +392,12 @@
 			
 				var options = {direction:'right'};
 				$('.maincontent').html('');
-				$( ".maincontent" ).effect( 'slide', options, 300, function(){
+				$( ".maincontent" ).effect( 'slide', options, 300, function(){					
 					$('.maincontent').html(template);
+					if(l == 'signin')
+					{
+						$('#umobile').focus();
+					}
 				});
 			}
 			
@@ -641,7 +645,7 @@
 													{
 														var otpTpl = Handlebars.compile($("#otp-tpl").html());	
 														$('.maincontent').html(otpTpl);
-														$('#cumobile').val(v);
+														$('#cumobile').val(v);$('#otp').focus();
 													}
 													else
 													{
@@ -677,7 +681,7 @@
 								SpinnerDialog.hide();
 								var otpTpl = Handlebars.compile($("#otp-tpl").html());	
 								$('.maincontent').html(otpTpl);
-								$('#cumobile').val(v);
+								$('#cumobile').val(v);$('#otp').focus();
 							}
 						},errorCB);
 					}, errorCB, successCB);
