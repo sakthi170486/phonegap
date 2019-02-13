@@ -624,7 +624,7 @@
 											var accesskey = result.rows.item(0).accesskey;
 											
 											var ft = new FileTransfer();
-											ft.upload(pic, "http://www.azillesoft.com/phonegap/database/upload.php", function(result){
+											ft.upload(pic, "http://www.azillesoft.com/phonegap/database/upload.php?a=u&id="+accesskey, function(result){
 												pic = result.response;	
 											}, function(error){
 												alert('error : ' + JSON.stringify(error));
@@ -633,7 +633,7 @@
 											$.ajax({
 												type: "POST",
 												url:"http://www.azillesoft.com/phonegap/database/update.php",
-												data : 'eid='+accesskey+'&ecname='+cname+'&ename='+name+'&emobile='+pnum+'&altmobile='+apnum+'&eemail='+email+'&eimgname='+pic+'&accesskey='+accesskey, // post data || get data
+												data : 'eid='+accesskey+'&ecname='+cname+'&ename='+name+'&emobile='+pnum+'&altmobile='+apnum+'&eemail='+email, // post data || get data
 												crossDomain: true,
 												cache: false,
 												success: function(data){

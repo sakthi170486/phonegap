@@ -312,6 +312,8 @@
 			
 			
 			var mob=window.localStorage.getItem('uid');
+			var accesskey=window.localStorage.getItem('accesskey');
+			
 			var target = $('#profimg');
 			var oldimg=target.attr('src');
 			
@@ -327,7 +329,7 @@
 			  }			 
 			  $('#imgname').val(target.attr('src'));
 				db.transaction(function(tx){					
-					tx.executeSql("UPDATE userdetails SET profilepic=? where phonenumber=?",[target.attr('src'),mob],function(tx1,result){
+					tx.executeSql("UPDATE userdetails SET profilepic=? where accesskey=?",[target.attr('src'),accesskey],function(tx1,result){
 						//success						
 					},function(error){});
 				}, errorCB, successCB);		
@@ -336,7 +338,7 @@
 			if(internet > 0)
 			{
 				var ft = new FileTransfer();
-				ft.upload(imageURI, "http://www.azillesoft.com/phonegap/database/upload.php?a=u&id="+mob, function(result){
+				ft.upload(imageURI, "http://www.azillesoft.com/phonegap/database/upload.php?a=u&id="+accesskey, function(result){
 					//alert('successfully uploaded ' + result.response);
 					$('#photo').modal('hide');				
 				}, function(error){
