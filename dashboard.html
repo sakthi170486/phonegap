@@ -382,7 +382,7 @@
 								var payid=field.paymentid;
 								var paystatus=field.paymentstatus;
 								db.transaction(function(tx){					
-									tx.executeSql("UPDATE userdetails SET planname=?,planexpiry=?,paymentid=?,paystatus=? where accesskey=?",[pname,pexpiry,payid,paystatus,akey],function(tx1,result){
+									tx.executeSql("UPDATE userdetails SET planname=?,planexpiry=?,paymentid=?,paymentstatus=? where accesskey=?",[pname,pexpiry,payid,paystatus,akey],function(tx1,result){
 										//success
 									},function(error){});
 								}, errorCB, successCB);									
@@ -392,7 +392,7 @@
 				});
 			}
 			db.transaction(function(tx){
-				tx.executeSql("select planname,planexpiry,paymentid,paystatus from userdetails where accesskey=?",[akey],function(tx1,result){
+				tx.executeSql("select planname,planexpiry,paymentid,paymentstatus from userdetails where accesskey=?",[akey],function(tx1,result){
 					var len = result.rows.length;
 					if(len >0)
 					{						
@@ -400,7 +400,7 @@
 							var pname=result.rows.item(i).planname;
 							var pexpiry=result.rows.item(i).planexpiry;
 							var payid=result.rows.item(i).paymentid;
-							var paystatus=result.rows.item(i).paystatus;
+							var paystatus=result.rows.item(i).paymentstatus;
 							
 							window.localStorage.setItem('pname',pname);
 							window.localStorage.setItem('pexp',pexpiry);
