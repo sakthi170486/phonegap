@@ -373,7 +373,6 @@
 					dataType : 'json', // data type
 					crossDomain: true,
 					cache: false,
-					beforeSend: function(){ $('.getcontent #myaccloader').show();$('.getcontent #vprofile').hide();},
 					success: function(result){
 						if( result.length > 0) 
 						{
