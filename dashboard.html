@@ -21,8 +21,8 @@
 							<p id="uname">Welcome Guest</p><hr/>							
 							<li class="active"><a href="MyAccount" class="lnk"><i class="fa fa-user"></i> My Account</a></li>
 							<li class="active"><a href="MyPlan" class="lnk"><i class="fa fa-user"></i> My Plan</a></li>
-							<li><a href="AddCustomer" class="lnk"><i class="fa fa-user-plus"></i> Add Customer</a></li>
-							<li><a href="Dashboard" class="lnk"><i class="fa fa-search"></i> Search Customer</a></li>
+							<li><a href="" class="adcus" ><i class="fa fa-user-plus"></i> Add Customer</a></li>
+							<li><a href="" class="srcus" ><i class="fa fa-search"></i> Search Customer</a></li>
 							<li><a href="#" id="logout"><i class="fa fa-sign-out"></i> Logout</a></li>					
 						</ul>
 					</nav>
@@ -270,7 +270,7 @@
 	<script src="js/dashboard.js"></script>
 	<script src="js/md5.min.js"></script>
 	<script type="text/javascript">
-		window.onload = function()
+		/*window.onload = function()
 		{			
 			var lgn=window.localStorage.getItem('loginstatus');
 			if(lgn != 'true')
@@ -278,7 +278,7 @@
 				window.location.href="index.html";
 			}
 			
-		}
+		}*/
 		var db = window.openDatabase("customerdb", "1.1", "customer database", 1000000);		
 		
 		function checkInternet() {
@@ -360,6 +360,69 @@
 			//alert("success!");
 		}
 		
+		function chkPlan(uid)
+		{
+			var internet = checkInternet();
+			if(internet > 0)
+			{	
+				var akey = window.localStorage.getItem('accesskey');
+				$.ajax({
+					type: "POST",
+					url:"http://www.azillesoft.com/phonegap/database/json.php",
+					data : 'u='+uid+'&k='+akey, // post data || get data
+					dataType : 'json', // data type
+					crossDomain: true,
+					cache: false,
+					beforeSend: function(){ $('.getcontent #myaccloader').show();$('.getcontent #vprofile').hide();},
+					success: function(result){
+						if( result.length > 0) 
+						{
+							$.each(result, function(i, field){								
+								var pname=field.planname;
+								var pexpiry=field.planexpiry;
+								var payid=field.paymentid;
+								var paystatus=field.paymentstatus;
+								db.transaction(function(tx){					
+									tx.executeSql("UPDATE userdetails SET planname=?,planexpiry=?,paymentid=?,paystatus=? where accesskey=?",[pname,pexpiry,payid,paystatus,akey],function(tx1,result){
+										//success
+									},function(error){});
+								}, errorCB, successCB);									
+							});	
+						}					
+					}
+				});
+			}
+			db.transaction(function(tx){
+				tx.executeSql("select planname,planexpiry,paymentid,paystatus from userdetails where accesskey=?",[akey],function(tx1,result){
+					var len = result.rows.length;
+					if(len >0)
+					{						
+						for (var i=0; i<len; i++){							
+							var pname=result.rows.item(i).planname;
+							var pexpiry=result.rows.item(i).planexpiry;
+							var payid=result.rows.item(i).paymentid;
+							var paystatus=result.rows.item(i).paystatus;
+							
+							window.localStorage.setItem('pname',pname);
+							window.localStorage.setItem('pexp',pexpiry);
+							window.localStorage.setItem('payid',payid);
+							window.localStorage.setItem('pstat',paystatus);							
+						}
+					}
+				},errorCB);
+			}, errorCB, successCB);			
+			var CurrentDate = new Date();
+			var pexp=window.localStorage.getItem('pexp');
+			if(pexp != '' && pexp >= CurrentDate)
+			{
+				$('.adcus').attr('href','AddCustomer').addClass('lnk').removeClass('noPlan');
+				$('.srcus').attr('href','Dashboard').addClass('lnk').removeClass('noPlan');
+			}
+			else
+			{
+				$('.adcus,.srcus').attr('href','').addClass('noPlan').removeClass('lnk');
+			}
+		}
 			
 		function getlist(s = '')
 		{
@@ -475,7 +538,8 @@
 		{
 			var uid=window.localStorage.getItem('uid');	
 			$('.getcontent #myaccloader').show();
-			$('.getcontent #vprofile').hide();			
+			$('.getcontent #vprofile').hide();
+			
 			db.transaction(function(tx){
 				tx.executeSql("select id,name,phonenumber,company_name,emailid,alternumber,profilepic,accesskey from userdetails where phonenumber=?",[uid],function(tx1,result){
 					var len = result.rows.length;
@@ -489,7 +553,8 @@
 							var emailid=result.rows.item(i).emailid;
 							var altnum=result.rows.item(i).alternumber;
 							var img=result.rows.item(i).profilepic;
-							var accesskey=result.rows.item(i).accesskey;
+							var accesskey=result.rows.item(i).accesskey;							
+							
 							if(img != '')
 							{
 								$('#uimg').attr('src',img);
@@ -522,52 +587,7 @@
 				},errorCB);
 			}, errorCB, successCB);
 			
-			/*
-			$.ajax({
-				type: "POST",
-				url:"http://www.azillesoft.com/phonegap/database/json.php",
-				data : 'u='+uid, // post data || get data
-				dataType : 'json', // data type
-				crossDomain: true,
-				cache: false,
-				beforeSend: function(){ $('.getcontent #myaccloader').show();$('.getcontent #vprofile').hide();},
-				success: function(result){
-					if( result.length > 0) 
-					{
-						$.each(result, function(i, field){
-							var id=field.id;
-							var cname=field.company_name;
-							var name=field.name;
-							var mobile=field.phonenumber;
-							var emailid=field.emailid;
-							var altnum=field.alternumber;
-							var img=field.profilepic;
-							if(img != '')
-							{
-								$('#uimg').attr('src','http://www.azillesoft.com/phonegap/database/upload/'+img);
-								$('#profimg').attr('src','http://www.azillesoft.com/phonegap/database/upload/'+img);
-							}
-							$('.getcontent #mcompname').text('Company Name : '+cname);
-							$('.getcontent #mname').text('Name : '+name);
-							$('.getcontent #memail').text('Email Id : '+emailid);
-							$('.getcontent #mphone').text('Contact Number : '+mobile);
-							$('.getcontent #maltnum').text('Alternate Number : '+altnum);
-							
-							$('.getcontent #ecname').val(cname);
-							$('.getcontent #ename').val(name);
-							$('.getcontent #eemail').val(emailid);
-							$('.getcontent #emobile').val(mobile);
-							$('.getcontent #altmobile').val(altnum);
-							$('.getcontent #simgname').val(img);
-							$('.getcontent #eid').val(id);
-							
-							$('#uname').text('Welcome '+name);
-						});						
-						$('.getcontent #myaccloader').hide();
-						$('.getcontent #vprofile').show();
-					}					
-				}
-			});*/
+			chkPlan(uid);
 		}
 		
 		function getcusdet(id)
@@ -677,7 +697,6 @@
 		{			
 			getmydet();
 			getlist();
-					
 			
 			$('#sidebar').removeClass('active');
 			// take picture from camera
@@ -698,6 +717,10 @@
 			
 			$('.maincontent').on('click', '#sidebarCollapse',function () {
 				$('#sidebar').toggleClass('active');
+			});	
+			
+			$('.maincontent').on('click', '.noPlan',function () {
+				alert('Upgrade your plan')
 			});	
 			
 			$('.maincontent').on('click', '#logout',function () {
@@ -738,7 +761,7 @@
 				});
 			});
 			
-			// cutomer edit
+			// customer edit
 			$('body').on('click','#cusedit',function(e){
 				e.preventDefault();
 				$('#vcusprofile').addClass('d-none');
@@ -792,6 +815,7 @@
 			// Check customer mobile number already registered or not
 			$("body").on('blur','#mobile',function(e){
 				var v=$(this).val();
+				var chk=0;
 				var accesskey=window.localStorage.getItem('accesskey');
 				var cid = $('#ecusid').val();
 				
@@ -805,8 +829,7 @@
 								id = result.rows.item(0).id;
 								if(id > 0)
 								{
-									alert("Mobile number already registered.");
-									$("#mobile").val('').focus();
+									chk=1;
 								}	
 							}
 						},errorCB);
@@ -815,21 +838,32 @@
 					var internet = checkInternet();
 					if(internet > 0)
 					{
-						$.ajax({
-							type: "POST",
-							url:"http://www.azillesoft.com/phonegap/database/checkcusmobile.php",
-							data : 'm='+v+'&accesskey='+accesskey+'&cid='+cid, // post data || get data
-							crossDomain: true,
-							cache: false,
-							success: function(data){
-								if(data == "exists")
-								{
-									alert("Mobile number already registered.");
-									$("#mobile").val('').focus();															
-								}						
-							}
-						});
+						var uid=window.localStorage.getItem('uid');
+						chkPlan(uid);
+						var today = new Date();
+						var pexp=window.localStorage.getItem('pexp');
+						if(pexp != '' && pexp >= today)
+						{					
+							$.ajax({
+								type: "POST",
+								url:"http://www.azillesoft.com/phonegap/database/checkcusmobile.php",
+								data : 'm='+v+'&accesskey='+accesskey+'&cid='+cid, // post data || get data
+								crossDomain: true,
+								cache: false,
+								success: function(data){
+									if(data == "exists")
+									{
+										chk=1;																	
+									}						
+								}
+							});
+						}
 					}
+				}
+				if(chk == 1)
+				{
+					alert("Mobile number already registered.");
+					$("#mobile").val('').focus();
 				}
 			});	
 			
@@ -960,7 +994,7 @@
 								
 					
 					db.transaction(function(tx){					
-						tx.executeSql("UPDATE userdetails SET company_name=?,name=?,phonenumber=?,emailid=?,alternumber=?,dateofupdate=? where accesskey=?",[cname,name,mobile,email,amobile,dt,accesskey],function(tx1,result){
+						tx.executeSql("UPDATE userdetails SET company_name=?,name=?,emailid=?,alternumber=?,dateofupdate=? where accesskey=?",[cname,name,email,amobile,dt,accesskey],function(tx1,result){
 							//success
 							alert("updated");
 							
@@ -1050,19 +1084,27 @@
 							//success
 							alert("updated");
 							
+							
 							var internet = checkInternet();
 							if(internet > 0 && src == 1)
 							{
-								$.ajax({
-									type: "POST",
-									url:"http://www.azillesoft.com/phonegap/database/updatecustomer.php",
-									data : $("#ecusreg").serialize(), // post data || get data
-									crossDomain: true,
-									cache: false,
-									beforeSend: function(){ $("#cusupdate").text('Connecting...');},
-									success: function(data){								
-									}
-								});
+								var uid=window.localStorage.getItem('uid');
+								chkPlan(uid);
+								
+								var pexp=window.localStorage.getItem('pexp');
+								if(pexp != '' && pexp >= today)
+								{
+									$.ajax({
+										type: "POST",
+										url:"http://www.azillesoft.com/phonegap/database/updatecustomer.php",
+										data : $("#ecusreg").serialize(), // post data || get data
+										crossDomain: true,
+										cache: false,
+										beforeSend: function(){ $("#cusupdate").text('Connecting...');},
+										success: function(data){								
+										}
+									});
+								}
 							}					
 							
 							$("#cusupdate").text('Update');	
@@ -1103,57 +1145,68 @@
 				var internet = checkInternet();
 				if(internet > 0)
 				{
-					 var arr = $('.mrgcus:checked').map(function(){
-						return this.value;
-					}).get();
-					
-					if(arr == '')
+					var uid=window.localStorage.getItem('uid');
+					chkPlan(uid);
+					var today = new Date();
+					var pexp=window.localStorage.getItem('pexp');
+					if(pexp != '' && pexp >= today)
 					{
-						var v=$('.mrgcus').length;
-						if(v > 0)
+						var arr = $('.mrgcus:checked').map(function(){
+							return this.value;
+						}).get();
+						
+						if(arr == '')
 						{
-							alert('select atleast one customer');
+							var v=$('.mrgcus').length;
+							if(v > 0)
+							{
+								alert('select atleast one customer');
+							}
+							else
+							{
+								alert('There is no record to sync');
+							}
 						}
 						else
 						{
-							alert('There is no record to sync');
+							db.transaction(function(tx){
+								tx.executeSql("select accesskey,name,address,city,state,country,pincode,emailid,phonenumber,source,cusuniqueid,dateofcreation,dateofupdate from customerdetails where cusuniqueid in (?) ", [arr], function(tx1, res) {
+									var all_rows = [];
+									for (i=0; i < res.rows.length; ++i)
+									{
+										all_rows.push(res.rows.item(i));
+									}
+									cusJson = JSON.stringify(all_rows);								
+									$.ajax({
+										type: "POST",
+										url:"http://www.azillesoft.com/phonegap/database/synctoserver.php",
+										data: {cusdet: cusJson}, // post data || get data
+										dataType: "json",
+										crossDomain: true,
+										cache: false,
+										beforeSend: function(){ $('#sync').html('<img src="img/reload.gif" class="img-responsive"> Sync');},
+										success: function(data){
+											$('#sync').html('<i class="fa fa-refresh"></i> Sync');
+											
+											
+										},
+										complete:function(){
+											$('#sync').html('<i class="fa fa-refresh"></i> Sync');	
+											
+											db.transaction(function (tx2){										
+												tx2.executeSql('UPDATE customerdetails SET source="1" where cusuniqueid in (?)',[arr],successCB,errorCB);
+											},errorCB, successCB);
+												
+											getlist();	
+										}
+									});
+								},errorCB);
+							}, errorCB, successCB);						
 						}
 					}
 					else
 					{
-						db.transaction(function(tx){
-							tx.executeSql("select accesskey,name,address,city,state,country,pincode,emailid,phonenumber,source,cusuniqueid,dateofcreation,dateofupdate from customerdetails where cusuniqueid in (?) ", [arr], function(tx1, res) {
-								var all_rows = [];
-								for (i=0; i < res.rows.length; ++i)
-								{
-									all_rows.push(res.rows.item(i));
-								}
-								cusJson = JSON.stringify(all_rows);								
-								$.ajax({
-									type: "POST",
-									url:"http://www.azillesoft.com/phonegap/database/synctoserver.php",
-									data: {cusdet: cusJson}, // post data || get data
-									dataType: "json",
-									crossDomain: true,
-									cache: false,
-									beforeSend: function(){ $('#sync').html('<img src="img/reload.gif" class="img-responsive"> Sync');},
-									success: function(data){
-										$('#sync').html('<i class="fa fa-refresh"></i> Sync');
-										
-										
-									},
-									complete:function(){
-										$('#sync').html('<i class="fa fa-refresh"></i> Sync');	
-										
-										db.transaction(function (tx2){										
-											tx2.executeSql('UPDATE customerdetails SET source="1" where cusuniqueid in (?)',[arr],successCB,errorCB);
-										},errorCB, successCB);
-											
-										getlist();	
-									}
-								});
-							},errorCB);
-						}, errorCB, successCB);						
+						alert('Upgrade your plan');
 					}
 				}
 				else
@@ -1168,37 +1221,48 @@
 				var internet = checkInternet();
 				if(internet > 0)
 				{
-					var arr =$(this).attr('href');	
-					db.transaction(function(tx){
-						tx.executeSql("select accesskey,name,address,city,state,country,pincode,emailid,phonenumber,source,cusuniqueid,dateofcreation,dateofupdate from customerdetails where cusuniqueid in (?) ", [arr], function(tx1, res) {
-							var all_rows = [];
-							for (i=0; i < res.rows.length; ++i)
-							{
-								all_rows.push(res.rows.item(i));
-							}
-							cusJson = JSON.stringify(all_rows);
-							
-							$.ajax({
-								type: "POST",
-								url:"http://www.azillesoft.com/phonegap/database/synctoserver.php",
-								data: {cusdet: cusJson}, // post data || get data
-								dataType: "json",
-								crossDomain: true,
-								cache: false,
-								beforeSend: function(){ $('#sync').html('<img src="img/reload.gif" class="img-responsive"> Sync');},
-								success: function(data){
-									$('#sync').html('<i class="fa fa-refresh"></i> Sync');									
-								},
-								complete:function(){
-									$('#sync').html('<i class="fa fa-refresh"></i> Sync');
-									db.transaction(function (tx2){										
-										tx2.executeSql('UPDATE customerdetails SET source="1" where cusuniqueid in (?)',[arr],successCB,errorCB);
-									},errorCB, successCB);
-									getlist();	
+					var uid=window.localStorage.getItem('uid');
+					chkPlan(uid);
+					var today = new Date();
+					var pexp=window.localStorage.getItem('pexp');
+					if(pexp != '' && pexp >= today)
+					{
+						var arr =$(this).attr('href');	
+						db.transaction(function(tx){
+							tx.executeSql("select accesskey,name,address,city,state,country,pincode,emailid,phonenumber,source,cusuniqueid,dateofcreation,dateofupdate from customerdetails where cusuniqueid in (?) ", [arr], function(tx1, res) {
+								var all_rows = [];
+								for (i=0; i < res.rows.length; ++i)
+								{
+									all_rows.push(res.rows.item(i));
 								}
-							});
-						},errorCB);
-					}, errorCB, successCB);	
+								cusJson = JSON.stringify(all_rows);
+								
+								$.ajax({
+									type: "POST",
+									url:"http://www.azillesoft.com/phonegap/database/synctoserver.php",
+									data: {cusdet: cusJson}, // post data || get data
+									dataType: "json",
+									crossDomain: true,
+									cache: false,
+									beforeSend: function(){ $('#sync').html('<img src="img/reload.gif" class="img-responsive"> Sync');},
+									success: function(data){
+										$('#sync').html('<i class="fa fa-refresh"></i> Sync');									
+									},
+									complete:function(){
+										$('#sync').html('<i class="fa fa-refresh"></i> Sync');
+										db.transaction(function (tx2){										
+											tx2.executeSql('UPDATE customerdetails SET source="1" where cusuniqueid in (?)',[arr],successCB,errorCB);
+										},errorCB, successCB);
+										getlist();	
+									}
+								});
+							},errorCB);
+						}, errorCB, successCB);	
+					}
+					else
+					{
+						alert('Upgrade your plan');
+					}
 				}
 				else
 				{
@@ -1213,43 +1277,64 @@
 				var internet = checkInternet();
 				var arr =$(this).attr('href');
 				var src =$(this).attr('data-src');
+				
+				var message = "Are you sure want to delete?";
+				var title = "CONFIRM";
+				var buttonLabels = "YES,NO";
+				
 				if(internet > 0)
-				{	
-					var message = "Are you sure want to delete?";
-					var title = "CONFIRM";
-					var buttonLabels = "YES,NO";
-					navigator.notification.confirm(message, confirmCallback, title, buttonLabels);
-					function confirmCallback(buttonIndex) {
-						if(buttonIndex == 1)
-						{				  
-							$.ajax({
-								type: "POST",
-								url:"http://www.azillesoft.com/phonegap/database/delcus.php",
-								data : 'v='+arr, // post data || get data
-								crossDomain: true,
-								cache: false,
-								success: function(data){
-									if(data=="success")
-									{
-										getlist();
+				{
+					var uid=window.localStorage.getItem('uid');
+					chkPlan(uid);
+					var today = new Date();
+					var pexp=window.localStorage.getItem('pexp');
+					if(pexp != '' && pexp >= today)
+					{						
+						navigator.notification.confirm(message, confirmCallback, title, buttonLabels);
+						function confirmCallback(buttonIndex) {
+							if(buttonIndex == 1)
+							{				  
+								$.ajax({
+									type: "POST",
+									url:"http://www.azillesoft.com/phonegap/database/delcus.php",
+									data : 'v='+arr, // post data || get data
+									crossDomain: true,
+									cache: false,
+									success: function(data){
+										if(data=="success")
+										{
+											getlist();
+										}
+									},
+									complete:function(){
+										db.transaction(function (tx){
+											tx.executeSql('delete from customerdetails where cusuniqueid=?',[arr],successCB,errorCB)
+										},errorCB, successCB);
 									}
-								},
-								complete:function(){
+								});
+							}					
+						}
+					}
+					else
+					{
+						if(src == 0)
+						{							
+							navigator.notification.confirm(message, confirmCallback, title, buttonLabels);
+							function confirmCallback(buttonIndex) {
+								if(buttonIndex == 1)
+								{
 									db.transaction(function (tx){
 										tx.executeSql('delete from customerdetails where cusuniqueid=?',[arr],successCB,errorCB)
 									},errorCB, successCB);
 								}
-							});
-						}					
+							}
+						}
 					}
 				}
 				else
 				{
 					if(src == 0)
-					{
-						var message = "Are you sure want to delete?";
-						var title = "CONFIRM";
-						var buttonLabels = "YES,NO";
+					{						
 						navigator.notification.confirm(message, confirmCallback, title, buttonLabels);
 						function confirmCallback(buttonIndex) {
 							if(buttonIndex == 1)
