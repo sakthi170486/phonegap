@@ -360,8 +360,9 @@
 			//alert("success!");
 		}
 		
-		function chkPlan(uid)
+		function chkPlan()
 		{
+			var uid = window.localStorage.getItem('uid');
 			var internet = checkInternet();
 			if(internet > 0)
 			{	
@@ -590,9 +591,8 @@
 						$('#vprofile').removeClass('d-none');
 					}
 				},errorCB);
-			}, errorCB, successCB);
+			}, errorCB, successCB);			
 			
-			//chkPlan(uid);
 		}
 		
 		function getcusdet(id)
@@ -702,7 +702,7 @@
 		{			
 			getmydet();
 			getlist();
-			
+			chkPlan();
 			$('#sidebar').removeClass('active');
 			// take picture from camera
 			$('body').on('click','#but_take',function(){
@@ -844,7 +844,7 @@
 					if(internet > 0)
 					{
 						var uid=window.localStorage.getItem('uid');
-						chkPlan(uid);
+						chkPlan();
 						var today = new Date();
 						var pexp=window.localStorage.getItem('pexp');
 						if(pexp && pexp >= today)
@@ -1094,7 +1094,7 @@
 							if(internet > 0 && src == 1)
 							{
 								var uid=window.localStorage.getItem('uid');
-								chkPlan(uid);
+								chkPlan();
 								
 								var pexp=window.localStorage.getItem('pexp');
 								if(pexp && pexp >= today)
@@ -1151,7 +1151,7 @@
 				if(internet > 0)
 				{
 					var uid=window.localStorage.getItem('uid');
-					chkPlan(uid);
+					chkPlan();
 					var today = new Date();
 					var pexp=window.localStorage.getItem('pexp');
 					if(!pexp || pexp < today)
@@ -1227,7 +1227,7 @@
 				if(internet > 0)
 				{
 					var uid=window.localStorage.getItem('uid');
-					chkPlan(uid);
+					chkPlan();
 					var today = new Date();
 					var pexp=window.localStorage.getItem('pexp');
 					if(!pexp || pexp < today)
@@ -1290,7 +1290,7 @@
 				if(internet > 0)
 				{
 					var uid=window.localStorage.getItem('uid');
-					chkPlan(uid);
+					chkPlan();
 					var today = new Date();
 					var pexp=window.localStorage.getItem('pexp');
 					if(!pexp || pexp < today)
