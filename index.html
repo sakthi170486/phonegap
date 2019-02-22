@@ -713,12 +713,15 @@
 											var email = result.rows.item(0).emailid;
 											var accesskey = result.rows.item(0).accesskey;
 											
-											var ft = new FileTransfer();
-											ft.upload(pic, "http://www.azillesoft.com/phonegap/database/upload.php?a=u&id="+accesskey, function(result){
-												pic = result.response;	
-											}, function(error){
-												alert('error : ' + JSON.stringify(error));
-											}, options);
+											if(pic.length > 0)
+											{
+												var ft = new FileTransfer();
+												ft.upload(pic, "http://www.azillesoft.com/phonegap/database/upload.php?a=u&id="+accesskey, function(result){
+													pic = result.response;	
+												}, function(error){
+													alert('error : ' + JSON.stringify(error));
+												}, options);
+											}
 											
 											$.ajax({
 												type: "POST",
