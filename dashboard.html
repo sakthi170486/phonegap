@@ -373,10 +373,10 @@
 					dataType : 'json', // data type
 					crossDomain: true,
 					cache: false,
-					success: function(result){
-						if( result.length > 0) 
+					success: function(resul){
+						if( resul.length > 0) 
 						{
-							$.each(result, function(i, field){								
+							$.each(resul, function(i, field){								
 								var pname=field.planname;
 								var pexpiry=field.planexpiry;
 								var payid=field.paymentid;
@@ -384,6 +384,7 @@
 								db.transaction(function(tx){					
 									tx.executeSql("UPDATE userdetails SET planname=?,planexpiry=?,paymentid=?,paymentstatus=? where accesskey=?",[pname,pexpiry,payid,paystatus,akey],function(tx1,result){
 										//success
+										alert('updated');
 									},function(error){});
 								}, errorCB, successCB);									
 							});	
@@ -408,10 +409,12 @@
 							window.localStorage.setItem('pstat',paystatus);							
 						}
 					}
+					alert('localchecked');
 				},errorCB);
 			}, errorCB, successCB);			
 			var CurrentDate = new Date();
 			var pexp=window.localStorage.getItem('pexp');
+			alert(CurrentDate);
 			if(!pexp || pexp < CurrentDate)
 			{
 				$('.adcus,.srcus').attr('href','').addClass('noPlan').removeClass('lnk');				
