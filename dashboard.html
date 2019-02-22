@@ -333,9 +333,10 @@
 					tx.executeSql("UPDATE userdetails SET profilepic=? where accesskey=?",[target.attr('src'),accesskey],function(tx1,result){
 						//success	
 					$('.maincontent #photo').modal('hide');	
-					},function(error){});
+					},errorCB);
 				}, errorCB, successCB);		
 			});	
+			
 			var internet = checkInternet();
 			if(internet > 0)
 			{
