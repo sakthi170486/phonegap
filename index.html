@@ -740,7 +740,7 @@
 				var c=0;
 				SpinnerDialog.show(null, "Processing");
 				db.transaction(function(tx){
-					tx.executeSql("select id from userdetails where phonenumber=?",[v],function(tx1,result){
+					tx.executeSql("select id,status from userdetails where phonenumber=?",[v],function(tx1,result){
 						c = result.rows.length;	
 						if(c == 0)
 						{
@@ -750,10 +750,44 @@
 						}
 						else
 						{
+							var status = result.rows.item(0).status;
 							SpinnerDialog.hide();
-							var pswdTpl = Handlebars.compile($("#pswd-tpl").html());	
-							$('.maincontent').html(pswdTpl);
-							$('#pumobile').val(v);$('#lpswd').focus();
+							if(status==1)
+							{
+								var pswdTpl = Handlebars.compile($("#pswd-tpl").html());	
+								$('.maincontent').html(pswdTpl);
+								$('#pumobile').val(v);$('#lpswd').focus();
+							}
+							else
+							{
+								if(internet > 0)
+								{
+									var otpTpl = Handlebars.compile($("#otp-tpl").html());	
+									$('.maincontent').html(otpTpl);
+									$('#cumobile').val(v);$('#otp').focus();								
+									
+									var options = {
+										delimiter : "Code is",
+										length : 6,
+										origin : "TESTTO"
+									  };										  
+									var success = function (otp) {
+										//console.log("GOT OTP", otp);
+										$('#otp').val(otp)
+										OTPAutoVerification.stopOTPListener();
+									}
+
+									var failure = function () {
+										OTPAutoVerification.stopOTPListener();
+										console.log("Problem in listening OTP");
+									}
+									OTPAutoVerification.startOTPListener(options, success, failure);
+								}
+								else
+								{
+									alert('You mobile not verified. Go online and try again');
+								}
+							}
 						}
 					},errorCB);
 				}, errorCB, successCB);
