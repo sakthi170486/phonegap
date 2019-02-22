@@ -374,7 +374,8 @@
 					crossDomain: true,
 					cache: false,
 					success: function(resul){
-						if( resul.length > 0) 
+						alert(resul);
+						if(resul.length > 0) 
 						{
 							$.each(resul, function(i, field){								
 								var pname=field.planname;
@@ -385,7 +386,7 @@
 									tx.executeSql("UPDATE userdetails SET planname=?,planexpiry=?,paymentid=?,paymentstatus=? where accesskey=?",[pname,pexpiry,payid,paystatus,akey],function(tx1,result){
 										//success
 										alert('updated');
-									},function(error){});
+									},function(error){alert('error');});
 								}, errorCB, successCB);									
 							});	
 						}					
