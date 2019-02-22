@@ -175,5 +175,14 @@
         "is_top_level": true,
         "variables": {}
     }
+	,
+    "cordova-plugin-otp-auto-verification": {
+        "source": {
+            "type": "registry",
+            "id": "OTPAutoVerification@~1.0.1"
+        },
+        "is_top_level": true,
+        "variables": {}
+    }
 	
 }
