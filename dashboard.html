@@ -413,14 +413,14 @@
 			}, errorCB, successCB);			
 			var CurrentDate = new Date();
 			var pexp=window.localStorage.getItem('pexp');
-			if(pexp != '' && pexp >= CurrentDate)
+			if(!pexp || pexp < CurrentDate)
 			{
-				$('.adcus').attr('href','AddCustomer').addClass('lnk').removeClass('noPlan');
-				$('.srcus').attr('href','Dashboard').addClass('lnk').removeClass('noPlan');
+				$('.adcus,.srcus').attr('href','').addClass('noPlan').removeClass('lnk');				
 			}
 			else
 			{
-				$('.adcus,.srcus').attr('href','').addClass('noPlan').removeClass('lnk');
+				$('.adcus').attr('href','AddCustomer').addClass('lnk').removeClass('noPlan');
+				$('.srcus').attr('href','Dashboard').addClass('lnk').removeClass('noPlan');
 			}
 		}
 			
@@ -842,7 +842,7 @@
 						chkPlan(uid);
 						var today = new Date();
 						var pexp=window.localStorage.getItem('pexp');
-						if(pexp != '' && pexp >= today)
+						if(pexp && pexp >= today)
 						{					
 							$.ajax({
 								type: "POST",
@@ -1092,8 +1092,8 @@
 								chkPlan(uid);
 								
 								var pexp=window.localStorage.getItem('pexp');
-								if(pexp != '' && pexp >= today)
-								{
+								if(pexp && pexp >= today)
+								{								
 									$.ajax({
 										type: "POST",
 										url:"http://www.azillesoft.com/phonegap/database/updatecustomer.php",
@@ -1149,7 +1149,11 @@
 					chkPlan(uid);
 					var today = new Date();
 					var pexp=window.localStorage.getItem('pexp');
-					if(pexp != '' && pexp >= today)
+					if(!pexp || pexp < today)
+					{
+						alert('Upgrade your plan');
+					}
+					else
 					{
 						var arr = $('.mrgcus:checked').map(function(){
 							return this.value;
@@ -1204,10 +1208,6 @@
 							}, errorCB, successCB);						
 						}
 					}
-					else
-					{
-						alert('Upgrade your plan');
-					}
 				}
 				else
 				{
@@ -1225,7 +1225,11 @@
 					chkPlan(uid);
 					var today = new Date();
 					var pexp=window.localStorage.getItem('pexp');
-					if(pexp != '' && pexp >= today)
+					if(!pexp || pexp < today)
+					{
+						alert('Upgrade your plan');							
+					}
+					else
 					{
 						var arr =$(this).attr('href');	
 						db.transaction(function(tx){
@@ -1257,11 +1261,7 @@
 									}
 								});
 							},errorCB);
-						}, errorCB, successCB);	
-					}
-					else
-					{
-						alert('Upgrade your plan');
+						}, errorCB, successCB);
 					}
 				}
 				else
@@ -1288,8 +1288,23 @@
 					chkPlan(uid);
 					var today = new Date();
 					var pexp=window.localStorage.getItem('pexp');
-					if(pexp != '' && pexp >= today)
-					{						
+					if(!pexp || pexp < today)
+					{	
+						if(src == 0)
+						{							
+							navigator.notification.confirm(message, confirmCallback, title, buttonLabels);
+							function confirmCallback(buttonIndex) {
+								if(buttonIndex == 1)
+								{
+									db.transaction(function (tx){
+										tx.executeSql('delete from customerdetails where cusuniqueid=?',[arr],successCB,errorCB)
+									},errorCB, successCB);
+								}
+							}
+						}						
+					}
+					else
+					{
 						navigator.notification.confirm(message, confirmCallback, title, buttonLabels);
 						function confirmCallback(buttonIndex) {
 							if(buttonIndex == 1)
@@ -1313,22 +1328,7 @@
 									}
 								});
 							}					
-						}
-					}
-					else
-					{
-						if(src == 0)
-						{							
-							navigator.notification.confirm(message, confirmCallback, title, buttonLabels);
-							function confirmCallback(buttonIndex) {
-								if(buttonIndex == 1)
-								{
-									db.transaction(function (tx){
-										tx.executeSql('delete from customerdetails where cusuniqueid=?',[arr],successCB,errorCB)
-									},errorCB, successCB);
-								}
-							}
-						}
+						}						
 					}
 				}
 				else
