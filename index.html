@@ -407,26 +407,22 @@
 				}
 			
 				var options = {direction:'right'};
-				$('.maincontent').html('');
-				$( ".maincontent" ).effect( 'slide', options, 300, function(){
-					var internet = checkInternet();
-					if(l == 'signup' && internet == 0)
-					{
-						alert('You are offline. Go online to register.');
-					}
-					else
-					{
-						$('.maincontent').html(template);
-						if(l == 'signin')
-						{
-							$('#umobile').focus();
-						}
-					}
-					
-				
-					
-				
-				});
+				var internet = checkInternet();
+				if(l == 'signup' && internet == 0)
+				{
+					alert('You are offline. Go online to register.');
+				}
+				else
+				{
+					$('.maincontent').html('');
+					$( ".maincontent" ).effect( 'slide', options, 300, function(){
+							$('.maincontent').html(template);
+							if(l == 'signin')
+							{
+								$('#umobile').focus();
+							}
+					});
+				}
 			}
 			
 		});
