@@ -647,7 +647,14 @@
 								$("#otp").val('').focus();
 							}
 							else
-							{
+							{				
+								db.transaction(function(tx){					
+									tx.executeSql("UPDATE userdetails SET status=1 where phonenumber=?",[m],function(tx1,result){
+										//success
+									},function(error){});
+								}, errorCB, successCB);	
+								 
+							
 								var signinTpl = Handlebars.compile($("#signin-tpl").html());	
 								$('.maincontent').html(signinTpl);	
 							}						
