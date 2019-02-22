@@ -150,7 +150,7 @@
 								<input type="text" class="form-control" required placeholder="Your Name *" name="ename" id="ename">
 							</div>
 							<div class="form-group">
-								<input type="tel" class="form-control" required placeholder="Mobile Number *" name="emobile" id="emobile">
+								<input type="tel" class="form-control" readonly placeholder="Mobile Number *" name="emobile" id="emobile">
 							</div>
 							<div class="form-group">
 								<input type="tel" class="form-control" placeholder="Alternative Number" name="altmobile" id="altmobile">
@@ -787,49 +787,6 @@
 						getmydet();
 					}					
 				});				
-			});
-			
-			// Check my mobile number already registered or not
-			$("body").on('blur','#emobile',function(e){
-				var v=$(this).val();
-				var accesskey = window.localStorage.getItem('accesskey');
-				if(v.length > 0)
-				{
-					db.transaction(function(tx){
-						tx.executeSql("select id from userdetails where phonenumber=? and accesskey != ?",[v,accesskey],function(tx1,result){
-							var len = result.rows.length;
-							if(len >0)
-							{							
-								id = result.rows.item(0).id;
-								if(id > 0)
-								{
-									alert("Mobile number already registered.");
-									$("#emobile").val('').focus();
-								}
-							}							
-						},errorCB);
-					}, errorCB, successCB);	
-					
-					var internet = checkInternet();
-					if(internet > 0)
-					{
-						$.ajax({
-							type: "POST",
-							url:"http://www.azillesoft.com/phonegap/database/checkumobile.php",
-							data : 'm='+v+'&accesskey='+accesskey, // post data || get data
-							crossDomain: true,
-							cache: false,
-							success: function(data){
-								if(data == "exists")
-								{	
-									alert("Mobile number already registered.");
-									$("#emobile").val('').focus();							
-								}						
-							}
-						});
-						
-					}
-				}
 			});
 			
 			// Check customer mobile number already registered or not

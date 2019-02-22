@@ -129,11 +129,11 @@
 		</div>
 	</script>
 	<script id="otp-tpl" type="text/x-handlebars-template">
-		<div class="container h-100" id="lgmid1">
+		<div class="container h-100" id="lgmid">
 			<div class="h-100 row align-items-center">
 				<div class="col-md-1 d-none d-md-block"></div>
 				<div class="col-md-10 col-sm-12 mx-auto">
-					<h3 class="text-center text-white">SIGN IN</h3><br/>
+					<h3 class="text-center text-white">Verify Mobile</h3><br/>
 					<form action="#" class="text-white">								
 						<div class="form-group">
 							<label for="mobile">Enter OTP: *</label>
@@ -151,7 +151,7 @@
 		</div>
 	</script>
 	<script id="pswd-tpl" type="text/x-handlebars-template">
-		<div class="container h-100" id="lgmid2">
+		<div class="container h-100" id="lgmid">
 			<div class="h-100 row align-items-center">
 				<div class="col-md-1 d-none d-md-block"></div>
 				<div class="col-md-10 col-sm-12 mx-auto">
@@ -272,7 +272,14 @@
 				var ft = new FileTransfer();
 				ft.upload(imageURI, "http://www.azillesoft.com/phonegap/database/upload.php", function(result){
 					//alert('successfully uploaded ' + result.response);
-					$('#simgname').val(result.response);
+					if(result.response != 'NA')
+					{
+						$('#simgname').val(result.response);
+					}
+					else
+					{
+						$('#simgname').val('');
+					}
 					$('#photo').modal('hide');				
 				}, function(error){
 					alert('error : ' + JSON.stringify(error));
@@ -285,7 +292,21 @@
 		function onFail(message) {
 			alert('Failed because: ' + message);
 		}
-		
+		function checkIfFileExists(path){
+			window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSystem){
+				fileSystem.root.getFile(path, { create: false }, fileExists, fileDoesNotExist);
+			}, getFSFail); //of requestFileSystem
+		}
+		function fileExists(fileEntry){
+			ImgCache.removeFile(fileEntry);
+			//alert("File " + fileEntry.fullPath + " exists!");
+		}
+		function fileDoesNotExist(){
+			//alert("file does not exist");
+		}
+		function getFSFail(evt) {
+			console.log(evt.target.error.code);
+		}
 		
 		function populateDB(tx){
 		
@@ -545,21 +566,21 @@
 											length : 6,
 											origin : "TESTTO"
 										  };										  
-										  var success = function (otp) {
+										var success = function (otp) {
 											//console.log("GOT OTP", otp);
 											$('#otp').val(otp)
 											OTPAutoVerification.stopOTPListener();
-										  }
+										}
 
-										  var failure = function () {
+										var failure = function () {
 											OTPAutoVerification.stopOTPListener();
 											console.log("Problem in listening OTP");
-										  }
+										}
 
-										  OTPAutoVerification.startOTPListener(options, success, failure);
+										OTPAutoVerification.startOTPListener(options, success, failure);
 										
 									},function(error){
-										ImgCache.removeFile(cimgname);
+										checkIfFileExists(cimgname);
 										$('#profimg').attr('src','img/camera.png');
 										alert("error");
 									});
@@ -759,7 +780,7 @@
 		$("body").on('click','.pswdlgn',function(e){
 			e.preventDefault();
 			var m=$('#pumobile').val();
-			var pswd=$('#lpswd').val();
+			var pswd=md5($('#lpswd').val());
 			
 			var today = new Date();
 			var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
@@ -790,6 +811,12 @@
 							});
 						}, errorCB, successCB);							
 					}
+					else
+					{
+						SpinnerDialog.hide();
+						alert("Incorrect Password");							
+						$("#lpswd").val('').focus();
+					}
 				},errorCB);
 			}, errorCB, successCB);	
 		});
@@ -799,6 +826,7 @@
 	{
 		var path = "http://www.azillesoft.com/phonegap/database/upload";
 		var filename = $('#simgname').val();
+		if(filename != ''){
 		window.resolveLocalFileSystemURL(path, function(dir) {
 			dir.getFile(filename, {create:false}, function(fileEntry) {
 					  fileEntry.remove(function(){
@@ -810,6 +838,7 @@
 					  });
 			});
 		});
+		}
 	}
  </script>
 </html>
