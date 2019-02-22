@@ -762,7 +762,7 @@
 						{
 							var status = result.rows.item(0).status;
 							SpinnerDialog.hide();
-							if(status==1)
+							if(status == 1)
 							{
 								var pswdTpl = Handlebars.compile($("#pswd-tpl").html());	
 								$('.maincontent').html(pswdTpl);
