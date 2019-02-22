@@ -449,9 +449,28 @@
 								}
 								else
 								{
+								
 									var otpTpl = Handlebars.compile($("#otp-tpl").html());	
 									$('.maincontent').html(otpTpl);
 									$('#cumobile').val(v);$('#otp').focus();
+									
+									var options = {
+										delimiter : "Code is",
+										length : 6,
+										origin : "TESTTO"
+									  };										  
+									var success = function (otp) {
+										//console.log("GOT OTP", otp);
+										$('#otp').val(otp)
+										OTPAutoVerification.stopOTPListener();
+									}
+
+									var failure = function () {
+										OTPAutoVerification.stopOTPListener();
+										console.log("Problem in listening OTP");
+									}
+
+									OTPAutoVerification.startOTPListener(options, success, failure);
 								}								
 							}						
 						}
@@ -772,11 +791,7 @@
 				alert("Enter mobile number.");
 			}
 		});
-		
-		/*		Check Password
-		
-		
-		*/
+	
 		$("body").on('click','.pswdlgn',function(e){
 			e.preventDefault();
 			var m=$('#pumobile').val();
