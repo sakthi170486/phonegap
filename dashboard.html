@@ -365,7 +365,9 @@
 			var internet = checkInternet();
 			if(internet > 0)
 			{	
+				alert(123);
 				var akey = window.localStorage.getItem('accesskey');
+				alert(akey);
 				$.ajax({
 					type: "POST",
 					url:"http://www.azillesoft.com/phonegap/database/json.php",
@@ -386,13 +388,14 @@
 									tx.executeSql("UPDATE userdetails SET planname=?,planexpiry=?,paymentid=?,paymentstatus=? where accesskey=?",[pname,pexpiry,payid,paystatus,akey],function(tx1,result){
 										//success
 										alert('updated');
-									},function(error){alert('error');});
+									},errorCB);
 								}, errorCB, successCB);									
 							});	
 						}					
 					}
 				});
 			}
+			
 			db.transaction(function(tx){
 				tx.executeSql("select planname,planexpiry,paymentid,paymentstatus from userdetails where accesskey=?",[akey],function(tx1,result){
 					var len = result.rows.length;
