@@ -331,7 +331,8 @@
 			  $('#imgname').val(target.attr('src'));
 				db.transaction(function(tx){					
 					tx.executeSql("UPDATE userdetails SET profilepic=? where accesskey=?",[target.attr('src'),accesskey],function(tx1,result){
-						//success						
+						//success	
+					$('.maincontent #photo').modal('hide');	
 					},function(error){});
 				}, errorCB, successCB);		
 			});	
@@ -341,7 +342,7 @@
 				var ft = new FileTransfer();
 				ft.upload(imageURI, "http://www.azillesoft.com/phonegap/database/upload.php?a=u&id="+accesskey, function(result){
 					//alert('successfully uploaded ' + result.response);
-					$('#photo').modal('hide');				
+					$('.maincontent #photo').modal('hide');				
 				}, function(error){
 					alert('error : ' + JSON.stringify(error));
 				}, options);
