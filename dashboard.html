@@ -59,13 +59,12 @@
 	<script id="dashboard-tpl" type="text/x-handlebars-template">			
 		<div class="container inner-container mt-5">
 			<div class="row">
-				<div class="col-md-1 d-none d-md-block">
-				</div>
+				<div class="col-md-1 d-none d-md-block"></div>
 				<div class="col-md-10 col-sm-12 mx-auto">
 					<form action="#" class="text-white">								
 						<div class="form-group has-search">
-							 <span class="fa fa-search form-control-feedback"></span>
-							<input class='form-control search-key w-70' placeholder="Search Customer" id="srchcus" type="search"/>
+							<span class="fa fa-search form-control-feedback"></span>
+							<input class='form-control search-key w-70' placeholder="Search Customer" id="srchcus" type="search" />
 						</div>
 					</form>	
 					<hr/>
@@ -330,12 +329,12 @@
 			  }			 
 			  $('#imgname').val(target.attr('src'));
 			  
-				/*db.transaction(function(tx){					
-					tx.executeSql("UPDATE userdetails SET profilepic=? where accesskey=?",[target.attr('src'),accesskey],function(tx1,result){
+				db.transaction(function(tx){					
+					tx.executeSql("UPDATE userdetails SET profilepic=? where phonenumber=?",[target.attr('src'),mob],function(tx1,result){
 						//success	
 						$('#photo').modal('hide');							
 					},errorCB);
-				}, errorCB, successCB);	*/	
+				}, errorCB, successCB);
 			});	
 			var internet = checkInternet();
 			if(internet > 0)
@@ -388,7 +387,7 @@
 								var payid=field.paymentid;
 								var paystatus=field.paymentstatus;
 								db.transaction(function(tx){					
-									tx.executeSql("UPDATE userdetails SET planname=?,planexpiry=?,paymentid=?,paymentstatus=? where accesskey=?",[pname,pexpiry,payid,paystatus,akey],function(tx1,result){
+									tx.executeSql("UPDATE userdetails SET planname=?,planexpiry=?,paymentid=?,paymentstatus=? where phonenumber=?",[pname,pexpiry,payid,paystatus,uid],function(tx1,result){
 										//success
 										alert('updated');
 									},errorCB);
@@ -704,7 +703,8 @@
 		{			
 			getmydet();
 			getlist();
-			//chkPlan();
+			chkPlan();
+			
 			$('#sidebar').removeClass('active');
 			// take picture from camera
 			$('body').on('click','#but_take',function(){
