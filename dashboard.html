@@ -273,8 +273,8 @@
 						<div class='col-12 col-md-12 col-sm-12'>
 							<div class="panel panel-default">
 								<div class="panel-body">
-									<h3>Your Current Plan : <span id="cplan"></span></h3>
-									<h5>Valid Upto : <span id="expplan"></span></h5>
+									<h5>Your Current Plan : <span id="cplan"></span></h5>
+									<p>Valid Upto : <span id="expplan"></span></p>
 								</div>
 							</div>
 							<hr/>
@@ -755,7 +755,7 @@
 				e.preventDefault();
 				alert('Upgrade your plan');
 				var planTpl = Handlebars.compile($("#myplan-tpl").html());	
-				$('.maincontent').html(planTpl);	
+				$('.getcontent').html(planTpl);	
 			});	
 			
 			$('.maincontent').on('click', '#logout',function () {
@@ -846,8 +846,18 @@
 					}
 					if(l == 'myplan')
 					{
-						$('#cplan').text(window.localStorage.getItem('pname'));
-						$('#expplan').text(window.localStorage.getItem('pexp'));
+						var cplan=window.localStorage.getItem('pname');
+						var pexp=window.localStorage.getItem('pexp');
+						if(!cplan)
+						{
+							cplan='No Plan';
+						}
+						if(!pexp)
+						{
+							pexp='-';
+						}
+						$('#cplan').text(cplan);
+						$('#expplan').text(pexp);
 					}					
 				});				
 			});
