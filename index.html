@@ -386,6 +386,42 @@
 					}
 				},errorCB);
 			}, errorCB, successCB);	
+			
+			
+			if(internet > 0)
+			{	
+				//truncate table
+				db.transaction(function(tx){
+					tx.executeSql("DELETE from plandetails",[],successCB,errorCB);
+				},errorCB,successCB);
+				
+				var today = new Date();
+				var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+				var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+				var dt = date+' '+time;
+				
+				$.ajax({
+					type: "POST",
+					url:"http://www.azillesoft.com/phonegap/database/planjson.php",			
+					dataType : 'json', // data type
+					crossDomain: true,
+					cache: false,
+					success: function(result){
+						if(result.length > 0) 
+						{	
+							var qry="INSERT INTO plandetails (planname,period,price,dateofcreation,dateofupdate) VALUES (?,?,?,?,?)";
+							$.each(result, function(i, field){								
+								var name=field.planname;
+								var period=field.period;
+								var price=field.price;
+								db.transaction(function(tx){
+									tx.executeSql(qry, [name,period,price,dt,dt], successCB,errorCB);
+								},errorCB,successCB);
+							});	
+						}					
+					}
+				});
+			}
 		}
 		
 		function successCB() {

@@ -289,6 +289,34 @@
 		</div>
 	</script>	
 	
+	<script id="plans-tpl" type="text/x-handlebars-template">			
+		<div class="container inner-container mt-5">
+			<div class="row">
+				<div class="col-md-1 d-none d-md-block"></div>
+				<div class="col-md-10 col-sm-12 mx-auto">					
+					<div class="details">
+						<div class="scroll">
+							<div class="text-center mt-5" id="plnloader">
+								<img src="img/ajax-loader.gif" alt="" class="img-responsive"/>
+							</div>
+							<div class="d-none" id="pdash">	
+								<h3 class="text-center text-white" id="cptitle" >All Plans</h3><hr/>
+								<div class="clearfix"></div>
+								<div class='plan-list'>
+									
+								</div>
+								<div class="bfixed btn btn-primary"><a href="#" id="buyplan">Upgrade Plan</a></div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-1">
+				</div>
+			</div>
+		</div>		
+	</script>
+	
+	
 	<script src="phonegap.js"></script>
 	<script type="text/javascript" charset="utf-8" src="cordova.js"></script>
 	<script src="js/jquery.min.js"></script>
@@ -391,7 +419,32 @@
 		function successCB() {
 			//alert("success!");
 		}
-		
+		function getPlans()
+		{
+			qry = "select planname,period,price from plandetails";
+			tx.executeSql(qry,[],function(tx1,result){
+				var len = result.rows.length;
+				if(len > 0)
+				{						
+					$('.getcontent .plan-list').html('');
+					$('#plnloader').hide();
+					$('#pdash').show();$('#pdash').removeClass('d-none');					
+					for (var i=0; i<len; i++){
+						var id = result.rows.item(i).id;
+						var pname = result.rows.item(i).planname;
+						var period=result.rows.item(i).period;
+						var price=result.rows.item(i).price;
+						
+						$('.getcontent .plan-list').append('<div class="panel panel-default"><div class="panel-body"><div class="col-md-2"><input type="radio" name="splan" class="splan" value="'+id+'"></div><div class="col-md-10"><p >'+pname+'</p> <p>Period : '+period+'</p><p>Price : '+price+'</p></div></div></div>');						
+							
+					}
+				}else
+				{
+					$('#plnloader').hide();$('#pdash').show();$('#pdash').removeClass('d-none');
+					$('.getcontent .plan-list').html('<p>No Plan Found</p>');
+				}
+			},errorCB);
+		}
 		function chkPlan()
 		{
 			var uid = window.localStorage.getItem('uid');
