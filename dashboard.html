@@ -366,10 +366,8 @@
 			var uid = window.localStorage.getItem('uid');
 			var internet = checkInternet();
 			if(internet > 0)
-			{	
-				alert(123);
+			{				
 				var akey = window.localStorage.getItem('accesskey');
-				alert(akey);
 				$.ajax({
 					type: "POST",
 					url:"http://www.azillesoft.com/phonegap/database/json.php",
@@ -378,7 +376,6 @@
 					crossDomain: true,
 					cache: false,
 					success: function(resul){
-						alert(resul);
 						if(resul.length > 0) 
 						{
 							$.each(resul, function(i, field){								
@@ -389,7 +386,6 @@
 								db.transaction(function(tx){					
 									tx.executeSql("UPDATE userdetails SET planname=?,planexpiry=?,paymentid=?,paymentstatus=? where phonenumber=?",[pname,pexpiry,payid,paystatus,uid],function(tx1,result){
 										//success
-										alert('updated');
 									},errorCB);
 								}, errorCB, successCB);									
 							});	
@@ -415,21 +411,8 @@
 							window.localStorage.setItem('pstat',paystatus);							
 						}
 					}
-					alert('localchecked');
 				},errorCB);
-			}, errorCB, successCB);			
-			var CurrentDate = new Date();
-			var pexp=window.localStorage.getItem('pexp');
-			alert(CurrentDate);
-			if(!pexp || pexp < CurrentDate)
-			{
-				$('.adcus,.srcus').attr('href','').addClass('noPlan').removeClass('lnk');				
-			}
-			else
-			{
-				$('.adcus').attr('href','AddCustomer').addClass('lnk').removeClass('noPlan');
-				$('.srcus').attr('href','Dashboard').addClass('lnk').removeClass('noPlan');
-			}
+			}, errorCB, successCB);				
 		}
 			
 		function getlist(s = '')
@@ -703,7 +686,18 @@
 		{			
 			getmydet();
 			getlist();
-			chkPlan();
+			
+			var CurrentDate = new Date();
+			var pexp=window.localStorage.getItem('pexp');
+			if(!pexp || pexp < CurrentDate)
+			{
+				$('.adcus,.srcus').attr('href','').addClass('noPlan').removeClass('lnk');				
+			}
+			else
+			{
+				$('.adcus').attr('href','AddCustomer').addClass('lnk').removeClass('noPlan');
+				$('.srcus').attr('href','Dashboard').addClass('lnk').removeClass('noPlan');
+			}
 			
 			$('#sidebar').removeClass('active');
 			// take picture from camera

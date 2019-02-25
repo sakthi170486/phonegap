@@ -319,7 +319,61 @@
 		function errorCB(err) {
 			alert("Error processing SQL: "+err.code);
 		}
-
+		
+		function afterLogin()
+		{
+			var uid = window.localStorage.getItem('uid');
+			var internet = checkInternet();
+			if(internet > 0)
+			{	
+				var akey = window.localStorage.getItem('accesskey');
+				$.ajax({
+					type: "POST",
+					url:"http://www.azillesoft.com/phonegap/database/json.php",
+					data : 'u='+uid+'&k='+akey, // post data || get data
+					dataType : 'json', // data type
+					crossDomain: true,
+					cache: false,
+					success: function(resul){
+						if(resul.length > 0) 
+						{
+							$.each(resul, function(i, field){								
+								var pname=field.planname;
+								var pexpiry=field.planexpiry;
+								var payid=field.paymentid;
+								var paystatus=field.paymentstatus;
+								db.transaction(function(tx){					
+									tx.executeSql("UPDATE userdetails SET planname=?,planexpiry=?,paymentid=?,paymentstatus=? where phonenumber=?",[pname,pexpiry,payid,paystatus,uid],function(tx1,result){
+										//success
+									},errorCB);
+								}, errorCB, successCB);									
+							});	
+						}					
+					}
+				});
+			}
+			
+			db.transaction(function(tx){
+				tx.executeSql("select planname,planexpiry,paymentid,paymentstatus from userdetails where accesskey=?",[akey],function(tx1,result){
+					var len = result.rows.length;
+					if(len >0)
+					{						
+						for (var i=0; i<len; i++){							
+							var pname=result.rows.item(i).planname;
+							var pexpiry=result.rows.item(i).planexpiry;
+							var payid=result.rows.item(i).paymentid;
+							var paystatus=result.rows.item(i).paymentstatus;
+							
+							window.localStorage.setItem('pname',pname);
+							window.localStorage.setItem('pexp',pexpiry);
+							window.localStorage.setItem('payid',payid);
+							window.localStorage.setItem('pstat',paystatus);							
+						}
+					}
+				},errorCB);
+			}, errorCB, successCB);	
+		}
+		
 		function successCB() {
 		 //alert("success!");
 		}
@@ -852,7 +906,7 @@
 			var today = new Date();
 			var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
 			var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-			var dt = date+' '+time;
+			var dt = date+' '+time;			
 			
 			SpinnerDialog.show(null, "Processing");										
 			var c=0;var lid='';
@@ -870,6 +924,9 @@
 								window.localStorage.setItem('accesskey',lid);
 								window.localStorage.setItem('uid',m);
 								synccusdet();
+								
+								afterLogin();
+								
 								window.location.href="dashboard.html";
 							},function(error){	
 								SpinnerDialog.hide();
@@ -886,6 +943,13 @@
 					}
 				},errorCB);
 			}, errorCB, successCB);	
+			
+			
+			
+			
+			
+			
+			
 		});
 	
 	// Delete image from server using cordova plugin file	
