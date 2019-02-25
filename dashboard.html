@@ -269,7 +269,7 @@
 					<div class="clearfix"></div>
 					
 					<div class="row" id="vplan">						
-						<a href="Dashboard" class="lnk" id="plnbck"><i class="fa fa-arrow-left"></i> Back </a>
+						<a href="Home" class="lnk" id="plnbck"><i class="fa fa-arrow-left"></i> Back </a>
 						<div class='col-12 col-md-12 col-sm-12'>
 							<div class="panel panel-default">
 								<div class="panel-body">
@@ -436,10 +436,22 @@
 							var payid=result.rows.item(i).paymentid;
 							var paystatus=result.rows.item(i).paymentstatus;
 							
-							window.localStorage.setItem('pname',pname);
-							window.localStorage.setItem('pexp',pexpiry);
-							window.localStorage.setItem('payid',payid);
-							window.localStorage.setItem('pstat',paystatus);							
+							if(pname != '')
+							{
+								window.localStorage.setItem('pname',pname);
+							}
+							if(pexpiry != '')	
+							{
+								window.localStorage.setItem('pexp',pexpiry);
+							}
+							if(payid != '')
+							{
+								window.localStorage.setItem('payid',payid);
+							}
+							if(paystatus != '')
+							{
+								window.localStorage.setItem('pstat',paystatus);							
+							}
 						}
 					}
 				},errorCB);
@@ -719,7 +731,7 @@
 			getlist();
 			
 			var CurrentDate = new Date();
-			var pexp=window.localStorage.getItem('pexp');
+			var pexp = window.localStorage.getItem('pexp');
 			if(!pexp || pexp < CurrentDate)
 			{
 				$('.adcus,.srcus').attr('href','').addClass('noPlan').removeClass('lnk');				
@@ -848,11 +860,11 @@
 					{
 						var cplan=window.localStorage.getItem('pname');
 						var pexp=window.localStorage.getItem('pexp');
-						if(!cplan)
+						if(cplan != '')
 						{
 							cplan='No Plan';
 						}
-						if(!pexp)
+						if(pexp != '')
 						{
 							pexp='-';
 						}

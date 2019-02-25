@@ -364,10 +364,22 @@
 							var payid=result.rows.item(i).paymentid;
 							var paystatus=result.rows.item(i).paymentstatus;
 							
-							window.localStorage.setItem('pname',pname);
-							window.localStorage.setItem('pexp',pexpiry);
-							window.localStorage.setItem('payid',payid);
-							window.localStorage.setItem('pstat',paystatus);							
+							if(pname != '')
+							{
+								window.localStorage.setItem('pname',pname);
+							}
+							if(pexpiry != '')	
+							{
+								window.localStorage.setItem('pexp',pexpiry);
+							}
+							if(payid != '')
+							{
+								window.localStorage.setItem('payid',payid);
+							}
+							if(paystatus != '')
+							{
+								window.localStorage.setItem('pstat',paystatus);							
+							}						
 						}
 					}
 				},errorCB);
