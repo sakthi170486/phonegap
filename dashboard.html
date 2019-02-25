@@ -269,7 +269,7 @@
 					<div class="clearfix"></div>
 					
 					<div class="row" id="vplan">						
-						<a href="Home" class="lnk" id="plnbck"><i class="fa fa-arrow-left"></i> Back </a>
+						<a href="myaccount" class="lnk" id="plnbck"><i class="fa fa-arrow-left"></i> Back </a>
 						<div class='col-12 col-md-12 col-sm-12'>
 							<div class="panel panel-default">
 								<div class="panel-body">
@@ -359,11 +359,10 @@
 				});
 			  }			 
 			  $('#imgname').val(target.attr('src'));
-			  
+			  	
 				db.transaction(function(tx){					
 					tx.executeSql("UPDATE userdetails SET profilepic=? where phonenumber=?",[target.attr('src'),mob],function(tx1,result){
-						//success	
-						$('#photo').modal('hide');							
+						//success			
 					},errorCB);
 				}, errorCB, successCB);
 			});	
@@ -378,6 +377,7 @@
 					alert('error : ' + JSON.stringify(error));
 				}, options);
 			}
+			$('#photo').modal('hide');
 		}
 		
 		function onFail(message) {
