@@ -270,15 +270,21 @@
 					
 					<div class="row" id="vplan">						
 						<a href="myaccount" class="lnk" id="plnbck"><i class="fa fa-arrow-left"></i> Back </a>
-						<div class='col-12 col-md-12 col-sm-12'>
-							<div class="panel panel-default">
-								<div class="panel-body">
-									<h5>Your Current Plan : <span id="cplan"></span></h5>
-									<p>Valid Upto : <span id="expplan"></span></p>
-								</div>
+						<div class="clearfix"></div><br/>
+						<div class='row mt-5'>
+							<div class='col-12 col-md-12 col-sm-12'>
+								<div class="panel panel-default">
+									<div class="panel-body">
+										<h5>Current Plan : <span id="cplan"></span></h5>
+										<p>Valid Upto : <span id="expplan"></span></p>
+									</div>
+								</div>							
 							</div>
+						</div>
+						
+						<div class='col-12 col-md-12 col-sm-12'>
 							<hr/>
-							<div class="text-center">
+							<div class="text-center mt-5">
 								<a class="btn btn-primary lnk" href="Plans" >Upgrade Plan</a>
 							</div>
 						</div>
@@ -296,12 +302,12 @@
 				<div class="col-md-10 col-sm-12 mx-auto">					
 					<div class="details">
 						<div class="scroll">
-							<div class="text-center mt-5" id="plnloader">
-								<img src="img/ajax-loader.gif" alt="" class="img-responsive"/>
-							</div>
-							<div class="d-none" id="pdash">	
-								<h3 class="text-center text-white" id="cptitle" >All Plans</h3><hr/>
+							<h3 class="text-center text-white" id="cptitle">All Plans</h3><hr/>
 								<div class="clearfix"></div>
+							<div class="text-center mt-5" id="plnloader">
+								<img src="img/ajax-loader.gif" alt="" class="img-responsive" />
+							</div>
+							<div class="d-none" id="pdash">									
 								<div class='plan-list'>
 									
 								</div>
@@ -819,6 +825,7 @@
 			$('.maincontent').on('click', '.noPlan',function (e) {
 				e.preventDefault();
 				alert('Upgrade your plan');
+				$('#sidebar').toggleClass('active');
 				var planTpl = Handlebars.compile($("#myplan-tpl").html());	
 				$('.getcontent').html(planTpl);	
 			});	
