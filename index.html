@@ -391,9 +391,9 @@
 			if(internet > 0)
 			{	
 				//truncate table
-				db.transaction(function(tx){
+				/*db.transaction(function(tx){
 					tx.executeSql("DELETE from plandetails",[],successCB,errorCB);
-				},errorCB,successCB);
+				},errorCB,successCB);*/
 				
 				var today = new Date();
 				var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
