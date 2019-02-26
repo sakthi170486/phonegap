@@ -407,6 +407,7 @@
 					crossDomain: true,
 					cache: false,
 					success: function(result){
+						alert(result);
 						if(result.length > 0) 
 						{	
 							var qry="INSERT INTO plandetails (planname,period,price,dateofcreation,dateofupdate) VALUES (?,?,?,?,?)";
@@ -414,6 +415,7 @@
 								var name=field.planname;
 								var period=field.period;
 								var price=field.price;
+								alert(name);
 								db.transaction(function(tx){
 									tx.executeSql(qry, [name,period,price,dt,dt], successCB,errorCB);
 								},errorCB,successCB);

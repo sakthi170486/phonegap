@@ -10145,8 +10145,16 @@ font-size: 30px;}
 right: 15px;}
 #sync{border-bottom:1px solid #0000001a;padding-bottom:10px;color:#000;}
 .dcus .fa{margin-right:18px;}
-.bfixed{width:100%;border:none;border-radius:0px;position:fixed;bottom:0;}
-.bfixed a{color:#fff;}
+.bfixed{width: 100%;
+    border: none;
+    border-radius: 0px;
+    position: fixed;
+    bottom: 0px;
+    left: 0;
+    height: 45px;}
+.bfixed a{color:#fff;line-height: 30px;
+    font-size: 18px;
+    font-weight: 600;}
 .plan-list{padding-left:35px;}
 @media (max-width: 768px) {
     #sidebar {
