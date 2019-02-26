@@ -117,3 +117,5 @@ extra plugins and config/cordova-plugin-vibration/NOTICE
 database/updateallcustomer.php
 database/planjson.php
 database/planjson.php
+*.php
+database/planjson.php
