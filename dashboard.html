@@ -920,7 +920,6 @@
 					}
 					if(l == 'myplan')
 					{
-						getPlans();
 						var cplan=window.localStorage.getItem('pname');
 						var pexp=window.localStorage.getItem('pexp');
 						if(cplan != '')
@@ -933,6 +932,10 @@
 						}
 						$('#cplan').text(cplan);
 						$('#expplan').text(pexp);
+					}
+					if(l == 'plans')
+					{
+						getPlans();						
 					}					
 				});				
 			});
