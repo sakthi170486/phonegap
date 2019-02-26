@@ -406,18 +406,15 @@
 					dataType : 'json', // data type
 					crossDomain: true,
 					cache: false,
-					success: function(result){
-						alert(result);
+					success: function(result){						
 						if(result.length > 0) 
-						{	
-							var qry="INSERT INTO plandetails (planname,period,price,dateofcreation,dateofupdate) VALUES (?,?,?,?,?)";
+						{							
 							$.each(result, function(i, field){								
 								var name=field.planname;
 								var period=field.period;
-								var price=field.price;
-								alert(name);
+								var price=field.price;								
 								db.transaction(function(tx){
-									tx.executeSql(qry, [name,period,price,dt,dt], successCB,errorCB);
+									tx.executeSql("INSERT INTO plandetails (planname,period,price,dateofcreation,dateofupdate) VALUES (?,?,?,?,?)", [name,period,price,dt,dt], successCB,errorCB);
 								},errorCB,successCB);
 							});	
 						}					
