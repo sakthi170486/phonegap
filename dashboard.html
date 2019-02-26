@@ -427,29 +427,31 @@
 		}
 		function getPlans()
 		{
-			qry = "select planname,period,price from plandetails";
-			tx.executeSql(qry,[],function(tx1,result){
-				var len = result.rows.length;
-				if(len > 0)
-				{						
-					$('.getcontent .plan-list').html('');
-					$('#plnloader').hide();
-					$('#pdash').show();$('#pdash').removeClass('d-none');					
-					for (var i=0; i<len; i++){
-						var id = result.rows.item(i).id;
-						var pname = result.rows.item(i).planname;
-						var period=result.rows.item(i).period;
-						var price=result.rows.item(i).price;
-						
-						$('.getcontent .plan-list').append('<div class="panel panel-default"><div class="panel-body"><div class="row"><div class="col-1"><input type="radio" name="splan" class="splan" value="'+id+'"></div><div class="col-11"><p >'+pname+'</p> <p>Period : '+period+'</p><p>Price : '+price+'</p></div></div></div></div>');						
+			db.transaction(function(tx){
+				qry = "select planname,period,price from plandetails";
+				tx.executeSql(qry,[],function(tx1,result){
+					var len = result.rows.length;
+					if(len > 0)
+					{						
+						$('.getcontent .plan-list').html('');
+						$('#plnloader').hide();
+						$('#pdash').show();$('#pdash').removeClass('d-none');					
+						for (var i=0; i<len; i++){
+							var id = result.rows.item(i).id;
+							var pname = result.rows.item(i).planname;
+							var period=result.rows.item(i).period;
+							var price=result.rows.item(i).price;
 							
+							$('.getcontent .plan-list').append('<div class="panel panel-default"><div class="panel-body"><div class="row"><div class="col-1"><input type="radio" name="splan" class="splan" value="'+id+'"></div><div class="col-11"><p >'+pname+'</p> <p>Period : '+period+'</p><p>Price : '+price+'</p></div></div></div></div>');						
+								
+						}
+					}else
+					{
+						$('#plnloader').hide();$('#pdash').show();$('#pdash').removeClass('d-none');
+						$('.getcontent .plan-list').html('<p>No Plan Found</p>');
 					}
-				}else
-				{
-					$('#plnloader').hide();$('#pdash').show();$('#pdash').removeClass('d-none');
-					$('.getcontent .plan-list').html('<p>No Plan Found</p>');
-				}
-			},errorCB);
+				},errorCB);
+			},errorCB,successCB);
 		}
 		function chkPlan()
 		{
@@ -788,7 +790,7 @@
 		{			
 			getmydet();
 			getlist();
-			getPlans();
+			
 			var CurrentDate = new Date();
 			var pexp = window.localStorage.getItem('pexp');
 			if(!pexp || pexp < CurrentDate)
@@ -918,6 +920,7 @@
 					}
 					if(l == 'myplan')
 					{
+						getPlans();
 						var cplan=window.localStorage.getItem('pname');
 						var pexp=window.localStorage.getItem('pexp');
 						if(cplan != '')
