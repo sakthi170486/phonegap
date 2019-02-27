@@ -413,7 +413,8 @@
 								var period=field.period;
 								var price=field.price;								
 								db.transaction(function(tx){
-									tx.executeSql("INSERT INTO plandetails (planname,period,price,dateofcreation,dateofupdate) VALUES (?,?,?,?,?)", [name,period,price,dt,dt], successCB,errorCB);
+									alert(name);
+									tx.executeSql("INSERT INTO plandetails(planname,period,price,dateofcreation,dateofupdate) VALUES (?,?,?,?,?)", [name,period,price,dt,dt], successCB,errorCB);
 								},errorCB,successCB);
 							});	
 						}					
