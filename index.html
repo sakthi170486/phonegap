@@ -411,10 +411,10 @@
 							$.each(result, function(i, field){								
 								var name=field.planname;
 								var period=field.period;
-								var price=field.price;								
-								db.transaction(function(tx){
-									alert(name);
-									tx.executeSql("INSERT INTO plandetails(planname,period,price,dateofcreation,dateofupdate) VALUES (?,?,?,?,?)", [name,period,price,dt,dt], successCB,errorCB);
+								var price=field.price;	
+								
+								db.transaction(function(txs){									
+									txs.executeSql("INSERT INTO plandetails(planname,period,price,dateofcreation,dateofupdate) VALUES (?,?,?,?,?)", [name,period,price,dt,dt], successCB,errorCB);
 								},errorCB,successCB);
 							});	
 						}					
