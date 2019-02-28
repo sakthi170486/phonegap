@@ -33,6 +33,16 @@
 	<preference name="auto-hide-splash-screen" value="true" />
 	<preference name="disable-cursor" value="false" />
     <preference name="android-minSdkVersion" value="14" />
+	<preference name="AndroidPersistentFileLocation" value="Internal" />
+	<preference name="AndroidPersistentFileLocation" value="Compatibility" />
+	<preference name="iosPersistentFileLocation" value="Library" />
+	<preference name="iosPersistentFileLocation" value="Compatibility" />
+	<preference name="iosExtraFilesystems" value="library,library-nosync,documents,documents-nosync,cache,bundle,root" />
+	<preference name="AndroidExtraFilesystems" value="files,files-external,documents,sdcard,cache,cache-external,assets,root" />
+	<feature name="Camera">
+		<param name="android-package" value="org.apache.cordova.camera.CameraLauncher" />
+		<param name="ios-package" value="CDVCamera" />
+	</feature>
 	
     <plugin name="cordova-plugin-battery-status" source="npm" spec="~1.1.1" />
     <plugin name="cordova-plugin-camera" source="npm" spec="~2.1.1" />
