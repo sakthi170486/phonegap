@@ -367,7 +367,6 @@ exec(win, fail, 'FileTransfer', 'upload',
 
                     // Adding file to upload to request payload
                     var fileToUploadPart = new Windows.Networking.BackgroundTransfer.BackgroundTransferContentPart(fileKey, fileName);
-                    fileToUploadPart.setHeader("Content-Type", mimeType);
                     fileToUploadPart.setFile(storageFile);
                     transferParts.push(fileToUploadPart);
 
@@ -499,10 +498,6 @@ exec(win, fail, 'FileTransfer', 'upload',
                             if (!response) {
                                 resolve(new FTErr(FTErr.CONNECTION_ERR, source, target));
                             } else {
-                                if (download.progress.bytesReceived === 0) {
-                                    resolve(new FTErr(FTErr.FILE_NOT_FOUND_ERR, source, target, response.statusCode, null, error));
-                                    return;
-                                }
                                 var reader = new Windows.Storage.Streams.DataReader(download.getResultStreamAt(0));
                                 reader.loadAsync(download.progress.bytesReceived).then(function (bytesLoaded) {
                                     var payload = reader.readString(bytesLoaded);

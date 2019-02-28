@@ -30,10 +30,8 @@ require('./fileSystems').getFs = function (name, callback) {
         fsMap = {};
         for (var i = 0; i < response.length; ++i) {
             var fsRoot = response[i];
-            if (fsRoot) {
-                var fs = new FileSystem(fsRoot.filesystemName, fsRoot);
-                fsMap[fs.name] = fs;
-            }
+            var fs = new FileSystem(fsRoot.filesystemName, fsRoot);
+            fsMap[fs.name] = fs;
         }
         callback(fsMap[name]);
     }
